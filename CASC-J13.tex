@@ -1,0 +1,2090 @@
+\documentclass[aic]{iosart2x}
+
+%----Generally useful
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{wasysym}
+\usepackage{amsfonts}
+% \usepackage{graphicx}
+% \usepackage{algorithm2e}
+\newcommand{\smalltt}[1]{\small \texttt{#1}}
+\newcommand{\tildenot}{\raisebox{0.4ex}{\texttildelow}}
+
+%----Useful for this document
+\usepackage{dcolumn}
+\usepackage{rotating}
+\usepackage{pdflscape}
+\newcommand{\bb}[1]{\bf {#1}}
+\newcommand{\xxx}{$\times$}
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\newcolumntype{C}[1]{>{\PreserveBackslash\centering}p{#1}}
+\newcolumntype{R}[1]{>{\PreserveBackslash\raggedleft}p{#1}}
+\newcolumntype{L}[1]{>{\PreserveBackslash\raggedright}p{#1}}
+
+%----Making things more compact
+\newenvironment{packed_enumerate}{
+\vspace*{-0.3em}
+\begin{enumerate}
+  \setlength{\partopsep}{0pt}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
+\newenvironment{packed_itemize}{
+\vspace*{-0.3em}
+\begin{itemize}
+  \setlength{\partopsep}{0pt}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+\newcommand{\ass}[1]{\footnotesize {#1}}
+%----Suppress extra space in texttt mode
+\AddToHook{cmd/ttfamily/after}{\frenchspacing}
+% \renewcommand{\arraystretch}{0.8}
+\renewcommand{\floatpagefraction}{0.9}
+% \renewcommand{\textfloatsep}{2.0ex}
+% \setlength{\floatsep}{2.0pt plus 2.0pt minus 2.0pt}
+% \setlength{\textfloatsep}{5.0pt plus 2.0pt minus 0.0pt}
+% \renewcommand{\dbltextfloatsep}{2.0ex}
+% \renewcommand{\textfraction}{0.07}
+% \renewcommand{\topfraction}{0.9}
+% \renewcommand{\bottomfraction}{0.9}
+% \setlength{\tabcolsep}{3pt}
+%% One can fix some overfulls
+\sloppy
+
+\newcommand{\LAST}{\mbox{CASC-30}}
+\newcommand{\THIS}{\mbox{CASC-J13}}
+\newcommand{\NEXT}{\mbox{CASC-31}}
+\newcommand{\NUMBEROFENTRANTS}{\mbox{Twenty three}}
+\newcommand{\NTHCOMPETITION}{\mbox{thirty-first}}
+
+\begin{document}
+\begin{frontmatter}                           % The preamble begins here.
+%
+%\pretitle{Pretitle}
+\title{The 13th IJCAR Automated Theorem Proving System Competition -- \THIS{}}
+\runtitle{\THIS{}}
+%\subtitle{Subtitle}
+\maketitle
+%
+\begin{aug}
+\author[A]{\fnms{Geoff} \snm{Sutcliffe} \ead[label=e1]{geoff@tptp.org} \thanks{Corresponding author. \printead{e1}.}}
+\address[A]{Department of Computer Science, \orgname{University of Miami},
+\cny{USA}\printead[presep={\\}]{e1}}
+\end{aug}
+\runauthor{Sutcliffe}
+
+\begin{abstract}
+The CADE ATP System Competition (CASC) is the annual evaluation of fully automatic, classical
+logic, Automated Theorem Proving (ATP) systems –- the world championship for such systems.
+\THIS{} was the \NTHCOMPETITION{} competition in the CASC series.
+\NUMBEROFENTRANTS{} ATP systems competed in the various divisions.
+This paper presents an outline of the competition design and a commentated summary of the results.
+\end{abstract}
+
+\begin{keyword}
+automated theorem proving\sep competition
+\end{keyword}
+%
+\end{frontmatter}
+%--------------------------------------------------------------------------------------------------
+\paragraph{Author contributions:} The paper, except for Section~\ref{Systems}, was written by 
+the paper author.
+The three subsection of Section~\ref{Systems} were written by Michael Rawson (hopCoP), 
+Simon Guilloud (Lisa's Tableau Tactic), and Christoph Weidenbach (SPASS-SCL-FOL 0.1).
+
+\paragraph{Statements and Declarations:} 
+Ethical considerations - Not applicable.
+Consent to participate - Not applicable.
+Consent for publication - Not applicable.
+Conflicting interest - The author(s) declare no potential conflicts of interest with respect to 
+the research, authorship, and/or publication of this article.
+Funding statement - Not applicable.
+%--------------------------------------------------------------------------------------------------
+\section{Introduction}
+\label{Introduction}
+
+Automated Theorem Proving (ATP) deals with the task of proving theorems from axioms – the
+derivation of conclusions that follow inevitably from known facts~\cite{RV01-HAR}.
+The converse task of disproving conjectures is another facet of interest~\cite{CS03,BN10-ITP}.
+The axioms and conjecture are written in an appropriately expressive logic, and the solutions
+(proofs and models) are often similarly written in logic~\cite{Sut23-IGPL}.
+The CADE ATP System Competition (CASC)~\cite{Sut16} is the annual evaluation of fully automatic,
+classical logic, ATP systems – the world championship for such systems.
+One purpose of CASC is to provide a public evaluation of the relative capabilities of ATP systems.
+Additionally, CASC aims to
+stimulate ATP research,
+motivate development and implementation of robust ATP systems that can be easily and usefully
+deployed in applications,
+provide an inspiring environment for personal interaction between ATP researchers,
+and
+expose ATP systems within and beyond the ATP community.
+CASC evaluates the performance of the ATP systems in terms of
+the number of problems solved,
+the number of acceptable solutions (proofs and models) output, and
+the average time taken for problems solved,
+in the context of
+a bounded number of eligible problems and
+specified time limits.
+
+CASC is held at each CADE (the International Conference on Automated Deduction) and IJCAR
+(the International Joint Conference on Automated Reasoning) conference -- the major forums
+for the presentation of new research in all aspects of automated deduction.
+\THIS{} was held on 27th July 2026, as part of the
+% 30th International Conference on Automated Deduction (CADE-30).
+13th International Joint Conference on Automated Reasoning (IJCAR 2024)\footnote{%
+CADE was a constituent conference of the 13th IJCAR, hence CASC-``J13'',
+which in turn was part of the Federated Logic Conference 2026},
+in Lisbon, Portugal.
+It was the \NTHCOMPETITION{} competition in the CASC series; see~\cite{Sut26-CASC} and citations
+therein, and the CASC web site \href{http://tptp.org/CASC}{\smalltt{tptp.org/CASC}}, for 
+information about previous CASCs.
+The ``FLoC Olympic Games'' hosted HOWMANY competitions in
+various areas of logic and reasoning, which provided the \THIS{} entrants
+with opportunities to observe and interact with developers of other types
+of reasoning tools.
+% , and~\cite{SS06-SoCASC} for a historical overview and analysis of the
+% first ten CASCs.
+
+\THIS{} was organized by Geoff Sutcliffe,
+% assisted by Martin Desharnais for the SLH division,
+and overseen by a panel consisting of
+Aart Middeldorp, Cl{\' a}udia Nalon, and Martina Seidl.
+The CASC panel has a few, but important, responsibilities:
+\begin{packed_itemize}
+\item Advise (by email) on contentious issues that arise before the competition, and that cannot
+      be agreeably resolved by the organizers and entrants.
+\item With the help of the organizers, adjudicate on the acceptability of the sample proofs and
+      models that are submitted before the competition.
+\item Supply a seed digit for the random problem selection process.
+\item If possible, be physically present at the start of the competition, so entrants can see who
+      they are and raise any issues they are concerned about.
+\item Be contactable during the competition to advise on contentious issues that arise and that
+      cannot be agreeably resolved by the organizers and entrants.
+\item With the help of the organizers, adjudicate on the acceptability of the winners' proofs and
+      models.
+\item If possible, be physically present at the end of the competition for resolving possible 
+      open issues, confirming the final system ranking in each division, and assisting in winner 
+      announcements.
+\end{packed_itemize}
+
+\THIS{} was run on computers provided by the StarExec project~\cite{SST14} at the
+University of Miami.
+% the Max-Planck-Institut f{\"u}r Informatik, Saar\-br{\"u}cken, Germany.
+% and by the Department of Computer Science at the University of Manchester.
+% the Department of Computer Science at the University of Miami.
+The \THIS{} web site \href{http://tptp.org/CASC/J13}{\smalltt{tptp.org/CASC/J13}}
+provides access to all the resources used before, during, and after the event.
+
+The design and organization of CASC has evolved over the years to a sophisticated state.
+An outline of the \THIS{} design and organization is provided here.
+The details are in~\cite{Sut26-CASC-J13} and on the \THIS{} web site.
+Important changes for \THIS{} were
+(for readers already familiar with the general design of CASC):
+\begin{packed_itemize}
+\item The TFA and EPR divisions went on hiatus.
+\item The FNT division returned from hiatus.
+\item Inference steps in proofs may not list parents that are not used in the inference.
+\item Proofs should graft in subproofs from external systems.
+\item A new performance measure, proof granularity, is recorded and reported.
+\item The ProoVer competition for proof verifiers was held for the first time in 2026, 
+      as a companion competition to \THIS{}.
+\end{packed_itemize}
+The CASC rules, specifications, and deadlines are absolute.
+Only the panel has the right to make exceptions.
+It is assumed that all entrants have read the documentation related to the competition, and have
+complied with the competition rules.
+Non-compliance with the rules can lead to disqualification.
+A ``catch-all'' rule is used to deal with any unforeseen circumstances: 
+{\em No cheating is allowed}.
+The panel is allowed to disqualify entrants due to unfairness, and to adjust the competition
+rules in case of misuse.
+
+\vspace*{0.5em}
+\emph{Executive summary:} \THIS{} was the \NTHCOMPETITION{} annual evaluation of fully 
+automatic, classical logic, Automated Theorem Proving (ATP) systems.
+\THIS{} fulfilled its objectives by evaluating the relative capabilities of ATP systems,
+and stimulating development and interest in ATP.
+The highlights of \THIS{} were many new entrants, and the companion ProoVer competition.
+Despite the continued dominance of the Vampire systems, the stimulating and interactive nature
+of CASC has kept the developer and user communities engaged.
+The experience gained from \THIS{} has prompted further focus on proof production and verification
+in \NEXT{}.
+
+\vspace*{0.5em}
+The rest of this paper is organized as follows:
+Section~\ref{DivisionsSystems} describes the competition divisions and the ATP systems that
+entered the various divisions.
+Sections~\ref{Infrastructure} and \ref{Registration} describe the competition infrastructure
+and the requirements for the ATP systems.
+Section~\ref{Evaluation} describes how the systems are evaluated.
+Section~\ref{Results} provides a commentated summary of the results.
+Section~\ref{Systems} contains short descriptions of three of the ATP systems.
+% the winning systems.
+Section~\ref{ProoVer} describes the design of the ProoVer competition, presents the results,
+and discusses new requirements for proofs in the TPTP format NEED REF.
+Section~\ref{Conclusion} concludes and discusses plans for future CASCs.
+
+\vspace*{0.5em}
+\emph{A Tense Note:}
+Attentive readers will notice changes between the present and past tenses in this paper.
+Many parts of CASC are established and stable -- they are described in the present tense (the
+rules are the rules).
+Aspects that were particular to \THIS{} are described in the past tense so that they make sense
+when reading this after the event.
+
+%--------------------------------------------------------------------------------------------------
+\section{Divisions and Systems}
+\label{DivisionsSystems}
+
+CASC is divided into divisions according to problem and system characteristics, in a coarse
+version of the TPTP problem library's Specialist Problem Classes (SPCs)~\cite{SS01}.
+Each division uses problems that have certain logical, language, and syntactic characteristics,
+so that the ATP systems that compete in a division are, in principle, able to attempt all the 
+problems in the division.
+Some divisions are further divided into problem categories that make it possible to analyze, at
+a more fine-grained level, which systems work well for what types of problems.
+Table~\ref{DivisionsTable} catalogs the divisions and problem categories of \THIS{}.
+The example problems can be viewed online at
+\href{https://tptp.org/cgi-bin/SeeTPTP?Category=Problems}{\smalltt{tptp.org/cgi-bin/SeeTPTP?Category=Problems}}.
+Section~\ref{TPTPProblems}
+% , \ref{SLHProblems}, and~\ref{ICUProblems} 
+explains what problems are eligible for use in each division and category.
+The competition rankings are at (only) the division level, as explained in 
+Section~\ref{Evaluation}.
+
+\begin{table*}[htbp]
+\caption{Divisions and Problem categories}
+\label{DivisionsTable}
+\begin{tabular}{p{1cm}p{7cm}p{5cm}}
+\hline
+Division  & Problems              & Problem categories \\
+\hline
+\textbf{THF} &
+\textbf{T}yped (monomorphic) \textbf{H}igher-order \textbf{F}orm theorems
+(axioms with a provable conjecture). &
+\textbf{TNE} -- \textbf{T}HF with \textbf{N}o \textbf{E}quality
+
+      Example: \texttt{NUM738\string^{}1}
+
+\textbf{TEQ} -- \textbf{T}HF with \textbf{EQ}uality
+
+      Example: \texttt{SET171\string^{}3} \\
+\hline
+% \textbf{THN} &
+% \textbf{T}yped \textbf{H}igher-order form \textbf{N}on-theorems
+% (axioms with a countersatisfiable conjecture, and satisfiable axiom sets without a conjecture). &
+% \textbf{TNN} -- \textbf{T}H\textbf{N} with \textbf{N}o equality
+%
+%       Example: \texttt{CSR142\string^{}3}
+%
+% \textbf{TNQ} -- \textbf{T}H\textbf{N} with e\textbf{Q}uality
+%
+%       Example: \texttt{PHI003\string^{}3} \\
+% \hline
+% \textbf{TFA} &
+% \textbf{T}yped (monomorphic) \textbf{F}irst-order form theorems
+%       with \textbf{A}rithmetic (axioms with a provable conjecture). &
+% \textbf{TFI}~ -- \textbf{TF}A with only \textbf{I}nteger arithmetic
+%
+%       Example: \texttt{DAT016\_1}
+%
+% % \textbf{TFR} -- \textbf{TF}A with only \textbf{R}ational arithmetic
+% 
+% %       Example: \texttt{ARI621\_2}
+% 
+% \textbf{TFE} -- \textbf{TF}A with only r\textbf{E}al arithmetic,
+%       e.g., \texttt{MSC022\_2} \\
+% \hline
+% \textbf{TFN} & \textbf{T}yped \textbf{F}irst-order form \textbf{N}on-theorems
+%     (axioms with a countersatisfiable conjecture, and satisfiable axiom sets without a conjecture)
+%     without arithmetic. &
+%     Example: \texttt{COM002\_20} \\
+% \hline
+\textbf{FOF} &
+\textbf{F}irst-\textbf{O}rder \textbf{F}orm theorems (axioms with a provable
+    conjecture). &
+\textbf{FNE} -- \textbf{F}OF with \textbf{N}o \textbf{E}quality.
+
+    Example: \texttt{COM003+1}
+
+\textbf{FEQ} -- \textbf{F}OF with \textbf{EQ}uality.
+
+    Example: \texttt{SEU147+3} \\
+\hline
+\textbf{FNT} &
+\textbf{F}OF \textbf{N}on-\textbf{T}heorems (axioms with a countersatisfiable
+    conjecture, and satisfiable axioms without a conjecture). &
+\textbf{FNN} -- \textbf{FN}T with \textbf{N}o equality.
+
+    Example: \texttt{KRS173+1}
+
+\textbf{FNQ} -- \textbf{FN}T with e\textbf{Q}uality.
+
+    Example: \texttt{MGT033+2} \\
+\hline
+% \textbf{EPR} &
+% \textbf{E}ffectively \textbf{PR}opositional clause normal form theorems and non-theorems (clause
+%     sets). &
+% \textbf{EPU} -- \textbf{EP}R \textbf{U}nsatisfiable clause sets.
+% 
+%     Example: \texttt{GEO079-1}
+% 
+% \textbf{EPS} -- \textbf{EP}R \textbf{S}atisfiable clause sets.
+%
+%     Example: \texttt{PUZ001-3} \\
+% \hline
+\textbf{UEQ} &
+     \textbf{U}nit \textbf{EQ}uality theorems in clause normal form
+     (unsatisfiable clause sets). &
+     Example: \texttt{RNG026-7} \\
+\hline
+% \textbf{SLH} &
+% Typed (monomorphic) higher-order theorems (axioms with a provable conjecture),
+% generated by Isabelle's \textbf{SL}edge\textbf{H}ammer system~\cite{PB10}.  &
+% The problems were generated from sessions in Isabelle's Archive of Formal Proofs~\cite{BH+15}. \\
+% \hline
+% \textbf{ICU} &
+% First-order theorems (axioms with a provable conjecture) provided by the entrants. &
+% The problems supplied by an entrant were expected to be easy enough for that entrant's ATP system,
+% but difficult for the other entrants' systems, i.e., each entrant is saying to the others: ``I
+% Challenge yoU!''. \\
+% \hline
+% \textbf{LTB} &
+% Theorems (axioms with a provable conjecture) from \textbf{L}arge \textbf{T}heories, presented
+% in \textbf{B}atches.
+% A large theory typically has many functions and predicates, and many axioms of which only a few
+% are required for a proof of a theorem.
+% The problems in a batch are given to an ATP system all at once, and typically have a common core
+% set of axioms.
+% The batch presentation allows the ATP systems to load and preprocess the common core set of
+% axioms just once, and to share logical and control results between proof searches.
+% Each problem category might be accompanied by a set of training problems and their solutions,
+% % taken from the same source as the competition problems,
+% which can be used for ATP system tuning during (typically at the start of) the competition &
+% \textbf{VBT} -- Problems generated by Isabelle's Sledgehammer system, from the
+% ``{\bf v}an Emde {\bf B}oas {\bf T}rees'' entry in the Archive of Formal Proofs.
+% See Section~\ref{LTBProblems} for details.
+% There was no common core set of axioms.
+%
+% \vspace{0.7em}
+% Six versions of each VBT problem were provided:
+% % a first-order form (FOF) version,
+% monomorphic and polymorphic typed first-order versions,
+% monomorphic and polymorphic typed extended first-order versions,
+% and
+% monomorphic and polymorphic typed higher-order versions without \smalltt{\$ite}, 
+% \smalltt{\$let}, or tuples.
+% Systems could attempt as many of the versions as they wanted, and could attempt the problems
+% and versions in any order including in parallel.
+% A solution to any version counted as a solution to the problem.
+%
+% \vspace{0.7em}
+% The VBT category was accompanied by training data. \\
+% \hline
+\end{tabular}
+\end{table*}
+
+ATP systems that cannot run in the competition divisions for any reason, e.g., the system cannot
+run on the competition computers, or the entrant is an organizer, can be entered into the 
+demonstration division.
+The demonstration division uses the same problems as the competition divisions, and the entry
+specifies which competition divisions' problems are to be used.
+Demonstration division systems can run on the competition computers, or on computers supplied by 
+the entrant.
+The demonstration division results are presented along with the competition divisions' results,
+but might not be comparable with those results.
+
+\NUMBEROFENTRANTS{} ATP systems competed in the various divisions of \THIS{}.
+The division winners of the previous CASC (\LAST{}) and the Prover9~1109a system are automatically
+entered into the FOF demonstration division to provide benchmarks against which progress can be 
+judged.
+The systems, the divisions in which they were entered, and their entrants, are listed in
+Table~\ref{Entrants}.
+A division acronym in {\em italics} indicates the system was in the demonstration division.
+System descriptions are in these competition proceedings~\cite{Sut24-CASC-J12} and on the \THIS{}
+web site.
+
+\begin{table*}
+\setlength{\tabcolsep}{5pt}
+\footnotesize
+\caption{The ATP systems and entrants}
+\label{Entrants}
+\begin{tabular}{lp{1.5em}p{1.5em}p{1.5em}p{1.5em}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{3.4cm}}
+ATP System                & \multicolumn{4}{l}{Divisions} & Entrant (Associates)              & Entrant's Affiliation\\
+\hline
+Connect++ 0.7.2           &   &FOF&FNT&   & Dr Sean B Holden                                  & University of Cambridge \\
+CSI++ 1.0                 &   &FOF&   &UEQ& Guoyan Zeng (Yang Xu, Baojie Rui, Stephan Schulz, Peiyao Liu, Hailin Guo, Jun Liu, Shuwei Chen)
+                                                                                              & Xihua University \\
+Drodi 4.1.1               &   &FOF&FNT&UEQ& Oscar Contreras                                   & Amateur Programmer \\
+E 3.5.1                   &THF&FOF&FNT&UEQ& Stephan Schulz                                    & DHBW Stuttgart \\
+FindProof 0.1             &   &FOF&   &UEQ& Nik Murzin                                        & Wolfram Institute \\
+FMB4J 0.1                 &   &   &FNT&   & Michael Rawson (Joe Hall)                         & University of Southampton \\
+iProver 3.9.4             &   &FOF&FNT&UEQ& Konstantin Korovin                                & University of Manchester \\
+LEO-II 1.7.0              &THF&   &   &   & Alexander Steen (Christoph Benzmüller)            & University of Greifswald \\
+Leo-III 1.9.0             &THF&   &   &   & Alexander Steen (Christoph Benzmüller)            & University of Greifswald \\
+LisaST 0.9                &   &{\em FOF}&   &   & Simon Guilloud                              & EPFL \\
+Mace4 2026-6A             &   &   &FNT&   & Jeff Machado (Larry Lesyna)                       & Independent Researcher \\
+mrs 0.2.0                 &   &FOF&   &UEQ& Olivier Roland                                    & Independent Researcher \\
+Prover9 1109a             &   &{\em FOF}&   &   & CASC (Bob Veroff, Bill McCune)              & CASC fixed point \\
+Prover9 2026-6A           &   &FOF&   &UEQ& Jeff Machado (Larry Lesyna)                       & Independent Researcher \\
+SATResetCoP 1.0           &   &FOF&   &   & Martin Fixman (Fredrik Rømming, Sean Holden)      & University of Cambridge \\
+SPASS-SCL 0.1.1           &   &FOF&   &   & Simon Schwarz (Yasmine Briefs, Lorenz Leutgeb, Christoph Weidenbach, Fabian Wobito)
+                                                                                              & Max Planck Institute for Informatics \\
+SUPr 1.0                  &   &FOF&   &   & Teddy Kim (Adam Pease)                            & Naval Postgraduate School \\
+Twee 2.7                  &   &   &   &UEQ& Nick Smallbone (Guy Axelrod)                      & Chalmers University of Technology \\
+Vampire 4.8               &   &   &{\em FNT}&   & CASC                                        & CASC-29 winner \\
+Vampire 5.0               &{\em THF}&{\em FOF}&   &{\em UEQ}& CASC                            & \LAST{} winner \\
+Vampire 5.0.1             &THF&FOF&FNT&UEQ& Márton Hajdu (Filip Bártek, Ahmed Bhayat, Jonas Bodingbauer, Robin Coutelier, 
+                                                Matthias Hetzenberger, Petra Hozzová, Laura Kovács, Jack McKeown, Merisa Mustajbasic, 
+                                                Axel Polaczek, Jakob Rath, Michael Rawson, Giles Reger, Martin Riener, Martin Suda, 
+                                                Johannes Schoisswohl, Andrei Voronkov, 
+                                                Eva Maria Wagner)                                 & TU Wien \\
+VIP 1.71828459        &   &FOF&   &   & Ilies Nokrani (David Delahaye, Clémence Gerardin) & Université Montpellier - LIRMM \\
+Zipperp'n 2.1.9999        &THF&FOF&   &   & Jasmin Blanchette
+                          (Alexander Bentkamp, Simon Cruanes, Petar Vukmirovi{\'c})               & Ludwig-Maximilians-Universität München\\
+\hline
+\end{tabular}
+\end{table*}
+
+%--------------------------------------------------------------------------------------------------
+%----HERE IS WHERE WE START SLIDING INTO PAST TENSE
+%--------------------------------------------------------------------------------------------------
+\section{Infrastructure}
+\label{Infrastructure}
+
+%--------------------------------------------------------------------------------------------------
+\subsection{Computers}
+\label{Computers}
+
+The StarExec Miami computers used for the competition have
+two octa-core Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz CPUs, with hyperthreading (two 
+threads per core),
+256GiB memory,
+the Ubuntu 24.04.3 LTS operating system, with Linux kernel 6.8.0-71-generic.
+There were 30 computers available for \THIS{}, i.e., 60 CPUs.
+One ATP system runs on one CPU at a time.
+StarExec uses Linux's \texttt{sched\_setaffinity} to restrict each system run to a single CPU,
+and \texttt{setrlimit} to limit memory use to 128 GiB.
+This separation avoids contention that might affect performance measurements~\cite{BLW19,FG+24}.
+Systems can use all the cores on the CPU.
+In \THIS{} all the demonstration division systems used the competition computers.
+
+The StarExec Miami computers used for CASC are the same as are publicly available to the TPTP 
+community, which allows system developers to test and tune their systems in exactly the same 
+environment as is used for the competition.
+
+HOWMANY In \THIS{} a total of 2071 CPU hours were used in 431 wall clock hours, i.e., 7.2 hours spread
+over the 60 CPUs, which allowed the competition to run live in one conference day.
+For the problems that were solved, 267 CPU hours were used in 53 wall clock hours.
+
+%--------------------------------------------------------------------------------------------------
+\subsection{Problems for the TPTP-based Divisions}
+\label{TPTPProblems}
+
+The problems for the THF, FOF, EPR, and UEQ divisions were taken from the latest release of the
+Thousands of Problems for Theorem Provers (TPTP) problem library~\cite{Sut17}.
+For \THIS{} that was release v9.3.0.
+The TPTP version used for CASC is released only after the competition has started, so that new
+problems in the release have not been seen by the entrants.
+The problems have to meet certain criteria to be eligible for use:
+\begin{packed_itemize}
+\item The TPTP tags problems that are designed specifically to be suited or ill-suited to some ATP
+      system, calculus, or control strategy as \textit{biased}.
+      They are excluded from the competition.
+\item The problems must be syntactically non-prop\-osi\-tional.
+\item The TPTP uses system performance data in the Thousands of Solutions from Theorem Provers
+      (TSTP) solution library~\cite{Sut07-CSR} to compute problem difficulty ratings in the 
+      range 0.00 (easy) to 1.00 (unsolved)~\cite{SS01}.
+      Problems with ratings in the range 0.21 to 0.99 are eligible.
+      The upper bound of 0.99 excludes problems that probably would not be solved by any of the 
+      systems, and thus would not differentiate between the systems.
+      The lower bound of 0.21 was chosen (many years ago, and it has worked successfully) to
+      exclude problems that would be solved by most of the systems and thus not differentiate
+      between the systems.
+      Problems of lesser and greater ratings are made eligible if there are not enough problems
+      with ratings in that range.
+      There were none in \THIS{}.
+
+      \hspace*{1em}
+      Systems can be submitted before the competition so that their performance data is used in
+      computing the problem ratings -- problems that are newly solved get a rating less than
+      1.00 and thus become eligible (until the rating drops below 0.21).
+      The rating calculation also uses performance data from ATP systems that are not
+      entered into the competition, which can produce ratings that make some problems eligible
+      for selection but easy or unsolvable for the systems in the competition.
+      Using problems that are solved by all or none of the competition systems does not
+      affect the competition rankings, has the benefit of placing the systems' performances
+      in the context of the state-of-the-art in ATP, but does reduce the differentiation between
+      the systems in the competition.
+\end{packed_itemize}
+
+In order to ensure that no system receives an advantage or disadvantage due to the specific
+presentation of the problems in the TPTP problem library, the problems are obfuscated by
+% \item rename all predicate and function symbols to meaningless symbols
+stripping out all comment lines, including the problem header,
+randomly reordering the formulae (\texttt{include} directives are left before the formulae, 
+type declarations and definitions are left before the symbols' uses),
+randomly swapping the arguments of associative connectives,
+randomly reversing implications, and
+randomly reversing equalities.
+
+The numbers of problems used in each division and problem category are constrained by the
+numbers of eligible problems, the numbers of systems entered in the divisions, the number of 
+CPUs available, the time limits, and the time available for running the competition live
+in one conference day, i.e., in about 6 hours.
+The numbers of problems used are set within these constraints according to the judgement of the 
+competition organizer.
+The problems used are randomly selected from the eligible problems based on a seed supplied by
+the competition panel:
+\begin{packed_itemize}
+\item The selection is constrained so that no division or category contains an excessive number
+      of very similar problems, according to the ``very similar problems'' (VSP) lists distributed
+      with the TPTP problem library~\cite{Sut00-JAR}.
+      For each problem category in each division, if the category is going to use $N$ problems
+      and there are $L$ VSP lists that have an intersection of at least $N/(L+1)$ with the
+      eligible problems for the category, then maximally $N/(L+1)$ problems are taken from each
+      VSP list.
+\item In order to combat excessive tuning towards problems that are in the preceding TPTP version, 
+      the selection is biased to select problems that are new in the TPTP version used until 
+      50\% of the problems in each problem category have been selected or there are no more new 
+      problems to select, after which random selection from old and new problems continues.
+      The number of new problems used depends on how many new problems are eligible and the
+      limitation on very similar problems.
+\item Problems with rating 0.21 to 0.99 are selected before problems with other ratings.
+\end{packed_itemize}
+Table~\ref{ProblemNumbers} gives the numbers of eligible problems, the maximal numbers that could
+be used after taking into account the limitation on very similar problems,
+% (in the context of the numbers of problems used),
+and the numbers of problems used in each division and category.
+ENOUGH NEW??
+See Section~\ref{Conclusion} for a plea to the community to submit new problems to the TPTP 
+problem library.
+
+\begin{table*}[tbh]
+\caption{Numbers of eligible and used problems}
+\label{ProblemNumbers}
+\begin{tabular}{l|rr|rr|rr|r}
+\hline
+\multicolumn{1}{l}{Division} &
+\multicolumn{2}{c}{THF} &
+\multicolumn{2}{c}{FOF} &
+\multicolumn{2}{c}{FNT} &
+\multicolumn{1}{c}{UEQ} \\
+Category                  & {\tiny TNE} & {\tiny TEQ} 
+                                      & {\tiny FNE} & {\tiny FEQ} 
+                                                  & {\tiny FNN} & {\tiny FNQ} & \\
+\hline
+Eligible                  & 147 &1155 & 249 &4135 &  91 & 117 & 439 \\
+Usable                    & 139 & 439 & 117 & 912 &  64 & 117 & 439 \\
+Used                      & 100 & 300 & 100 & 300 &  50 & 100 & 400 \\
+New                       &   0 &  31 &   0 &  79 &   0 &   0 &  21 \\
+% \hspace*{2ex}Max new      &
+% \hspace*{2ex}Usable       &
+% \hspace*{2ex}Usable new   &
+\hline
+\end{tabular}
+\end{table*}
+
+The problems are given to the ATP systems in TPTP format, with {\tt include} directives,
+in increasing order of TPTP difficulty rating.
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{Problems for the SLH Division}
+% \label{SLHProblems}
+% 
+% For the SLH division of CASC-29, Isabelle's Sledgehammer system~\cite{PB10} was used to generate
+% 8400 problems that could be used, of which 1000 appropriately difficult problems were selected 
+% based on performance data~\cite{Sut23-CASC-29,SD24-CASC}.
+% For the SLH division of \LAST{}, the same problem set was used, and 1000 problems not used in 
+% CASC-29 were selected.
+% For the SLH division of \THIS{}, the same problem set was used, and 1000 problems not used in
+% CASC-29 or \LAST{} were selected.
+% The reuse of the problem set was announced in advance of \THIS{}, so that developers could tune
+% their systems using the CASC-29 and \LAST{} problems.
+% The problems are not modified by any preprocessing, thus allowing the ATP systems to take
+% advantage of natural structure that occurs in the problems.
+% 
+% Of the 1000 problems selected for \THIS{}, 383 had not been solved in the testing done before
+% CASC-29.
+% If many of them were solved in the competition, that would indicate progress.
+% See Section~\ref{SLH} for the results on these problems.
+% 
+% The problems are given in a roughly estimated increasing order of difficulty.
+% 
+%--------------------------------------------------------------------------------------------------
+% \subsection{Problems for the ICU Division}
+% \label{ICUProblems}
+% 
+% For the ICU division each entrant had to submit 20 FOF theorems (axioms with a provable conjecture).
+% The problems had to be provided in decreasing order of desired use in the division, e.g., from 
+% hardest to easiest for other systems.
+% The problems had to be all different, as assessed by the competition organizers.
+% It was expected that each entrant would submit problems that are easy enough for that entrant's
+% system, but difficult for the other entrants' systems, i.e., each entrant is saying to the
+% others: ``I Challenge yoU!''.
+% 
+% For \THIS{} the 10 problems chosen for the \LAST{} winner, Vampire~4.9, were reused.
+% Then the top 13 problems were taken from each of the entrant's submissions, excluding duplicates.
+% That gave a total of 101 problems.
+% It was later noticed that one of the selected problems was satisfiable, and removed, leaving
+% 100 problems for the competition.
+% Eighty-four of the 100 problems are existing TPTP problems, of which 32 had difficulty rating 
+% 1.00, and the average difficulty rating over the 84 was 0.90.
+% The remaining 16 problems were all versions of existing TPTP problems that had been modified
+% to suit the entrant's system.
+% 
+% The problems were given in reverse order of desired use, so that the ``easier'' problems were
+% used before ``harder'' ones.
+% 
+%---------------------------------------------------------------------------------------------------
+% \subsection{Problems for the LTB Division}
+% \label{LTBProblems}
+%
+% The problems for the LTB division are taken from various sources,
+% % (both within and across CASC editions),
+% with each problem category being based on one source.
+% \THIS{} had only one category,
+% % \footnote{%
+% % Usually the LTB division has multiple problem categories, but for CASC-J9
+% % it was decided to have just one category, which allowed that category
+% % to have a very large number of problems.}:
+% the VBT category, which used a set of 8900 problems generated by Isabelle's Sledgehammer
+% system from the ``van Emde Boas Trees'' session in the AFP.\footnote{%
+% \url{https://www.isa-afp.org/entries/Van_Emde_Boas_Trees.html}}
+% Recall from Section~\ref{Introduction}, six versions of each problem were provided:
+% monomorphic and polymorphic typed first-order versions (TF0 and TF1),
+% monomorphic and polymorphic typed extended first-order versions (TX0 and TX1),
+% and
+% monomorphic and polymorphic typed higher-order versions (TH0 and TH1).
+% % Eight versions of each problem were provided -- the six versions used in the competition as
+% % described in Section~\ref{Introduction}, and additionally TH0 and TH1 versions that used
+% % {\tt \$ite}, {\tt \$let}, or tuples.
+% % As some systems were not able to attempt problems with {\tt \$ite}, {\tt \$let}, or tuples, it
+% % was decided to exclude those two versions from the competition.
+% In order to gauge the problems' difficulties and find proofs that could be used in the training
+% data that is provided in the LTB division, five ATP systems (E~2.6.X, lambdaE~22.03.23,
+% Leo-III~1.6.6, Vampire~4.6.1, Zipperposition~2.1) were run on all versions of the 8900 problems
+% with a 60~s CPU time limit.
+% A prerelease of 100 problems with their proofs was evenly sliced out from the 8900 problems and
+% distributed to the entrants before the competition so there were no surprises, leaving 8800
+% problems.
+% % The FOF versions were attempted by CSE\_E 1.0, E 2.2, iProver 2.8, Metis 2.4,
+% % Prover9 1109a, SPASS 3.9, and Vampire~4.3.
+% % The TF0 versions were attempted by E 2.2, iProverModulo 2.5-0.1, Leo-III 1.3,
+% % Vampire~4.3, and Zipperposition 1.4.
+% % The TF1 problems were attempted by Leo-III 1.3 and Zipperposition 1.4.
+% % The TH0 problems were attempted by agsyHOL 1.0, cocATP 0.2.0, LEO-II 1.7.0,
+% % Leo-III 1.3, Satallax 3.3, and Zipperposition 1.4.
+% % The TH1 problems were attempted by
+% % HOLyHammer 0.21 and Leo-III 1.3.
+% % A proof for at least one version was found for 10294 problems, at least one proof for every
+% % version was found for 2632 problems, and all the systems solved all the versions of 29 problems.
+% The problems were then sorted according to the number of solutions found across all versions, and
+% a training set of 800 problems that each had at least two proofs was sliced out as the training
+% data to be used in the competition.
+% The remaining 8000 problems were used in the competition.
+% There were 3517 problems where all versions had at least one proof (from the five ATP systems),
+% 6867 problems where at least one version had at least one proof,
+% 800 problems where at least one version had no proofs, and
+% 490 problems that had no proofs.
+% These results provided assurance that the problems were of a reasonable range of difficulty.
+% % and the 490 unsolved problems provided a challenge to the systems in the competition
+% % (see Section~\ref{LTB}).
+% The TF0 problems used had up to 12792 axioms,
+% the TF1 problems had up to 12528 axioms,
+% the TX0 problems had up to 12579 axioms,
+% the TX1 problems had up to 12488 axioms,
+% the TH0 problems had up to 10296 axioms,
+% and
+% the TH1 problems had up to 10078 axioms.
+%
+% The problems are given to the ATP systems as files in TPTP format, in the natural order of their
+% source, i.e., for \THIS{} in the order of their export from the AFP.
+% The problem batch was \textit{unordered}, which meant that the ATP systems could attempt as many
+% of the versions as they wanted, in any order including in parallel, and could attempt them
+% multiple times.
+% This provided opportunities for sharing logical and control results between proof attempts.
+% A solution to any version counted as a solution to the problem.
+%
+% % \begin{packed_itemize}
+% % \item The AIM2175 problem set contains 1155 test problems, and 1020 training
+% %       problems with one solution each.
+% %       For the competition, 200 problems were randomly chosen from the 1155.
+% %       All the training problems and their solutions were given in the
+% %       training set.
+% % \item The CML10227 problem set contains 10227 problems.
+% %       Proofs were found by Vampire~4.0 for 2017 of them by careful
+% %       preselection of axioms.
+% %       The 2017 proofs were used to construct ``easy problems'' with only the
+% %       axioms used in the proofs, which were attempted in non-batch mode by
+% %       pre-\THIS{} versions of E, iProver, and Vampire, with a 120~s CPU time
+% %       limit.
+% % %      (Those ATP systems were chosen as they were the underlying systems
+% % %      entered into the (non-demonstration) division.)
+% %       Only 440 of these easy problems were solved by any of the three
+% %       systems.
+% %       One hundred of the 440 solved problems and 100 of the 1577 unsolved
+% %       problems were randomly selected to be used in the competition, but
+% %       with their full original axiomatizations.
+% % % (i.e., not with just the axioms extracted to form the easy problems).
+% %       For the training set, 1000 problems (and their Vampire~4.0 solutions)
+% %       were selected from the remaining 1817 unselected problems.
+% % \item The HH7150 problem set contains 7150 problems.
+% %       This problem set was also used in \LAST{}, and same criteria were
+% %       used for problem selection:
+% %       140 problems that were solvable in 60~s by at least one of the \LAST{}
+% %       non-LTB versions of the systems, and 60 problems that were not solvable
+% %       in 60~s.
+% %       For the training set, 1000 problems (and their solutions) were selected
+% %       from those that were solvable in 60~s but not selected for the
+% %       competition.
+% % \end{packed_itemize}
+
+% For the LTB division this preprocessing was limited to randomly
+% reordering the formulae, so that the formulae in the training set were
+% the same as in the competition problems.
+% In the non-batch divisions
+% The problems are given
+% individually as command line parameters.
+% In the LTB division the problems for each problem category are listed in a
+% \textit{batch specification file}, containing global data lines and one or more
+% batch specifications.
+% The global data lines specify the problem category, and for CASC-24
+% provided the name of the directory containing the training data.
+% A batch specification consists of a configuration section, a list of the
+% common axiom files \texttt{include}d in every problem, and a list of the
+% problems in the batch.
+
+%--------------------------------------------------------------------------------------------------
+\subsection{Time Limits}
+\label{TimeLimits}
+
+In the THF, FOF, FNT, and UEQ divisions a wall clock time limit is imposed for each problem.
+The minimal time limit for each problem is 120~s.
+% , except for the ICU division where the minimal time limit is 300~s.
+The maximal time limit for each problem is constrained by the same factors that constrain the
+numbers of problems that are used, taking into account the phenomenon that ATP systems solve most
+problems quickly and very few slowly~\cite{SS01,Sut24} -- this phenomenon is evident in the 
+performance plots from the competition\footnote{%
+\href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}}, 
+and from the ratios of total times taken to solved times given in Section~\ref{Computers}.
+CHECK THIS
+The time limit is chosen value within the range allowed according to the judgement of the
+organizer, and is announced at the competition.
+In \THIS{} a 180~s wall clock time limit was imposed for each problem.
+No CPU time limits are imposed, so it can be advantageous to use all the cores on the CPU
+when a wall clock time limit is used.
+
+% \footnote{%
+% CPU limits emphasize underlying algorithmic/search quality, while wall
+% clock limits emphasize the user experience.
+% For many years, up to CASC-27 in 2019, CPU limits were used.
+% At that time it was decided to change to wall clock limits to promote the
+% use of the multiple cores that had become commonly available.
+% There will be a time in the future when development of multi-core techniques
+% have matured, and CASC might then go back to CPU limits.}
+% A wall clock time limit of 360~s was also imposed to limit very high memory
+% usage that causes swapping.
+
+% In the SLH division a CPU time limit is imposed for each problem.
+% The limit is between 15~s and 90~s, which is the range of CPU time that can be usefully
+% allocated for a proof attempt in the Sledgehammer context.\footnote{%
+% According to a personal communication from Jasmin Blanchette, and he should know.}
+% The time limit is chosen within the range allowed according to the judgement of the organizer,
+% and is announced at the competition.
+% In \THIS{} a 15~s CPU time limit was imposed for each problem.
+% 
+% In the ICU division a wall clock time limit is imposed for each problem.
+% The limit is between 300~s and 600~s, which is a range that gives the systems sufficient time
+% (4800~s CPU time on the octa-core CPUs) to attempt the difficult problems submitted.
+% The time limit is chosen within the range allowed according to the judgement of the organizer,
+% and is announced at the competition.
+% In \THIS{} a 480~s wall clock time limit was imposed for each problem.
+
+% In the LTB division a 172800~s wall clock time limit was imposed for
+% the one batch in
+% the problem batch, giving an average of 21.6~s per problem.
+% There was no wall clock time limit for each problem, and no CPU time limits.
+% Time spent before starting the first problem in the batch, e.g., tuning
+% on the training data and pre-loading common axioms, and time spent
+% between ending a problem and starting the next, e.g., learning from previous
+% proofs, is not part of the time taken on problems.
+% However, the time taken on such tasks is part of the overall time for the
+% batch.
+
+%---------------------------------------------------------------------------------------------------
+HERE WE ARE
+\section{System Evaluation}
+\label{Evaluation}
+
+CASC ranks the ATP systems at the division level.
+For each system, for each problem, four items of data are recorded:
+whether or not the problem was solved,
+whether or not a solution (proof or model) was output,
+the CPU and wall clock times taken to solve the problem and the times taken to output the
+solution (taken from the time stamps prepended to each line of the system's \smalltt{stdout}
+by StarExec's \smalltt{runsolver} utility),
+and
+the maximal number of parents in any inference.
+The systems are ranked at (only) the division level, according to the number of problems solved
+with an acceptable solution output.
+Ties are broken by the average time taken over problems solved.
+% (The models are ``counter-models'' for problems with an unprovable conjecture,
+% and ``models'' for satisfiable axiom sets without a conjecture.)
+Trophies are awarded to the competition divisions' winners.
+A system that is not entered into a division is assumed to perform worse than the entered systems,
+for that type of problem -- wimping out is not an option.
+% Additionally in CASC-28, Jasmin Blanchette at the Vrije Universiteit Amsterdam
+% contributed a travel prize of a ``romantic hotel stay in Amsterdam'' for the
+% SLH division, with expenses covered by the Matryoshka project\footnote{%
+% \url{https://matryoshka-project.github.io}}~\cite{BF+17}.
+In the demonstration division the systems are not ranked, and no trophies are awarded.
+
+The competition panel decides whether or not the systems' solutions are ``acceptable''. 
+The criteria include:
+\begin{packed_itemize}
+\item Proofs should not use a TPTP language that is more expressive than that of the problem.
+\item Proofs must be in TPTP format~\cite{Sut07-CSR}.
+\item Proofs must be structurally correct:
+      \begin{packed_itemize}
+      \item Annotated formulae must be uniquely named.
+      \item Proofs must be acyclic.
+      \item Proofs must show only relevant inference steps.
+      \item Proofs must have formulae from the problem as leaves, and end at the conjecture (for
+            axiomatic proofs) or \smalltt{\$false} formulae (for proofs by contradiction,
+            e.g.,~CNF refutations and closed tableau).
+      \item Proofs that negate the conjecture must correctly annotate the step as
+            \smalltt{status(cth)} and have a a single parent with the role \smalltt{conjecture}.
+      \item Inference steps must list exactly those parents that are used in the inference.
+      \item Proofs that make \smalltt{assumption}s must propagate and eventually discharge the
+            assumptions.
+      \end{packed_itemize}
+      Proof structure is checked using GDV~\cite{SB05}.
+      This can be done in SystemOnTSTP.
+\item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
+\item Inference steps must be reasonably fine-grained.
+      The maximal number of parents in any inference is considered in this regard.
+\item Proofs should graft in subproofs from external systems.
+\item An unsatisfiable set of ground instances of clauses is acceptable for establishing the
+      unsatisfiability of a set of clauses.
+\item Models must be complete, documenting the domain and symbol maps.
+      The domain and symbol maps may be specified by explicit ground lists (of mappings), or by
+      any clear, terminating algorithm.
+      Saturations are acceptable if their models are a subset of the models of the problem formulae.
+      Use of the TPTP format for interpretations~\cite{SS+26} is encouraged.
+\end{packed_itemize}
+
+In addition to the ranking data, other measures are made and presented in the results:
+\begin{packed_itemize}
+\item The \textit{state-of-the-art contribution} (SotAC) quantifies the unique abilities of each
+      system (excluding the previous year's winners that are earlier versions of competing systems).
+      For each problem solved by a system, its SotAC for the problem is the fraction of systems 
+      that do not solve the problem.
+      A system's overall SotAC is the average over the problems it solves but that are not solved 
+      by all the systems.
+\item The \textit{efficiency} balances the number of problems solved with the time taken.
+      It is the average solution rate (the reciprocal of the time taken to solve it) over the 
+      problems it solves, multiplied by the fraction of problems solved.
+      Efficiency is computed for both CPU time and wall clock time, to measure how efficiently the
+      systems use one core and multiple cores respectively.
+\item The \textit{core usage} measures the extent to which the systems take advantage of multiple
+      cores.
+      The raw core usage is the ratio of CPU time to wall clock time used, and the average core
+      usage is over the problems it solves with a raw core usage greater than 1.0.
+      The competition ran on octa-core computers, thus the maximal core usage was 8.0.
+      The ability to solve problems quickly before multi-core search is used is also of interest,
+      and the number of problems solved with a raw core usage less than 1.0 is also noted.
+\item The \textit{granularity} measures the extent to which inference steps combine multiple 
+      parent formulae into a single inferred formula.
+      The granularity of a proof is the maximal number of parents in an inference, and the 
+      overall granularity is the average over the the problems it solves with acceptable proof 
+      output.
+%\item In the ISA problem category of the LTB division, the {\em number
+%      of axiom lists} (output of a list of axioms sufficient for a proof)
+%      is counted.
+%      A well-formed proof can be used to provide such a list.
+%\item In the SMO problem category of the LTB division, the number of
+%      {\em questions answered} (output of the bindings for the outermost
+%      existentially quantified variables) is counted
+%      (see Section~\ref{Output}).
+\end{packed_itemize}
+
+% In the ISA problem category of the LTB division, the \textit{axiom accuracy}
+% compares the numbers of axioms used in proofs.
+% For each problem solved by a system, its problem axiom accuracy is
+% the smallest number of axioms used in any system's proof, divided by the
+% number of axioms in this system's proof (or 0 if this system does
+% not output a proof).
+% A system's overall axiom accuracy is its average problem axiom
+% accuracy over the problems it solved, multiplied by the fraction of
+% problems solved.
+% This was the basis for the ISA category prize.
+% In the SMO problem category of the LTB division, the \textit{number of questions
+% answered}, i.e., output of the bindings for the outermost existentially
+% quantified variables, is counted.
+% This was the basis for the SMO category prize.
+
+%--------------------------------------------------------------------------------------------------
+\section{System Registration, Delivery, and Execution}
+\label{Registration}
+
+The ATP systems are registered for the competition by the registration deadline, using the
+system registration form,
+Systems can be entered at only the division level, and can be entered into more than one division.
+Entering many similar variants of a system is deprecated, and entrants may be required to limit
+the number of variants that they enter.
+Systems that rely essentially on running other ATP systems without adding value are deprecated, and
+such systems might be disallowed or moved to the demonstration division.
+For each system an entrant must be nominated to handle all issues (e.g., installation and execution
+difficulties) arising before, during, and after the competition.
+The nominated entrant must formally register for CASC.
+It is not necessary for entrants to physically attend the competition.
+
+The ATP systems are delivered to the competition organizers by the system delivery deadline,
+as StarExec \smalltt{.tgz} installation packages.
+The installation packages may contain only the components necessary for running the system, i.e.,
+not including source code, etc.
+The competition organizers install and test the packages on StarExec.
+Source code is delivered separately, under the trusting assumption that the installation package
+corresponds to the source code.
+The entrants must email a \smalltt{.tgz} file of the source code and any files required for
+building the StarExec installation package to the competition organizers by the system delivery
+deadline.
+
+After the competition all competition division systems' StarExec and source code packages are made
+available on the competition web site.
+This allows anyone to use the systems on StarExec, and to examine the source code.
+Entrants are encouraged to make a public release of their systems after the competition, so
+that users can enjoy the latest capabilities.
+An open source license is encouraged, to allow the systems to be freely used, modified, and
+shared.
+Many of the StarExec packages include statically linked binaries that provide further portability
+and longevity of the systems.
+In the demonstration division the entrant specifies whether or not the source code is placed on
+the web site.
+
+% For systems running on entrant supplied computers in the demonstration division, entrants must
+% email a \smalltt{.tgz} file containing the source code and any files required for building the
+% executable system to the competition organizers by the system delivery deadline.
+% In the demonstration division the entrant specifies whether or not the source code is placed on
+% the CASC web site.
+
+Execution of the ATP systems is controlled by StarExec.
+StarExec copies the systems and problems to the compute nodes before starting execution, and timing
+starts when execution starts.
+The ATP systems must be fully automatic -- they are executed as black boxes, on one problem
+% (in the non-LTB divisions) or one batch (in the LTB division)
+at a time.
+Any command line parameters have to be the same for all problems in each division.
+The ATP systems must be sound, and are tested for soundness before the competition by submitting
+non-theorems to the systems in the THF, FOF, and UEQ divisions, and theorems to the systems in the
+FNT division.
+Claiming to have found a proof of a non-theorem or a disproof of a theorem indicates unsoundness.
+If a system fails the soundness testing it must be repaired by the unsoundness repair
+deadline or be withdrawn.
+THree systems were found to be unsound before \THIS{}, and were repaired in time for the 
+competition.
+The execution of demonstration division systems is supervised by their entrants.
+
+After the competition the systems are tested over the whole TPTP.
+If a system is found to be unsound, but before the competition report is published, and it cannot
+be shown that the unsoundness did not manifest itself in the competition, then the system is
+disqualified.
+After the competition the systems' solutions are checked.
+If any of the solutions are found to be unacceptable, but before the competition report is
+published, then the ranking is revised.
+All disqualifications and ranking changes are explained in the competition report.
+
+In CASC each ATP system is entered under one name, but it is common for the entrant to deliver
+multiple installation packages, each specialized to particular divisions in the competition,
+e.g., separate packages for the TFA and TFN divisions, and separate packages for the FOF, EPR, 
+and UEQ divisions.
+In some cases multiple packages are combined into one by adding a wrapper that detects the 
+SPC of the problem, and then calls the appropriate package's entrypoint.
+Requiring the use of a different package depending on the problem type is a coarse level of 
+non-automation.
+Users of ATP systems can have different intentions, that produce distinct tasks for the systems.
+Common examples are theorem proving vs. disproving, and testing for unsatisfiability vs. model 
+finding.
+The latter is often the implementation of the former.
+In \NEXT{} entrants will be restricted to maximally two installation packages, corresponding
+to those use cases.
+The ATP systems will be responsible for detecting the problem type and running appropriate 
+components.
+This will improve the level of automation in the ATP systems.
+
+%--------------------------------------------------------------------------------------------------
+\section{Results}
+\label{Results}
+
+% This section summarizes the results of \THIS{}, and provides commentary.
+% For the various divisions and categories, according to their ranking
+% criteria (see Section~\ref{Evaluation}),
+The result tables below give 
+the number of problems solved with an acceptable solution output,
+the number of problems solved (without considering solution output),
+the average wall clock time taken over the problems solved,
+the state-of-the-art contribution,
+the (micro-)\allowbreak efficiency,
+the core usage/the number of problems solved with core usage greater than 1.0,
+the proof granularity,
+the number of problems uniquely solved,
+the number of new problems solved,
+and
+the number of problems solved in each problem category.
+In each column the best value in the competition division is {\bf emboldened}.
+The \LAST{} winner is \textit{emphasized} in the demonstration divisions.
+Detailed results, including the systems' output files, are available on the \THIS{} web 
+site.\footnote{%
+\href{https://tptp.org/CASC/30/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}} 
+
+The structural checking of proofs in the competition theorem proving divisions -- the THF, 
+FOF, and UEQ divisions -- was new in \LAST{}.
+It was the first step along a path to full verification of proofs in CASC.
+In \LAST{}, for most systems, some of their proofs failed the structural checking,
+and it was hoped that the situation would have improved by \THIS{}. 
+Sadly, it was not the case.
+The result tables show the difference between the number of solutions output
+and the number of acceptable solutions output, and some commentary is provided.
+Some developers knew in advance that their system's proof output was not acceptable, and 
+``number of problems solved with an acceptable solution output'' is set to ``-'' rather than 0.
+A full analysis of the reasons for the failures is given in Section~\ref{Acceptable}.
+
+%--------------------------------------------------------------------------------------------------
+\subsection{The THF Division}
+\label{THF}
+
+Table~\ref{THFSummary} summarizes the results of the THF division.
+Vampire~5.0 won the division, but solved less problems than the \LAST{} winner Vampire~4.9.
+The developers thought there should be a minimal difference between the two versions, because
+they use the same source code.
+They suggested that a different compiler version (or compiler flags) was used to build the 
+Vampire~5.0 binary, or that, while unlikely, the randomized strategies in the schedules might 
+have resulted in plain bad luck for Vampire~5.0.
+It is impressive that Vampire~5.0 was able to solve so many problems, which necessarily include 
+more difficult problems, with the lowest average time taken (but again,
+Vampire~4.9 outperformed Vampire~5.0 in this respect).
+The versions of Vampire up to and including 5.0 have separate binaries for first-order and 
+higher-order logics.
+According to the Vampire developers the two branches of the source code are being merged so that
+for \NEXT{} there will be a single binary for all the competition divisions.
+
+\begin{table*}[tbh]
+\caption{THF division results}
+\label{THFSummary}
+\begin{tabular}{lrrrrrrr@{}l@{}rrrrr}
+\hline
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ & Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /31 & /31 &       \\
+\hline
+Vampire~5.0.1          &  352  &  352   &  6.5& 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &    3 &  31 &  TBA  \\
+Zipperp'n~2.1.9999     &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Leo-III~1.8.0          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+LEO-II~1.7.0           &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+\hline
+\multicolumn{13}{c}{Demonstration division} \\
+\hline
+\textit{Vampire~5.0}   &  354  &  354   &  6.8 &   - & 576      & 4.2       & {\tiny /238} &   70 & 284 &   3 &  31 &  TBA  \\
+\hline
+\end{tabular}
+\end{table*}
+
+Vampire~5.0 has the best results over almost all measures.
+The exception is core usage, where Zipperposition solved more problems using multiple cores,
+and had the highest core usage.
+E solved the most problems before starting to use multiple cores, and had good core usage
+when it did use multiple cores.
+Leo-III used multiple cores for all the problems it solved.
+cvc5's high average time taken is a consequence of it's sequential strategy schedule that uses
+a single core (the one result that appears to use 1.5 cores is an artifact of the competition 
+measurement harness).
+% which occurs when the CPU and wall clock usages are very close).
+The problem category rankings are generally aligned with the overall ranking, with the exception
+that Zipperposition had better performance on problems without equality.
+
+The detailed results show that E solved eight problems ``at the time limit''.
+An examination of E's logs revealed that the problems were actually solved in less time, but the 
+proof was printed only when the time limit was reached.
+In two cases, one in each problem category, the claim of theoremhood was output only after the
+time limit, and thus not counted as solved.
+The developer explained: ``E waits for all its children to terminate before printing the proof, 
+so if one does not respond to the {\tt SIG\_TERM} termination signal the scheduler hangs.
+The scheduler catches {\tt SIG\_TERM} while spawning worker processes, and this behaviour was 
+inadvertently inherited by the children. This has hopefully now been remedied.''
+% This might have caused them to ignore {\tt SIG\_TERM} in other situations.
+% This has hopefully now been remedied by explicitly resetting the signal handler in the children.''
+This is another instance of the careful evaluation done in CASC revealing a weakness in an ATP 
+system, leading to a bugfix.
+
+The individual problem results (without considering proof output) show that
+19 problems were unsolved,
+170 problems were solved by all the systems, and
+31 problems were solved by only one system (14 problems were solved by only the two versions
+of Vampire, and are counted as unique solutions for Vampire 5.0).
+Of the 31 unique solutions,
+14 were by Vampire~5.0,
+7 by E,
+5 by Zipperposition,
+3 by cvc5,'
+and
+2 by Vampire~4.9.
+A portfolio (sharing the time between several systems) of these five systems, with 48~s
+allocated to each, would solve 474 problems.
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The THN Division}
+% \label{THN}
+
+% Table~\ref{THNSummary} summarizes the results of the THN division.
+
+% \begin{table}[tbh]
+% \caption{THN division results}
+% \label{THNSummary}
+% \begin{tabular}{lrrrrrrrr}
+% \hline
+% ATP System            & THN & Avg  &Mdls & Sot  & \multicolumn{1}{c}{$\mu$} & New & TNN & TNQ \\
+%                       & /200& CPU  & out & AC   & Eff. & /5  &/25  &/175 \\
+% \hline
+% Nitpick 2015          & 200 &  7.9 &\tic & 0.70 & 130  &   5 &  25 & 175  \\
+% Refute 2015           &  74 & 24.3 & \xx & 0.49 &  29  &   2 &  25 &  49  \\
+% Satallax 2.8          &  49 &  0.1 & \xx & 0.48 & 242  &   2 &   5 &  44  \\
+% \hline
+% \multicolumn{9}{c}{Demonstration division} \\
+% \hline
+% Isabelle-HOT 2012 & 166 & 88.4 &     & 0.28 &  28  &  12 &  34 & 132 \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The TFA Division}
+% \label{TFA}
+% 
+% Table~\ref{TFASummary} summarizes the results of the TFA division.
+% The winner was Vampire~5.0
+% Vampire's arithmetic reasoning capabilities have recently been improved by the ALASCA approach 
+% to reasoning over quantified linear arithmetic~\cite{KK+23}, with further extensions by the VIRAS
+% technique for quantifier elimination in integer-real arithmetic~\cite{SKK24}.
+% 
+% \begin{table*}[tbh]
+% \caption{TFA division results}
+% \label{TFASummary}
+% \begin{tabular}{lrrrrrr@{}l@{}rrrrr}
+% \hline
+% ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & TFI & TFE & New \\
+%                        & /150  & /150   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}& /100& /50 & /7  \\
+% \hline
+% Vampire~5.0            & 127  & 131   &  4.4& 0.40& 695     & 4.7      & {\tiny /72}  & 97& 37& 6  \\
+% iProver 3.9.3          &  68   &  74    & 12.0 & 0.10 & 162      & 4.1       & {\tiny /68}  &  49 &  25 & 4   \\
+% \hline
+% \multicolumn{9}{c}{Demonstration division} \\
+% \hline
+% \textit{Vampire 4.9}   &   -   & 123    &  4.6 &    - & 592      & 4.8       & {\tiny /80}  &  87 &  36 & 7   \\
+% cvc5 1.3.0             &   -   & 108    & 16.4 & 0.18 & 349      & 0.0       & {\tiny /0}   &  75 &  33 & 5   \\
+% \hline
+% \end{tabular}
+% \end{table*}
+% 
+% The SotAC, efficiency, category, and new problem rankings are aligned with the overall ranking.
+% There were 7 new problems in the division, all in the TFI problem category, i.e., using integers.
+% Four of the new problems are software creation problems (the TPTP {\tt SWC} domain) from the
+% B~formal method~\cite{Deh22-Zenodo}, which were all solved by all the systems.
+% Two of the problems are common sense reasoning problems (the TPTP {\tt CSR} domain) that encode
+% calculus situations~\cite{MS05}, both of which were solved by Vampire~4.9 but only one by 
+% Vampire~5.0.
+% The seventh problem is an arithmetic problem (the TPTP {\tt ARI} domain) that was solved by
+% only the two Vampires.
+% 
+% The individual problem results (without considering proof output) show that
+% 15 problems were unsolved,
+% 65 problems were solved by all the systems, and
+% 23 problems were solved by only one system (16 problems were solved by only the two versions
+% of Vampire, and are counted as unique solutions for Vampire~5.0).
+% Of the 23 unique solutions,
+% 19 were by Vampire~5.0,
+% 3 by cvc5,
+% and
+% 1 by Vampire 4.9
+% The dominance of Vampire~5.0 means that only a little can be gained from a portfolio of the 
+% systems -- a combination of the two Vampires with cvc5, with 40~s allocated to each, would solve 
+% 133 problems.
+% 
+% The \LAST{} report said:
+% ``Over the years the TFA division has struggled to attract entrants, with the same few systems
+% being entered each year~\ldots~CASC will continue to have a TFA division in order to encourage 
+% development of ATP in this area.''
+% Sadly there has been no change to the situation, and the TFA division will not be run in
+% \NEXT{} (which will be somewhat different anyway, as explained in Section~\ref{Conclusion}).
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The TFN Division}
+% \label{TFN}
+% 
+% Table~\ref{TFNSummary} summarizes the results of the TFN division.
+% Vampire~5.0 solved the most problems, iProver~3.9.3 came in second, and cvc5 third.
+% All three systems output acceptable models for all the problems they solved.
+% This is in contrast to \LAST{} where Vampire~4.9 solved the most problems but none of its
+% models were considered acceptable, iProver~3.9 came second but output acceptable models for
+% only 67 of the 85 problems it solved, and cvc5 came third but output no acceptable models.
+% This matter was closely examined after \LAST{}, and the developers of all three systems
+% admitted to the deficiencies in their systems' model output.
+% It is pleasing to see the positive impact that had, leading to improved model output from all 
+% three systems in \THIS{}.
+% 
+% \begin{table}[tbh]
+% \caption{TFN division results}
+% \label{TFNSummary}
+% \begin{tabular}{lrrrrrr@{}l@{}r}
+% \hline
+% ATP System           & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & New \\
+%                      & /150  & /150   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}& /2      \\
+% \hline
+% Vampire 5.0          & 110  & 110   & 1.3 & 0.27& 588     & 4.8       & {\tiny /71}  & 1     \\
+% iProver 3.9.3        &  86   &  86    & 23.0 & 0.12 & 159      & 5.8      & {\tiny /60}  & 1     \\
+% cvc5 1.3.0           &  56   &  56    & 28.5 & 0.05 & 193      & 0.0       & {\tiny  /0}  & 1     \\
+% \hline
+% \multicolumn{8}{c}{Demonstration division} \\
+% \hline
+% \textit{iProver 3.9} &  84   &  84    & 21.5 & 0.11 & 193      & 6.3       & {\tiny /52}  & 1      \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% As noted in Section~\ref{TPTPProblems}, 68 problems with rating 0.00 and 49 problems
+% with rating 1.00 were made eligible for the TFN division.
+% Of those, 59 problems of rating 0.00 and 44 problems of rating 1.00 were selected.
+% Of the 59 problems with rating 0.00, 41 were solved by all the systems, and all the problems were 
+% solved by Vampire~5.0.
+% Of the 44 problems with rating 1.00, 39 were unsolved, and the other 5 were solved by only 
+% Vampire~5.0.
+% One might expect all the problems with rating 0.00 and none of the problems with rating 1.00
+% to be solved, but this is not the case because the ratings were calculated using earlier versions
+% of the systems. 
+% Progress in ATP is not monotonic.
+% 
+% The individual problem results (without considering model output) show that
+% 40 problems were unsolved,
+% 46 problems were solved by all the systems, and
+% 14 problems were solved by only one system (all 14 problems were solved by only Vampire~5.0).
+% % Of the 14 unique solutions,
+% % 11 were by Vampire,
+% % and
+% % 1 was by iProver.
+% A portfolio approach cannot improve on the individual systems' results.
+% Of the 14 problems solved by only Vampire~5.0, 
+% 8 are hardware verification (the TPTP {\tt HWV} domain) problems, 
+% 3 are interactive theorem proving (the TPTP {\tt ITP} domain) problems, 
+% 2 are software verification (the TPTP {\tt SWW} domain) problems, and
+% 1 is a logic calculus (the TPTP {\tt LCL} domain) problem, 
+% One had rating 0.00, 7 had rating 0.33, 4 had rating 0.67, and 2 had rating 1.00.
+% The common feature of these problems, with the exception of the logic calculus problem, is
+% that they have quite large numbers of formulae, ranging from 254 to 7803 formulae.
+% Twelve of them were solved by finding a finite model, and two by saturation.
+% Vampire's strategy scheduling allows it to try multiple approaches to establishing satisfiability,
+% and the ability to find finite models gave it a clear advantage.
+
+%--------------------------------------------------------------------------------------------------
+\subsection{The FOF Division}
+\label{FOF}
+
+Table~\ref{FOFSummary} summarizes the results of the FOF division.
+The Vampires dominated the division again.
+It is noteworthy that Vampire~4.9 solved more problems than Vampire~5.0.
+The developers believe that the main difference is that Vampire~4.9 has a ``cautiously 
+specialized'' schedule~\cite{BCS24-PAAR} of seven branches, while Vampire~5.0 has a single 
+monolithic schedule.
+The intent was for Vampire~5.0 to have a schedule that might be more general on unseen problems, 
+but would show its strength only with longer time limits.
+Some new implementation features in Vampire~5.0, e.g., term ordering diagrams~\cite{HC+25}, could 
+also have had a positive influence.
+
+A key differentiator between the FOF division systems is their abilities to generate acceptable 
+proofs.
+There is a notable difference between the ranking by number of acceptable proofs output, and the 
+ranking by the number of problems solved.
+Vampire~5.0, E, and LisaTT were the only systems to output an acceptable proof for every
+problem solved.
+It was disappointing that iProver solved so many problems, but failed to output acceptable proofs
+for a significant fraction of them, thus pushing iProver down to third place.
+Prior to the running of \THIS{} the developer of CSI\_Enigma was close to completing proof 
+output, which if completed would have placed the system second.
+CSE\_E solved two FEQ problems close to the time limit, but did not finish proof output by 
+the time limit. 
+Hopefully more systems will consistently produce acceptable proofs in \NEXT{}.
+
+In terms of problems solved (without considering proof output) the ranking is similar to that of 
+\LAST{}.
+The exceptions were improved performance of CSI\_Enigma over that of CSI\_E in \LAST{}, and
+iProver switching positions with CSE\_E.
+The improved performance of CSI\_Enigma over CSI\_E can be attributed to the use of the Enigma 
+system~\cite{JU17-CICM} as the secondary system instead of E.
+Note that all of CSI\_Enigma's proofs took more than 1~s.
+The improvement in iProver was due to efficiency improvements and heuristic optimization.
+In \LAST{} a clear separation was observed between three groups of systems: ``Vampire~4.9, the 
+"hoi polloi", and the "also rans"''.
+The performance plots for the FOF division in \THIS{}\footnote{%
+\href{https://tptp.org/CASC/30/WWWFiles/ResultsPlots.html\#FOFProblems}{\tt tptp.org/CASC/30/WWWFiles/ResultsPlots.html}} 
+show a more progressive separation between the systems, with only Prover9, Connect++, hopCoP, and 
+SPASS-SCL being separated into a trailing group.
+While the Vampires still stand out ahead, CSI\_Enigma fills the gap between them and the pair
+of iProver and E.
+
+\begin{table*}[tbh]
+\caption{FOF division results}
+\label{FOFSummary}
+\begin{tabular}{lrrrrrr@{}l@{}rrrrr}
+\hline
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ & Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /48 & /79 &       \\
+\hline
+Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+CSI\_PP~1.0            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Prover9~2026-6A        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+LisaST~0.9             &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+FindProof~0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+SUPr~1.0               &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+mrs~0.2.0              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+VIP~1.718              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Connect++~0.7.2        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+SATResetCoP~1.0        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+SPASS-SCL~0.1.1        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Zipperp'n 2.1.9999     &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+\hline
+\multicolumn{13}{c}{Demonstration division} \\
+\hline
+\textit{Vampire~5.0}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Prover9~1109a          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+\hline
+\end{tabular}
+\end{table*}
+
+The Vampires had the lowest average wall clock times, and correspondingly the highest efficiencies.
+Vampire~5.0 had a high SotAC, thanks to it's ability to solve problems that no other systems
+solved (see below).
+Drodi made the most use of the multiple cores thanks to its parallelisation architecture.
+The developer explained: ``Preprocessing is done only once before multiprocessing is started, 
+after which the parent process forks as many additional processes as there are cores available. 
+The processes share basic information by sharing a small portion of memory that holds a list
+of strategies with an associated time slice.
+The processes repeatedly take a strategy off the list and run it for the associated time slice.
+If a proof is found all processes are stopped, otherwise the process loops to take another
+strategy.
+This way there is no need to repeat the preprocessing or start a new process for each new 
+strategy.''
+
+The performances in the two problem categories are well aligned with the overall performance,
+except for SPASS-SCL's poor performance on problems with equality.
+The new problems provided different challenges for the systems.
+Vampire's monolithic schedule showed its intended ability to solve unseen problems.
+E performed worse on the new problems, failing to solve some new logic calculi (the TPTP 
+{\tt LCL} domain) problems converted from CNF versions that have been in the TPTP problem 
+library for a long time~\cite{RW+23}, hereditary finite set theory (the TPTP {\tt SEV} 
+domain) problems~\cite{Bro24}, and software verification (the TPTP {\tt SWX} domain) problems 
+encoding arithmetic operations~\cite{MMP24}.
+In contrast, Drodi performed relatively well on the new problems, but failed to solve similar 
+problems to E.
+
+The individual problem results (without considering proof output) show that
+12 problems were unsolved,
+no problems were solved by all the systems, and
+36 problems were solved by only one system (19 problems were solved by only the two versions of
+Vampire, and are counted as unique solutions for Vampire~5.0).
+Of the 36 unique solutions,
+22 were by Vampire~5.0,
+8 by Vampire~4.9,
+5 by cvc5,
+and
+1 by CSI\_Enigma.
+A portfolio of the two Vampires, cvc5, and CSI\_Enigma, with 60~s allocated to each, would 
+solve 484 problems.
+
+%--------------------------------------------------------------------------------------------------
+\subsection{The FNT Division}
+\label{FNT}
+%
+Table~\ref{FNTSummary} summarizes the results of the FNT division.
+The Vampires came out ahead of the other systems, by a large margin.
+As in the FOF division, in terms of the numbers of problems solved, Vampire~4.8 showed only
+a small improvement over the \LAST{} winner, Vampire 4.7.
+In contrast to the FOF division, the performance plot\footnote{%
+\url{https://tptp.org/CASC/29/WWWFiles/ResultsPlots.html\#FNTProblems}}
+shows a reversal of the impact of the refreshed strategy schedules in Vampire~4.8, with the
+older Vampire~4.7 having the more gradual increase in the CPU time taken over problems solved.
+The large numbers of problems solved without a model output by Vampire and iProver is
+explained in Section~\ref{TFN}.
+In the FNT division Vampire had 31 saturations disallowed, iProver had 27 saturations disallowed,
+and iProver had 51 explicit Herbrand models disallowed.
+%
+\begin{table*}[tbh]
+\caption{FNT division results}
+\label{FNTSummary}
+\begin{tabular}{lrrrrrr@{}l@{}rrrr}
+\hline
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ & Uniq & New  \\
+                       & /150  & /150   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/50  &/100 &  /16 & /10  \\
+\hline
+Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+FMB4J~0.1              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+Mace4~2026-6A          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+Connect++~0.7.2        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+\hline
+\multicolumn{12}{c}{Demonstration division} \\
+\hline
+\textit{Vampire~4.8}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+\hline
+\end{tabular}
+\end{table*}
+%
+% There are quite large ranges in average time taken (from E's 9.9~s up to cvc5's 35.1~s),
+% SotAC (from E's 0.08 up to Vampire~4.8's 0.33), efficiency (from cvc5's 163 up to Vampire~4.8's
+% 513), and core usage (from cvc5's 0.9 up to Vampire~4.7's 4.7).
+cvc5's low core usage led to its high average time taken and low efficiency.
+The problem category rankings reflect the overall ranking except for E's better performance
+on FNQ problems.
+%
+The individual problem results show that
+only 2 problems were unsolved,
+11 problems were solved by all the systems, and
+26 problems were solved by only one system (21 problems were solved by only the two versions of
+Vampire, and are counted as a unique solutions for Vampire~4.8).
+Of the 26 unique solutions,
+23 were by Vampire~4.8,
+and
+3 by iProver.
+A portfolio approach does not help much -- a combination of Vampire~4.8, iProver, and cvc5,
+with 60~s allocated to each, would solve just 146 problems.
+%
+The ongoing research and development of model finding, in the context of the TPTP World, and
+its impact on CASC, is discussed in Section~\ref{ModelFinding}.
+The conclusion that most affects CASC is that the FNT division will go on hiatus for \NEXT{}.
+%--------------------------------------------------------------------------------------------------
+% \subsection{The EPR Division}
+% \label{EPR}
+% 
+% The EPR division returned from hiatus in \THIS{}.
+% The most recent prior winner was Vampire~4.4 from CASC-27 in 2019. 
+% Unfortunately Vampire~4.4's StarExec package has been lost, and was thus not available for the 
+% demonstration division.
+% A comparison with iProver is a reasonably meaningful comparison system, as iProver dominated the 
+% division from CASC-J4 in 2008 through CASC-J9 in 2018.
+% Recall also that the EPR division does not require solution output (see Section~\ref{Evaluation}).
+% With that context, Table~\ref{EPRSummary} summarizes the results of the EPR division.
+% Vampire~5.0 solved the most problems, outperforming iProver.
+% 
+% \begin{table*}[tbh]
+% \caption{EPR division results}
+% \label{EPRSummary}
+% \begin{tabular}{lrrrrr@{}l@{}rr}
+% \hline
+% ATP System             &Solved & Avg  & Sot  &  WC      & \multicolumn{2}{r}{Core} & EPU  & EPS  \\
+%                        &  /200 & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}& /100 & /100 \\
+% \hline
+% Vampire~5.0            &   186&  9.3 & 0.50& 494     & 5.9      & {\tiny /117} &  96 &  90 \\
+% iProver 3.9.3          &   168 & 18.7 & 0.41 & 202      & 4.5       & {\tiny /142} &  85  &  83  \\
+% CSI\_Enigma 1.0.6      &    98 & 10.2 & 0.09 & 110      & 3.7       & {\tiny  /98} &  32  &  66  \\
+% E 3.3.0                &    88 & 19.1 & 0.09 & 294      & 3.5       & {\tiny  /35} &  29  &  59  \\
+% Drodi 3.6.0            &    80 &  8.5 & 0.04 & 300      & 6.8      & {\tiny  /27} &  25  &  55  \\
+% SPASS-SCL 0.1          &    64 &  4.5& 0.02 & 272      & 3.2       & {\tiny  /21} &  11  &  53  \\
+% \hline
+% \multicolumn{8}{c}{Demonstration division} \\
+% \hline
+% No systems             &       &      &      &          &           &              &      &     \\
+% \hline
+% \end{tabular}
+% \end{table*}
+% 
+% Vampire had a very high SotAC, thanks to it's ability to solve problems that no other systems
+% solved (see below).
+% Vampire also had the highest efficiency, followed by Drodi.
+% Drodi had the highest core usage.
+% E suffered from the bug explained in Section~\ref{THF}, with five EPS problems solved but not
+% counted because the claim of satisfiability came only after the time limit.
+% 
+% Most of the systems did better in the EPS problem category.
+% While there was no requirement for acceptable solution output in the EPR division, most of the
+% systems did output models.
+% The question of what constitutes an acceptable model has been a topic of quite hot debate after
+% models were deemed unacceptable in the TFN division of \LAST{} (see Section~\ref{TFN}).
+% In particular, there are conflicting views of whether or not a saturation is acceptable, e.g.,
+% \cite{Pel03-JSC} claims that saturations are: ``useless from a practical point of view''.
+% Given that a saturation represents a set of Herbrand models, a salient question is whether that
+% set should be a subset of the models of the input formulae.
+% Vampire~5.0's preprocessing steps can lead to a saturation whose models is not a subset, but 
+% a list of ``Definitions and Model Updates'' is provided to convert the saturation into one 
+% whose models are a subset.
+% The competition panel ruled that this combination of ``saturation+updates'' constitutes an 
+% acceptable model.
+% Other types of model output were Vampire's finite models with a domain and mappings, and 
+% iProver's Herbrand models expressed as a term algebra.
+% The distribution of the different types of models produced is interesting:
+% Vampire produced 35 saturations without updates, 26 saturations with updates, and 29 finite 
+% models; iProver produced 26 saturations and 57 Herbrand models;
+% the other systems produced only saturations.
+% Vampire's ability to find finite models gave it a clear advantage.
+% 
+% As noted in Section~\ref{TPTPProblems}, 191 problems with rating 0.00, 2 problems with rating 
+% 0.14, and 11 problems with rating 1.00 were made eligible for the EPR division, all in the EPS
+% problem category.
+% Of those, 72 problems of rating 0.00, both problems of rating 0.14, and 9 problems of rating 
+% 1.00 were selected.
+% Of the 72 problems with rating 0.00, 42 were solved by all the systems, 62 were solved by 
+% Vampire~5.0, and all the problems were solved by at least one system.
+% Of the 9 problems with rating 1.00, only one was solved, by Vampire.
+% 
+% The individual problem results show that
+% 14 problems were unsolved,
+% 55 problems were solved by all the systems, and
+% 13 problems were solved by only one system, all by Vampire~5.0.
+% % Of the 14 unique solutions,
+% % 11 were by Vampire,
+% % and
+% % 1 was by iProver.
+% A portfolio approach cannot improve on the individual systems' results.
+% 
+%--------------------------------------------------------------------------------------------------
+\subsection{The UEQ Division}
+\label{UEQ}
+
+Table~\ref{UEQSummary} summarizes the results of the UEQ division.
+Vampire~5.0 won, with an improvement over Vampire~4.9.
+The recent advances in Vampire's UEQ calculus and implementation~\cite{HKV25,HC+25} have
+contributed significantly to Vampire's strong performance.
+Twee~2.6.0 solved the same number of problems as Vampire~4.9, indicating improvement since
+Twee~2.5.0, which was convincingly beaten by Vampire~4.9 in \LAST{}.
+The Twee developer explained: ``this year's version has fixes for some completeness bugs, 
+which allows some slightly more aggressive redundancy criteria to be used''.
+Only CSE\_E and iProver failed to output acceptable proofs for all problems solved.
+In the case of iProver this was quite severe, moving it from a possible fourth place down to
+the bottom of the competition division (see Section~\ref{Acceptable} for more details).
+
+\begin{table}[tbh]
+\caption{UEQ division results}
+\label{UEQSummary}
+\begin{tabular}{lrrrrrr@{}l@{}rrr}
+\hline
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&  /48 & /79 &       \\
+\hline
+Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+Twee~2.7               &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+CSI\_PP~1.0            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+FindProof~0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+Prover9~2026-6A        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+mrs~0.2.0              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+\hline
+\multicolumn{11}{c}{Demonstration division} \\
+\hline
+\textit{Vampire~5.0}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+\hline
+\end{tabular}
+\end{table}
+
+The SotAC, efficiency, and core usage values were roughly aligned with the division ranking, 
+with the exceptions of iProver's higher SotAC, and Drodi's higher efficiency and core usage.
+It is noteworthy that compared to the other divisions a higher fraction of problems were solved
+with a core usage greater than 1.0.
+The exception was Toma, which makes no use of the multiple cores (the 19 results that appear
+to use multiple cores are an artifact of the competition measurement harness).
+Over the other systems, an average of 90\% of the problems were solved with multiple cores used.
+This is in contrast to, e.g., the FOF division, where the average (excluding the systems that did
+not try to use multiple cores) is 76\%.
+
+The individual problem results (without considering proof output) show that
+4 problems were unsolved,
+59 problems were solved by all the systems, and
+17 problems were solved by only one system (4 problems were solved by only the two versions
+of Vampire, and are counted as unique solutions for Vampire~5.0).
+Of the 17 unique solutions,
+7 were by Vampire~5.0,
+6 by Twee~2.6.0,
+and
+5 by Vampire~4.9.
+A portfolio of Vampire~5.0, Twee, and E, with 80~s allocated to each, would solve 285 problems.
+Although there were no problems that only E solved, its ability to solve problems quickly makes
+it a useful contributor to a portfolio.
+For the suggested portfolio there are 11 problems that only E can solve within 80~s.
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The SLH Division}
+% \label{SLH}
+% 
+% Table~\ref{SLHSummary} summarizes the results of the SLH division.
+% Vampire's improved performance on higher-order problems (see Section~\ref{THF}) showed again here.
+% As noted in Section~\ref{SLHProblems}, 383 of the 1000 problems had not been solved in the
+% testing done before CASC-29, and if many of them were solved in \THIS{} that would indicate
+% progress in the field.
+% Of the 383 problems, 5 were solved in \THIS{}, 5 by Vampire~5.0, 3 by Vampire~4.9, and 1 by E.
+% The lack of progress might be attributed to the lack of tuning that was expected.
+% The \THIS{} design informed the developers that the SLH problems would be taken from the same 
+% problem set as for CASC-29 and \LAST{}, so that the systems could be tuned using the problems 
+% selected for CASC-29 and \LAST{}. 
+% According to the systems' developers, no such tuning was done.
+% % NOT VAMPIRE ... No, we didn't. The schedule has been fixed for the last two years. It has
+% % been trained on the dataset from https://matryoshka-project.github.io/pubs/seventeen.pdf
+% % NOT E ... indeed, I did not.
+% % NOT LEO-III ... Leo-III is not tuned to anything as a general rule
+% 
+% The logs from Leo-III revealed that it suffered from the short 15~s CPU time limit.
+% The developer explained: ``Leo-III runs in a JVM. 
+% The start-up of a JVM uses quite a lot of time, and execution of the Leo-III code is slow at 
+% first as the JVM is loading the required classes on-demand. 
+% This gets better once proof search is running.''
+% A quick experiment was done using a native build that compiles to LLVM code, on two relatively 
+% easy problems on which Leo-III timed out in the competition: {\tt SLH0003\verb|^|1} and 
+% {\tt SLH0004\verb|^|1}.
+% They were solved in 2.4~s and 1.2~s respectively.
+% As the developer said: ``Seems to make a difference ... good spot''.
+% 
+% \begin{table}[tbh]
+% \caption{SLH division results}
+% \label{SLHSummary}
+% \begin{tabular}{lrrrrr}
+% \hline
+% ATP System             & Solns & Solved & Avg  & Sot  & CPU      \\
+%                        & /1000 & /1000  & CPU  & AC   & $\mu$Eff \\
+% \hline
+% Vampire~5.0            &  433 &   434 &  1.9& 0.16& 317     \\
+% E 3.3.0                &  427  &   429  &  2.7 & 0.16& 238      \\
+% \hline
+% \multicolumn{6}{c}{Demonstration division} \\
+% \hline
+% \textit{Vampire 4.9}   &    -  &   441  &  2.0 &    - & 311      \\
+% cvc5 1.3.0             &    -  &   294  &  3.0 & 0.09 & 117      \\
+% Leo-III 1.7.19         &    -  &    38  &  3.3 & 0.01 &  11      \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% The individual problem results (without considering proof output) show that
+% 479 problems were unsolved,
+% 21 problems were solved by all the systems, and
+% 102 problems were solved by only one system (41 problems were solved by only the two versions
+% of Vampire, and are counted as unique solutions for Vampire~5.0).
+% In \LAST{} 258 problems were solved by all the systems: Vampire~4.9, E~3.2.0, cvc5~1.1.3, and
+% the CASC-29 winner E~3.1.
+% The impact of Leo-III in \THIS{} is evident -- 234 problems were solved by all the other systems.
+% Of the 102 unique solutions,
+% 45 were by Vampire~5.0,
+% 36 by E,
+% 13 by cvc5,
+% 7 by Vampire~4.9,
+% and
+% 1 by Leo-III
+% A portfolio approach works well here --
+% a portfolio of E, Vampire~4.9, and cvc5, with 5~s allocated to each, would solve 482 problems.
+% 
+% The SLH division has served it's purpose, to raise awareness of the needs of the Sledgehammer
+% system -- higher-order problems to be solved within a short CPU time limit.
+% Sadly it has not inspired developers to tune to the problem set.
+% The SLH division will go on hiatus from \NEXT{}.
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The ICU Division}
+% \label{ICU}
+% 
+% Table~\ref{ICUSummary} summarizes the results of the ICU division, and Table~\ref{ICUMatrix}
+% shows how many of the problems submitted by each system's developer were solved by each
+% system (the columns correspond to the problem submissions from the corresponding system row).
+% As might have been expected, the Vampires were dominant (see Section~\ref{FOF} for the
+% reasons).
+% Most of the systems solved all or most of their submitted problems, and Vampire~5.0 additionally 
+% solved all of Drodi's problems.
+% CSI\_Enigma and E also solved a reasonable cross-section of the other systems' problems.
+% 
+% \begin{table}[tbh]
+% \caption{ICU division results}
+% \label{ICUSummary}
+% \begin{tabular}{lrrrrrr@{}l@{}}
+% \hline
+% ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core}  \\
+%                        & /100  &  /100  & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{Usage} \\
+% \hline
+% Vampire~5.0            &   69 &    69 & 58.0 & 0.39& 172     & 5.9       & {\tiny /66}  \\
+% E 3.3.0                &   42  &    42  &115.0 & 0.19 &  43      & 6.7       & {\tiny /41}  \\
+% iProver 3.9.3          &   28  &    34  &114.1 & 0.14 &  17      & 7.1       & {\tiny /34}  \\
+% Drodi 4.1.0            &   16  &    21  & 50.5& 0.07 &  41      & 7.2      & {\tiny /20}  \\
+% CSE\_E 1.7             &   16  &    18  &143.5 & 0.06 &   8      & 2.8       & {\tiny /18}  \\
+% Connect++ 0.6.1        &    0  &     1  &417.5 & 0.00 &   0      & 0.0       & {\tiny /0}   \\
+% \hline
+% \multicolumn{6}{c}{Demonstration division} \\
+% \hline
+% \textit{Vampire~4.9}   &    -  &    70  & 21.7 &    - & 195      & 5.9       & {\tiny /67}  \\
+% CSI\_Enigma 1.0.6      &    -  &    46  &124.2 & 0.21 &  28      & 6.3       & {\tiny /46}  \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% \begin{table}[tbh]
+% \caption{ICU matrix}
+% \label{ICUMatrix}
+% \begin{tabular}{lrrrrrrrr}
+% \hline
+% ATP System             & VAM & EEE & IPR & DRO & CSE & CPP & VVA & CSI \\
+% ATP System             & /13 & /13 & /13 & /13 & /13 & /12 & /10 & /13 \\
+% \hline
+% Vampire~5.0            &  13&   7 &  11 &  13&   7 &   0 &   6&  11\\
+% E 3.3.0                &   1 &  13&   3 &   6 &   9&   0 &   0 &  10 \\
+% iProver 3.9.3          &   2 &   2 &  12&  10 &   1 &   0 &   0 &   7 \\
+% Drodi 4.1.0            &   0 &   2 &   3 &  12 &   1 &   0 &   0 &   3 \\
+% CSE\_E 1.7             &   0 &   4 &   4 &   1 &   3 &   0 &   0 &   5 \\
+% Connect++ 0.6.1        &   0 &   0 &   0 &   1 &   0 &   0 &   0 &   0 \\
+% \hline
+% \multicolumn{9}{c}{Demonstration division} \\
+% \hline
+% \textit{Vampire~4.9}   &   8 &   6 &  12 &  13 &  11 &   0 &  10 &   9 \\
+% CSI\_Enigma 1.0.6      &   1 &   9 &   6 &   9 &  11 &   0 &   1 &   9 \\
+% \hline
+% \end{tabular}
+% \end{table}
+% 
+% The SotAC values align with the division ranking, but the efficiency values are less aligned.
+% iProver and CSI\_Enigma had lower efficiencies due to their higher average times taken.
+% Drodi's performance stands out thanks to its low average time taken and high core usage.
+% 
+% The individual problem results (without considering proof output) show that
+% 14 problems were unsolved,
+% no problems were solved by all the systems, and
+% 24 problems were solved by only one system (14 problems were solved by only the two versions
+% of Vampire, and are counted as unique solutions for Vampire~5.0).
+% Of the 24 unique solutions,
+% 18 were by Vampire~5.0,
+% 5 by Vampire~4.9,
+% and
+% 1 by E.
+% A portfolio approach naturally works well here because the problems were purposefully chosen
+% for each system.
+% A combination of the two Vampires and E, with 160~s allocated to each, would solve 86 problems.
+
+%--------------------------------------------------------------------------------------------------
+% \subsection{The LTB Division}
+% \label{LTB}
+%
+% Table~\ref{LTBSummary} summarizes the results of the LTB division.
+% The Vampires solved the most problems, demonstrating the efficacy of their dynamic strategy
+% tuning:
+% The idea is to start by attempting all versions of all problems with a short time limit, to get
+% an initial set of problems solved.
+% Following that an auto-tuning mode starts, repeatedly iterating through the remaining unsolved
+% problems, randomly selecting a variant of an unsolved problem and randomly selecting a strategy
+% for the version, weighted according to how successful the strategies have been so far.
+% The strategy weighting is updated dynamically by giving a successful strategy a weight
+% proportional to how many previous strategies failed to solve the problem version, and giving
+% an unsuccessful strategy a constant penalty.
+% Over time the successful strategies are given higher priority, and different (successful)
+% strategies are used in subsequent attempts on unsolved problems.
+% For \THIS{} Vampire~4.7 added a slight variation that introduced a fresh strategy with a
+% 1\% probability at each attempt, by randomly permuting an existing strategy.
+% If the fresh strategy solved the problem it was kept in the pool of strategies, otherwise it
+% was discarded.
+% The purpose was to inject some randomness into very long runs, but the developer reported that
+% he has ``no idea if it actually helped!''.
+%
+% The selection of problems and problem versions was evidently harder for the systems than in
+% \LAST{}, where Vampire~4.6 solved 78\%, iProver~3.5 70\%, and E~2.6 68\% of the problems,
+% compared to 47\%, 43\%, and 41\% respectively, this year.
+% Polymorphism continues to be a challenge for the ATP systems -- see the \LAST{} report
+%~\cite{SD22-CASC} and the discussion of Table~\ref{VersionCounts} below.
+% % Recall from Section~\ref{LTBProblems} that there were 490 problems that had not been proved
+% % during the problem testing before the competition.
+% In \LAST{} Vampire~4.6 solved 262 problems by finding that they had contradictory axioms.
+% This year Vampire~4.7 solved 146 by contradictory axioms.
+% Of the 146, 41 were TF0, 30 TF1, 66 TX0, 5 TH0, and 4 TH1.
+% Contradictory axioms is a recurring ``feature'' of problems generated by Sledgehammer, where
+% contradictory axioms can appear in proofs of negation, proofs by contradiction, and proofs by
+% case analysis where some cases do not apply.
+%
+% \begin{table}[htb]
+% \caption{LTB division results}
+% \label{LTBSummary}
+% \begin{tabular}{lrrrrr}
+% \hline
+% ATP System           & LTB  &  Avg & Sot  &  WC &Core \\
+%                      &/8000 &  WC  & AC   &$\mu$Eff&usage \\
+% \hline
+% Vampire~4.7          & 3729 & 46.3 & 0.09 & 154 & 5.7  \\
+% iProver 3.6          & 3446 & 50.1 & 0.05 & 126 & 6.1  \\
+% E 3.0                & 3292 & 52.5 & 0.05 & 116 & 1.6  \\
+% \hline
+% \multicolumn{6}{c}{Demonstration division} \\
+% \hline
+% \textit{Vampire~4.6} & 3725 & 46.4 &    - & 163 & 5.7  \\
+% \hline
+% \end{tabular}
+% \end{table}
+%
+% Table~\ref{VersionCounts} shows the numbers of each version of the problems solved.
+% There were 4532 problems solved across all systems and problem versions.
+% There is quite a high degree of specialization to specific problem versions, with Vampire~4.7
+% having the broadest range.
+% The most problems were solved in the lowest logic, with iProver solving all its 3446 problems
+% in TF0.
+% The benefit of being able to solve problems in higher logics is clear, and there appears to be
+% some space for improvement by adding TX1 capability.
+%
+% \begin{table*}[hbt]
+% \caption{Problems solved for each version}
+% \label{VersionCounts}
+% \begin{tabular}{c|R{8mm}R{8mm}R{8mm}R{8mm}|r}
+% \hline
+% Ver    & V~4.7& V~4.6& iPro & E    & Union \\
+% \hline
+% TF0    &  959 & 1948 & 3446 & 2816 &  4008 \\
+% TF1    &  942 & 1307 &    0 &    0 &  1870 \\
+% TX0    & 1541 &    0 &    0 &    4 &  1544 \\
+% TX1    &    0 &    0 &    0 &    0 &     0 \\
+% TH0    &  260 &  449 &    0 &  472 &   999 \\
+% TH1    &   27 &   21 &    0 &    0 &    41 \\
+% \hline
+% Sum    & 3729 & 3725 & 3446 & 3292 &  4532  \\
+% \hline
+% \end{tabular}
+% \end{table*}
+%
+% The Vampires' dynamic strategy tuning approach meant that most problems and problem versions
+% were attempted more than once; only 40 problems were attempted (and thus solved) only once, six
+% problems were solved in the 77th attempt, and one problem was attempted (but not solved) 78 times.
+% While over half of the solutions were found by 12 attempts, the figure shows how the number of
+% problems solved keeps increasing, up to the six solved in the 77th attempt.
+% The multiple attempts on problems is also reflected in Vampire~4.7's accumulated CPU times across
+% the solved problems, from 1155 problems accumulating less than 1~s of CPU time, up to 2 problems
+% that accumulated just over 4000~s of CPU time -- see the performance graph for the LTB
+% division\footnote{%
+% \url{https://tptp.org/CASC/J11/WWWFiles/ResultsPlots.html\#LTBProblems}}.
+% Vampire~4.6 took the same approach as Vampire~4.7 but without the new strategy permutation
+% feature.
+% Vampire~4.6 was disadvantaged by the different versions of problems available in \THIS{}:
+% In \LAST{} there were first-order form (FOF) problems, and no TXF problems.
+% As a result this year Vampire~4.6 spent time looking for FOF problems that did not exist,
+% ignored the TXF problems because TXF was not part of \LAST{}, and attempted the THF problems to
+% a greater extent than Vampire~4.7, as is evident in Table~\ref{VersionCounts}.
+% E also attempted more than one version of each problem, by first trying the TF0 versions, then
+% the TX0 versions of the remaining unsolved problems, and finally the TH0 versions of the
+% remaining still unsolved problems.
+% E used a dynamic scheduling algorithm that gave each attempt the remaining time divided by the
+% number of remaining versions of unsolved problems.
+% E solved only a very small number of TX0 problems; the developer believes this was caused by E
+% converting TX0 problems to TF0 problems in preprocessing, resulting in problems that were
+% nearly identical to the TF0 problems on which the strategies had already failed in the last
+% iteration.
+% iProver attempted only the TF0 versions of the problems.
+%
+% % \begin{figure}[ht!]
+% % \begin{center}
+% % \includegraphics[width=0.4\columnwidth]{V47AttemptsSolvedPlot}
+% % \caption{Vampire~4.7 problems solved by attempts}
+% % \label{V47AttemptsSolvedPlot}
+% % \end{center}
+% % \end{figure}
+%
+% The individual problem results show that
+% 3468 problems were unsolved,
+% 2552 problems were solved by all the systems,
+% and 919 problems were solved by only one system
+% (263 problems were solved by only the two versions of Vampire, and are counted as
+% unique solutions for Vampire~4.7).
+% Of the 919 unique solutions,
+% 425 were by Vampire~4.7,
+% 175 were by Vampire~4.6,
+% 169 by iProver,
+% and
+% 150 by E.
+% As the systems have different approaches to solving the problems, a portfolio approach that shares
+% the available time cannot be (easily) considered.
+% However, Table~\ref{VersionCounts} shows that giving all systems the full 172800~s solves 4532
+% problems.
+% Interestingly, just Vampire~4.6 and iProver~3.6 together would solve 4141 problems, and adding
+% Vampire~4.7 to that mix would solve 4382 problems.
+%
+%--------------------------------------------------------------------------------------------------
+\section{System Descriptions}
+\label{Systems}
+
+Each year the competition report features short system descriptions of systems that stand out in
+some way.
+For \THIS{} the salient systems are the newcomers that performed relatively well (as newcomers)
+in the FOF division: FindProof~0.1, SUPr~1.0, and mrs~0.2.0.
+These short descriptions of the systems were written by their entrants.
+
+\textbf{FindProof} is 
+
+\textbf{SUPr} is
+
+\textbf{mrs} is 
+
+%--------------------------------------------------------------------------------------------------
+\section{Acceptable Proofs}
+\label{Acceptable}
+
+The CASC-J12 report noted the benefits of moving towards a ``verified track'' in CASC, and in 
+\LAST{} first steps were taken, to check three aspects of proofs:
+\begin{packed_enumerate}
+\item Solutions must be written in the TPTP language~\cite{Sut23-IGPL}.
+\item Solutions must be written in the TPTP formats for derivations~\cite{SS+06}, tableaux, and 
+      models~\cite{SS+23-LPAR}.
+\item Solutions must be structurally correct, e.g., derivations must be acyclic, finite models must
+      have domains.
+\end{packed_enumerate}
+The impact was interesting, and it was clear that the ATP systems needed to further improve their
+proof output.
+In \THIS{} the TPTP4X parser~\cite{Sut10} and the GDV proof verifier~\cite{Sut06} were made 
+available to the systems' developers so that they could check their proofs.
+Despite this, many proofs were still syntactically or structurally flawed.
+The \THIS{} panel ruled that the documentation of the TPTP proof format was inadequate, which
+meant many of those proofs were eventually counted.
+
+What got better?
+
+There are 482 proofs that failed structural checking.
+The reasons for failure are varied: 
+12 because a refutation has a root node that is not {\tt \$false},
+30 because there are duplicate formula names in the proof,
+91 because an introduced definition is incorrectly documented,
+172 because an inference step references a non-existent parent,
+and
+177 because of syntax errors in the formulae.
+As can be seen from Table~\ref{FailedVerification}, the impact was greatest on iProver, which
+had all 91 of the cases of incorrect definition documentation, and 147 proofs that referenced 
+non-existent parents.
+These seem like easy fixes, which bodes well for iProver in \NEXT{}.
+Drodi was also strongly impacted, with 120 proofs containing formulae with syntax errors.
+The developer agreed: ``all those 120 problems had bad solutions'', and it is expected that this 
+will be fixed ready for \NEXT{}.
+
+Discussion of granularity:
+It was observed that many of the ATP systems' proofs include ``inference steps'' that are calls 
+to SAT/ATP/SMT systems, which infer {\tt \$false} to end the ATP system's refutation.
+Drodi calls an internally implemented SAT system.
+E calls the SAT system PicoSAT~\cite{Bie08}.
+iProver calls the SAT system MiniSat~\cite{ES04} and the SMT system Z3~\cite{dMB08}.
+Leo-III calls the ATP system E.
+Vampire~5.0 calls the SAT systems MiniSat and CaDiCal~\cite{BF+24} (the choice depends on the 
+proving context, as one of the developers explained: ``MiniSat has a quick-and-dirty flavour 
+in our experience, CaDiCaL "thinks" a bit harder''), and the SMT system Z3. 
+In most cases these steps in the ATP systems' proofs have a very long parent list.
+The most parents listed in the SAT/ATP/SMT systems' steps were in
+E's refutation for {\tt GEG019\verb|^|1} that ends with a PicoSAT step with 114 parents,
+Leo-III's refutation for {\tt SWW474\verb|^|3} that ends with an E step with 950 parents,
+Drodi's refutation for {\tt ALG104+1} that ends with a SAT step with 1219 parents,
+Vampire~5.0's refutation for {\tt SWW593\_2} that ends with a Z3 step with 5617 parents,
+and
+iProver's refutation for {\tt NUM862+1} that ends with a Z3 step with 72367 parents!
+Discussions with the systems' developers revealed that these steps are typically reported with
+the parent list containing all the formulae that were sent to the SAT/ATP/SMT system, and it is
+not known which of them were used by the SAT/ATP/SMT system to infer {\tt \$false}.
+A limited analysis revealed that typically only a subset of the listed parents were used by the 
+SAT/ATP/SMT system to infer {\tt \$false}.
+For examples, 
+Leo-III's use of E needed only 14 of the 950 reported parents,
+Drodi's use of it's SAT solver needed only 663 of the 1219 reported parents,
+and
+Vampire~5.0's use of either MiniSat or CaDiCaL (the proof does not indicate which) needed only
+194 of the 5617 parents.
+iProver's use of Z3 defied analysis because of the size of the parent list!
+Only E and Drodi make an effort to extract the formulae that were actually used by the 
+SAT/ATP/SMT system.
+E precisely extracts the unsatisfiable core found by PicoSAT, and thus the parent list contains 
+only the formulae that were used.
+Drodi makes an effort to minimize the parent list from its SAT solver steps, but the developer 
+admitted: ``I cannot guarantee that this set is the minimum possible, but I used the best algorithm 
+I could design to minimize it''.
+
+In an effort to further improve the quality of ATP systems'proofs, \NEXT{} will require the 
+systems to aim to report only the parents that are used in each inference step of a proof. 
+It is clear that the systems can only ``aim to'' comply, because precisely extracting the set of 
+parents that were used by a SAT/ATP/SMT system might not be possible in all cases.
+From the organizational side, checking conformance to that requirement might not be possible in 
+all cases. 
+We'll all just do the best we can.
+
+Even with a minimization of the parents list in inference steps, it is debatable whether a 
+successful call to a SAT/ATP/SMT system is really an ``inference step''.
+The SAT/ATP/SMT systems typically build a proof of their own, and that proof structure is not 
+shown in the ATP system's proof that reports the step.
+It would be preferable for the SAT/ATP/SMT system's proof to be exposed, and grafted into the
+ATP system's proof.
+An interesting two-level example starts with Leo-III's refutation for {\tt GEG019\verb|^|1} that 
+ends with an E step with nine parents.
+It is quite possible that the E step is the one mentioned above, that ends with a PicoSAT step 
+with 114 parents.
+Whether or not Leo-III should be expected to burrow down to expose the PicoSAT proofs within 
+E proofs is a matter for debate -- it will be the focus of the TPTP Tea Party at IJCAR in 2026.
+Grafting in the proofs of subsystems might be required in future CASCs.
+
+These more rigorous requirements for proofs in CASC resonate with the ProoVer proof verifier 
+competition that was held as a companion competition to \THIS{}.
+ProoVer is decribed in Section~\ref{ProoVer}.
+
+%--------------------------------------------------------------------------------------------------
+\section{The ProoVer Competition}
+\label{ProoVer}
+
+
+%--------------------------------------------------------------------------------------------------
+\section{Conclusion}
+\label{Conclusion}
+
+\THIS{} was the \NTHCOMPETITION{} annual evaluation of fully automatic, classical logic, Automated
+Theorem Proving (ATP) systems.
+% The competition provided exposure for ATP systems both within and beyond the
+% ATP community, and provided an overview of the implementation state of fully
+% automatic classical logic ATP systems.
+\THIS{} fulfilled its objectives by evaluating the relative capabilities of ATP systems,
+and stimulating development and interest in ATP.
+The highlight of \THIS{} was the structural checking of proofs, which revealed flaws in many
+systems proofs.
+This will lead to improvements in proof output over the next year.
+Despite the continued dominance of the Vampire systems, the developer and user communities have
+remained engaged with CASC.
+A key to this is CASC's stimulating and interactive nature: a live competition run during one day 
+of the conference; opportunities for users and observers to be involved; a social dinner where 
+entrants and associates can interact; distinctive T-shirts that identify system developers and 
+others who are part of the competition.
+
+While the design of CASC is mature and stable, each year's experiences lead to ideas for changes
+and improvements.
+Changes being planned for \NEXT{} are:
+\begin{packed_itemize}
+\item Only two installation package will be allowed for each entry -- one for theorem proving/
+      unsatisfiability checking, and one for coutermodel finding/satisfiability checking.
+\item Proof checking will be extended to include:
+      \begin{packed_itemize}
+      \item Leaves must come from the problem.
+      \item \smalltt{inference} and \smalltt{introduced} records must be correctly formatted.
+      \item All new symbols must be correctly and unique documented in an \smalltt{introduced} 
+            record.
+      \item Skolemization steps must be correctly documented in an \smalltt{inference} record.
+      \end{packed_itemize}
+\item Syntax checking of proofs will be done at runtime during the competition.
+\item No sample proofs will be requested, to avoid any mistaken belief that an approved sample
+      proof implies that all proofs will be accepted.
+\end{packed_itemize}
+
+As always, the ongoing success and utility of CASC depends on ongoing contributions of problems
+to the TPTP.
+The automated reasoning community is encouraged to continue making contributions of all types of
+problems.
+
+%--------------------------------------------------------------------------------------------------
+% \begin{acks}
+% This material is based upon work supported by the National Science Foundation
+% under Grant No. 1730419.
+% \end{acks}
+%--------------------------------------------------------------------------------------------------
+\bibliographystyle{ios1}
+\bibliography{Bibliography}
+%--------------------------------------------------------------------------------------------------
+\end{document}
+%--------------------------------------------------------------------------------------------------
