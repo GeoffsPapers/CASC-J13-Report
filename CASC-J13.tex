@@ -1058,19 +1058,12 @@ A full analysis of the reasons for the failures is given in Section~\ref{Accepta
 \label{THF}
 
 Table~\ref{THFSummary} summarizes the results of the THF division.
-Vampire~5.0 won the division, but solved less problems than the \LAST{} winner Vampire~4.9.
-The developers thought there should be a minimal difference between the two versions, because
-they use the same source code.
-They suggested that a different compiler version (or compiler flags) was used to build the 
-Vampire~5.0 binary, or that, while unlikely, the randomized strategies in the schedules might 
-have resulted in plain bad luck for Vampire~5.0.
-It is impressive that Vampire~5.0 was able to solve so many problems, which necessarily include 
-more difficult problems, with the lowest average time taken (but again,
-Vampire~4.9 outperformed Vampire~5.0 in this respect).
-The versions of Vampire up to and including 5.0 have separate binaries for first-order and 
+Vampire~5.0.1 won the division, but solved less problems than the \LAST{} winner Vampire~5.0,
+which in \LAST{} had solved less problems than the preceding CASC-J12 winner!
+The versions of Vampire up to and including 5.0.1 have separate binaries for first-order and 
 higher-order logics.
-According to the Vampire developers the two branches of the source code are being merged so that
-for \NEXT{} there will be a single binary for all the competition divisions.
+The higher-order components of Vampire are being incrementally merged into the main branch
+of development, which is clearly producing some growing pains.
 
 \begin{table*}[tbh]
 \caption{THF division results}
