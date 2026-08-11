@@ -1068,23 +1068,26 @@ of development, which is clearly producing some growing pains.
 \begin{table*}[tbh]
 \caption{THF division results}
 \label{THFSummary}
-\begin{tabular}{lrrrrrrr@{}l@{}rrrrr}
+\begin{tabular}{lrrrrrr@{}l@{}rrrrrr}
 \hline
-ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ & Uniq & New & Gr'ty \\
-                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /31 & /31 &       \\
+ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ & Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /31 & /31 &       \\
 \hline
-Vampire~5.0.1          &  352  &  352   &  6.5& 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &    3 &  31 &  TBA  \\
-Zipperp'n~2.1.9999     &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Leo-III~1.8.0          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-LEO-II~1.7.0           &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Vampire~5.0.1          &  340  &  352   &  6.5 & 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &    3 &  31 & 10.1  \\
+Zipperp'n~2.1.9999     &  TBA  &  TBA   &  TBA &  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+E~3.5.1                &  323  &  324   & 10.7 & 0.29 & 593      & 4.2       & {\tiny /129} &   73 & 251 &  23 &  28 & 26.4  \\
+Leo-III~1.8.0          &  137  &  160   & 14.4 & 0.07 &  83      & 2.5       & {\tiny /160} &   38 & 122 &   1 &   7 & 53.3  \\
+LEO-II~1.7.0           &   67  &   67   & 11.0 & 0.01 & 110      & 0.0       & {\tiny /0  } &   26 &  41 &   0 &   0 & 84.8  \\
 \hline
 \multicolumn{13}{c}{Demonstration division} \\
 \hline
-\textit{Vampire~5.0}   &  354  &  354   &  6.8 &   - & 576      & 4.2       & {\tiny /238} &   70 & 284 &   3 &  31 &  TBA  \\
+\textit{Vampire~5.0}   &  344  &  354   &  6.8 &    - & 576      & 4.2       & {\tiny /238} &   70 & 284 &   3 &  31 & 14.8  \\
 \hline
 \end{tabular}
 \end{table*}
+
+NOTES:
+E uniquely solved a 19/20 of GRA Ramsey problems from TNE.
 
 Vampire~5.0 has the best results over almost all measures.
 The exception is core usage, where Zipperposition solved more problems using multiple cores,
@@ -1329,34 +1332,44 @@ of iProver and E.
 \begin{table*}[tbh]
 \caption{FOF division results}
 \label{FOFSummary}
-\begin{tabular}{lrrrrrr@{}l@{}rrrrr}
+\begin{tabular}{lrrrrrr@{}l@{}rrrrrr}
 \hline
-ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ & Uniq & New & Gr'ty \\
-                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /48 & /79 &       \\
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ  &Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300  & /48 & /79 &       \\
 \hline
-Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-CSI\_PP~1.0            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Prover9~2026-6A        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-LisaST~0.9             &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-FindProof~0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-SUPr~1.0               &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-mrs~0.2.0              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-VIP~1.718              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Connect++~0.7.2        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-SATResetCoP~1.0        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-SPASS-SCL~0.1.1        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Zipperp'n 2.1.9999     &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Vampire~5.0.1          &  380  &  381   &  9.5 & 0.58 & 309     & 3.5       & {\tiny /346} &   94 & 287 &  45 &  71 &  6.0  \\
+E~3.5.1                &  264  &  264   & 10.6 & 0.32 & 419     & 4.9       & {\tiny /142} &   75 & 189 &   0 &  55 &  4.3  \\
+CSI\_PP~1.0            &  264  &  264   & 14.1 & 0.32 & 406     & 4.6       & {\tiny /139} &   76 & 188 &   0 &  55 &  4.4  \\
+iProver~3.9.4          &  222  &  250   & 23.0 & 0.30 & 176     & 4.0       & {\tiny /231} &   64 & 186 &   0 &  54 &265.6  \\
+Drodi~4.1.1            &  214  &  215   & 20.3 & 0.24 & 312     & 6.0       & {\tiny /126} &   60 & 155 &   0 &  40 & 10.3  \\
+Prover9~2026-6A        &  139  &  143   & 13.0 & 0.13 & 208     & 5.3       & {\tiny /98 } &   50 &  93 &   0 &  25 &  2.0  \\
+LisaST~0.9             &  127  &  199   & 18.5 & 0.21 &  74     & 5.1       & {\tiny /192} &   54 & 145 &   0 &  52 &  2.0  \\
+FindProof~0.1          &   91  &   91   & 19.8 & 0.07 &  46     & 6.4       & {\tiny /91 } &   26 &  65 &   0 &  18 & 13.3  \\
+SUPr~1.0               &   73  &   73   & 16.7 & 0.05 &  92     & 4.0       & {\tiny /54 } &   22 &  51 &   0 &  21 &  3.7  \\
+mrs~0.2.0              &   71  &   79   & 12.6 & 0.05 & 106     & 5.1       & {\tiny /59 } &   23 &  56 &   0 &  18 &  2.5  \\
+VIP~1.718              &   32  &   32   & 26.1 & 0.01 &  34     & 0.0       & {\tiny /0  } &   13 &  19 &   0 &   8 &  2.0  \\
+Connect++~0.7.2        &   24  &   64   & 60.0 & 0.04 &  22     & 0.0       & {\tiny /0  } &   27 &  37 &   0 &  13 &  2.0  \\
+SATResetCoP~1.0        &   20  &   20   & 70.5 & 0.01 &   3     & 0.0       & {\tiny /0  } &   3A &  17 &   0 &   9 &456.0  \\
+SPASS-SCL~0.1.1        &   14  &   14   & 21.9 & 0.01 &  12     & 0.0       & {\tiny /0  } &   14 &   0 &   0 &   0 &  4.7  \\
+Zipperp'n 2.1.9999     &  TBA  &  TBA   &  TBA &  TBA & TBA     & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
 \hline
 \multicolumn{13}{c}{Demonstration division} \\
 \hline
-\textit{Vampire~5.0}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-Prover9~1109a          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+\textit{Vampire~5.0}   &  328  &  328   &  8.1 &    - & 538     & 3.9       & {\tiny /236} &   80 & 248 &   3 &  70 & 13.9  \\
+Prover9~1109a          &    -  &   92   & 14.7 &    - & 134     & 0.0       & {\tiny /0  } &   23 &  69 &   0 &  22 &  2.0  \\
 \hline
 \end{tabular}
 \end{table*}
+
+NOTES:
+CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
+Big drop from Drodi to Prover9.
+LisaST high number solved fast. LisaST lost lots.
+FindProof good core usage. All proofs fast.
+mrs relatively high efficiency.
+VIP large startup time? Look at size of binary. No core usage, none fast.
+ConnectPP lost lots. Check! Huge time - check! No core usage, none fast.
+SATResetCoP huger time - check! HUGE granularity.
 
 The Vampires had the lowest average wall clock times, and correspondingly the highest efficiencies.
 Vampire~5.0 had a high SotAC, thanks to it's ability to solve problems that no other systems
@@ -1565,25 +1578,30 @@ the bottom of the competition division (see Section~\ref{Acceptable} for more de
 \label{UEQSummary}
 \begin{tabular}{lrrrrrr@{}l@{}rrr}
 \hline
-ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & Uniq & New & Gr'ty \\
-                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&  /48 & /79 &       \\
+ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} &Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}& /30 & /21 &       \\
 \hline
-Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-Twee~2.7               &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-CSI\_PP~1.0            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-FindProof~0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-Prover9~2026-6A        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
-mrs~0.2.0              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+Vampire~5.0.1          &  370  &  370   & 11.8 & 0.40 & 222     & 4.1       & {\tiny /351} &  17 &  12 &  7.9  \\
+Twee~2.7               &  286  &  286   &164.3 & 0.24 & 225     & 6.4       & {\tiny /273} &   2 &   7 &  2.0  \\
+CSI\_PP~1.0            &  258  &  258   & 21.5 & 0.19 & 261     & 5.0       & {\tiny /223} &   1 &   9 & 10.4  \\
+E~3.5.1                &  255  &  255   & 20.4 & 0.19 & 244     & 5.3       & {\tiny /226} &   1 &   8 & 12.3  \\
+FindProof~0.1          &  251  &  269   & 25.3 & 0.21 & 118     & 6.5       & {\tiny /269} &   1 &   4 &  2.3  \\
+Prover9~2026-6A        &  207  &  208   & 21.4 & 0.15 & 202     & 6.2       & {\tiny /179} &   4 &  10 &  2.0  \\
+iProver~3.9.4          &  198  &  198   & 37.9 & 0.12 &  73     & 5.1       & {\tiny /189} &   1 &   7 & 10.5  \\
+Drodi~4.1.1            &  163  &  163   & 37.2 & 0.09 & 127     & 6.7       & {\tiny /143} &   0 &   3 &  4.2  \\
+mrs~0.2.0              &   75  &   76   & 36.8 & 0.02 &  33     & 5.8       & {\tiny /71 } &   0 &   2 &  3.8  \\
 \hline
 \multicolumn{11}{c}{Demonstration division} \\
 \hline
-\textit{Vampire~5.0}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA}  & TBA & TBA &  TBA  \\
+\textit{Vampire~5.0}   &  322  &  322   & 16.6 &    - & 295     & 5.2       & {\tiny /310} &   3 &  13 &  8.7  \\
 \hline
 \end{tabular}
 \end{table}
+
+NOTES:
+CSI on the coattails of E.
+FindProof lost some. Lots of core usage.
+Drodi good core usage.
 
 The SotAC, efficiency, and core usage values were roughly aligned with the division ranking, 
 with the exceptions of iProver's higher SotAC, and Drodi's higher efficiency and core usage.
