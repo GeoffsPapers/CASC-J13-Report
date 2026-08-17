@@ -1433,26 +1433,38 @@ and iProver had 51 explicit Herbrand models disallowed.
 \label{FNTSummary}
 \begin{tabular}{lrrrrrr@{}l@{}rrrr}
 \hline
-ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ & Uniq & New  \\
-                       & /150  & /150   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/50  &/100 &  /16 & /10  \\
+ATP System             & Solns & Solved & Avg  &  Sot & WC       & \multicolumn{2}{r}{Core} & FNN & FNQ &Uniq & New  \\
+                       & /150  & /150   & WC   &  AC  & $\mu$Eff & \multicolumn{2}{r}{usage}& /50 &/100 & /16 & /10  \\
 \hline
-Vampire~5.0.1          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-iProver~3.9.4          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-FMB4J~0.1              &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-Mace4~2026-6A          &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-E~3.5.1                &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-Drodi~4.1.1            &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
-Connect++~0.7.2        &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+Vampire~5.0.1          &  143  &  143   & 11.9 & 0.58 & 434      & 4.7       & {\tiny /87 } &  45 &  98 &  14 &  10  \\
+iProver~3.9.4          &   71  &   71   & 25.5 & 0.19 & 176      & 3.3       & {\tiny /53 } &  15 &  56 &   0 &   8  \\
+FMB4J~0.1              &   51  &   51   &  9.3 & 0.11 & 241      & 1.3       & {\tiny /33 } &   8 &  43 &   0 &   7  \\
+Mace4~2026-6A          &   44  &   45   &  9.0 & 0.10 & 229      & 4.2       & {\tiny /12 } &   8 &  37 &   0 &   8  \\
+E~3.5.1                &   42  &   42   &  9.4 & 0.12 & 151      & 4.3       & {\tiny /22 } &  17 &  25 &   0 &   2  \\
+Drodi~4.1.1            &   41  &   41   &  6.1 & 0.09 & 175      & 4.9       & {\tiny /17 } &   7 &  34 &   0 &   2  \\
+Connect++~0.7.2        &    -  &   11   &  0.4 & 0.01 &  73      & 0.0       & {\tiny /0  } &   3 &   8 &   0 &   0  \\
 \hline
 \multicolumn{12}{c}{Demonstration division} \\
 \hline
-\textit{Vampire~4.8}   &  TBA  &  TBA   &  TBA&  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA  \\
+\textit{Vampire~4.8}   &  127  &  131   & 17.4 &    - & 411      & 5.6       & {\tiny /82 } &  45 &  86 &  2  &  10  \\
 \hline
 \end{tabular}
 \end{table*}
 
 NOTES:
 Mace4 lost one on output timeout
+FMB4J is fast. Good with equality.
+Mace4 good core usage.
+E good core usage. Better FNN.
+Drodi fast. Best core usage.
+
+Vampire~5.0.1 84 FMo, 59 Sat.
+Vampire~4.8   91 FMo, 36 Sat
+iProver~3.9.4 65 Mod,  6 Sat
+FMB4J~0.1     51 FMo
+Mace4~2026-6A 44 FMo
+E~3.5.1               42 Sat
+Drodi~4.1.1           41 Sat
 
 % There are quite large ranges in average time taken (from E's 9.9~s up to cvc5's 35.1~s),
 % SotAC (from E's 0.08 up to Vampire~4.8's 0.33), efficiency (from cvc5's 163 up to Vampire~4.8's
@@ -1941,6 +1953,11 @@ These short descriptions of the systems were written by their entrants.
 %--------------------------------------------------------------------------------------------------
 \section{Acceptable Proofs}
 \label{Acceptable}
+
+SATResetCoP feature:
+Most hig granularity is the \smalltt{satresetcop\_premises} that builds a conjunction of the
+axioms and negated conjecture. I MUST FIND OUT WHAT THAT IS ALL ABOUT. 
+Greatest is 8006 parents in \smalltt{CSR058+3}, average 531, median 44.
 
 The CASC-J12 report noted the benefits of moving towards a ``verified track'' in CASC, and in 
 \LAST{} first steps were taken, to check three aspects of proofs:
