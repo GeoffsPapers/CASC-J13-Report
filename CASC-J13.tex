@@ -92,8 +92,8 @@ automated theorem proving\sep competition
 %--------------------------------------------------------------------------------------------------
 \paragraph{Author contributions:} The paper, except for Section~\ref{Systems}, was written by 
 the paper author.
-The three subsection of Section~\ref{Systems} were written by Michael Rawson (hopCoP), 
-Simon Guilloud (Lisa's Tableau Tactic), and Christoph Weidenbach (SPASS-SCL-FOL 0.1).
+The three subsections of Section~\ref{Systems} were written by Nicolas Murzin (FindProof), 
+Olivier Roland (mrs), and Theodore Kim (SUPr).
 
 \paragraph{Statements and Declarations:} 
 Ethical considerations - Not applicable.
@@ -141,10 +141,9 @@ in Lisbon, Portugal.
 It was the \NTHCOMPETITION{} competition in the CASC series; see~\cite{Sut26-CASC} and citations
 therein, and the CASC web site \href{http://tptp.org/CASC}{\smalltt{tptp.org/CASC}}, for 
 information about previous CASCs.
-The ``FLoC Olympic Games'' hosted HOWMANY competitions in
-various areas of logic and reasoning, which provided the \THIS{} entrants
-with opportunities to observe and interact with developers of other types
-of reasoning tools.
+The ``FLoC Olympic Games'' hosted fifteen competitions in various areas of logic and reasoning, 
+which provided the \THIS{} entrants with opportunities to observe and interact with developers 
+of other types of reasoning tools.
 % , and~\cite{SS06-SoCASC} for a historical overview and analysis of the
 % first ten CASCs.
 
@@ -460,8 +459,8 @@ Zipperp'n 2.1.9999        &THF&FOF&   &   & Jasmin Blanchette
 \label{Computers}
 
 The StarExec Miami computers used for the competition have
-two octa-core Intel(R) Xeon(R) CPU E5-2620 v4 @ 2.10GHz CPUs, with hyperthreading (two 
-threads per core),
+two octa-core Intel(R) Xeon(R) CPU E5-2620~v4 @~2.10GHz CPUs, with hyperthreading (two threads 
+per core),
 256GiB memory,
 the Ubuntu 24.04.3 LTS operating system, with Linux kernel 6.8.0-71-generic.
 There were 30 computers available for \THIS{}, i.e., 60 CPUs.
@@ -476,9 +475,9 @@ The StarExec Miami computers used for CASC are the same as are publicly availabl
 community, which allows system developers to test and tune their systems in exactly the same 
 environment as is used for the competition.
 
-HOWMANY In \THIS{} a total of 2071 CPU hours were used in 431 wall clock hours, i.e., 7.2 hours spread
+In \THIS{} a total of 1618 CPU hours were used in 453 wall clock hours, i.e., 5.9 hours spread
 over the 60 CPUs, which allowed the competition to run live in one conference day.
-For the problems that were solved, 267 CPU hours were used in 53 wall clock hours.
+For the problems that were solved, 185 CPU hours were used in 34 wall clock hours.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{Problems for the TPTP-based Divisions}
@@ -847,7 +846,7 @@ The competition panel decides whether or not the systems' solutions are ``accept
 The criteria include:
 \begin{packed_itemize}
 \item Proofs should not use a TPTP language that is more expressive than that of the problem.
-\item Proofs must be in TPTP format~\cite{Sut07-CSR}.
+\item Proofs must be syntactically correct in TPTP format~\cite{Sut07-CSR}.
 \item Proofs must be structurally correct:
       \begin{packed_itemize}
       \item Annotated formulae must be uniquely named.
@@ -856,9 +855,6 @@ The criteria include:
       \item Proofs must have formulae from the problem as leaves, and end at the conjecture (for
             axiomatic proofs) or \smalltt{\$false} formulae (for proofs by contradiction,
             e.g.,~CNF refutations and closed tableau).
-      \item Proofs that negate the conjecture must correctly annotate the step as
-            \smalltt{status(cth)} and have a a single parent with the role \smalltt{conjecture}.
-      \item Inference steps must list exactly those parents that are used in the inference.
       \item Proofs that make \smalltt{assumption}s must propagate and eventually discharge the
             assumptions.
       \end{packed_itemize}
@@ -1064,72 +1060,70 @@ The versions of Vampire up to and including 5.0.1 have separate binaries for fir
 higher-order logics.
 The higher-order components of Vampire are being incrementally merged into the main branch
 of development, which is clearly producing some growing pains.
+Zipperposition ran the same code as it has since CASC-29 in 2023, and its proofs that were 
+acceptable in the past are now unacceptable due to the stricter requirements.
+These flaws in the proof are quite simple, e.g., many of them have duplicate formulae names, in 
+some cases duplicate formulae, and others have the SZS \smalltt{status(esa)} when negating 
+the conjecture, while it should be \smalltt{status(cth)}.
+These are flaws that should be easily fixed, so that Zipperposition is upgraded for \NEXT{}.
+The 13 missing proofs from Leo-III are interesting: they come from Leo-III using bracketed
+quantifiers as terms that can be applied, e.g., \smalltt{((!) @ \$i)}, which might be 
+acceptable as a higher-order notion, but is not permitted in the TPTP syntax.
 
 \begin{table*}[tbh]
 \caption{THF division results}
 \label{THFSummary}
 \begin{tabular}{lrrrrrr@{}l@{}rrrrrr}
 \hline
-ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ & Uniq & New & Gr'ty \\
-                       & /400  & /400   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 &  /31 & /31 &       \\
+ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ &Uniq & New & Gr'ty \\
+                       & /400  & /400   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 & /31 & /31 &       \\
 \hline
-Vampire~5.0.1          &  340  &  352   &  6.5 & 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &    3 &  31 & 10.1  \\
-Zipperp'n~2.1.9999     &  TBA  &  TBA   &  TBA &  TBA & TBA      & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
-E~3.5.1                &  323  &  324   & 10.7 & 0.29 & 593      & 4.2       & {\tiny /129} &   73 & 251 &  23 &  28 & 26.4  \\
-Leo-III~1.8.0          &  137  &  160   & 14.4 & 0.07 &  83      & 2.5       & {\tiny /160} &   38 & 122 &   1 &   7 & 53.3  \\
-LEO-II~1.7.0           &   67  &   67   & 11.0 & 0.01 & 110      & 0.0       & {\tiny /0  } &   26 &  41 &   0 &   0 & 84.8  \\
+Vampire~5.0.1          &  340  &  352   &  6.5 & 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &   3 &  31 & 10.1  \\
+E~3.5.1                &  323  &  324   & 10.7 & 0.29 & 593      & 4.2       & {\tiny /129} &  73 & 251 &  23 &  28 & 26.4  \\
+Leo-III~1.8.0          &  137  &  160   & 14.4 & 0.07 &  83      & 2.5       & {\tiny /160} &  38 & 122 &   1 &   7 & 53.3  \\
+LEO-II~1.7.0           &   67  &   67   & 11.0 & 0.01 & 110      & 0.0       & {\tiny /0  } &  26 &  41 &   0 &   0 & 84.8  \\
+Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & 5.7       & {\tiny /268} &  67 & 280 &   1 &  29 &    -  \\
 \hline
 \multicolumn{13}{c}{Demonstration division} \\
 \hline
-\textit{Vampire~5.0}   &  344  &  354   &  6.8 &    - & 576      & 4.2       & {\tiny /238} &   70 & 284 &   3 &  31 & 14.8  \\
+\textit{Vampire~5.0}   &  344  &  354   &  6.8 &    - & 576      & 4.2       & {\tiny /238} &  70 & 284 &   3 &  31 & 14.8  \\
 \hline
 \end{tabular}
 \end{table*}
 
-NOTES:
-E uniquely solved a 19/20 of GRA Ramsey problems from TNE.
-
-Vampire~5.0 has the best results over almost all measures.
-The exception is core usage, where Zipperposition solved more problems using multiple cores,
-and had the highest core usage.
+Zipperposition had the highest average time taken, but made the bext use of the multiple cores.
 E solved the most problems before starting to use multiple cores, and had good core usage
-when it did use multiple cores.
 Leo-III used multiple cores for all the problems it solved.
-cvc5's high average time taken is a consequence of it's sequential strategy schedule that uses
-a single core (the one result that appears to use 1.5 cores is an artifact of the competition 
-measurement harness).
-% which occurs when the CPU and wall clock usages are very close).
-The problem category rankings are generally aligned with the overall ranking, with the exception
-that Zipperposition had better performance on problems without equality.
+This is the first CASC in which the new granularity data has been provided, motivated by the
+very last numbers of parents listed in individual inferences of \LAST{}.
+The report on \LAST{} noted that final calls to external ATP systems were typically reported 
+with all the clauses sent to the external system listed as parents.
+The most extreme case listed 72367 parent clauses that were sent to the external Z3 system.
+The granularity figures for the THF division (recall, they are the average maximal number of
+parents in inferences over problems solved with acceptable proof output) are not extreme.
+Deeper analysis revealed that LEO-II and Leo-III often had inference with many parents, by
+virtue of calls to the E system.
 
-The detailed results show that E solved eight problems ``at the time limit''.
-An examination of E's logs revealed that the problems were actually solved in less time, but the 
-proof was printed only when the time limit was reached.
-In two cases, one in each problem category, the claim of theoremhood was output only after the
-time limit, and thus not counted as solved.
-The developer explained: ``E waits for all its children to terminate before printing the proof, 
-so if one does not respond to the {\tt SIG\_TERM} termination signal the scheduler hangs.
-The scheduler catches {\tt SIG\_TERM} while spawning worker processes, and this behaviour was 
-inadvertently inherited by the children. This has hopefully now been remedied.''
-% This might have caused them to ignore {\tt SIG\_TERM} in other situations.
-% This has hopefully now been remedied by explicitly resetting the signal handler in the children.''
-This is another instance of the careful evaluation done in CASC revealing a weakness in an ATP 
-system, leading to a bugfix.
+E had solved the most TNE problems, largely because it uniquely solved 19 graph theory (\smalltt{GRA}) problems.
+These problems have been in the TPTP problem library since release v3.6.0 from 2008.
+E's developer explained ASKED STEPHAN.
+The new problems were mostly solved by the non-Leo systems.
 
 The individual problem results (without considering proof output) show that
-19 problems were unsolved,
-170 problems were solved by all the systems, and
-31 problems were solved by only one system (14 problems were solved by only the two versions
-of Vampire, and are counted as unique solutions for Vampire 5.0).
+11 problems were unsolved,
+53 problems were solved by all the systems, and
+31 problems were solved by only one system.
+% (6 problems were solved by only the two versions
+% of Vampire, and are counted as unique solutions for Vampire 5.0.1).
 Of the 31 unique solutions,
-14 were by Vampire~5.0,
-7 by E,
-5 by Zipperposition,
-3 by cvc5,'
+23 were by E,
+3 were by Vampire~5.0.1,
+3 were by Vampire~5.0,
+1 by Leo-III,
 and
-2 by Vampire~4.9.
-A portfolio (sharing the time between several systems) of these five systems, with 48~s
-allocated to each, would solve 474 problems.
+1 by Zipperposition.
+A portfolio (sharing the time between several systems) of Vampire~5.0 and E, with 90~s
+allocated to each, would solve 383 problems.
 
 %--------------------------------------------------------------------------------------------------
 % \subsection{The THN Division}
@@ -1288,46 +1282,47 @@ allocated to each, would solve 474 problems.
 \label{FOF}
 
 Table~\ref{FOFSummary} summarizes the results of the FOF division.
-The Vampires dominated the division again.
-It is noteworthy that Vampire~4.9 solved more problems than Vampire~5.0.
-The developers believe that the main difference is that Vampire~4.9 has a ``cautiously 
-specialized'' schedule~\cite{BCS24-PAAR} of seven branches, while Vampire~5.0 has a single 
-monolithic schedule.
-The intent was for Vampire~5.0 to have a schedule that might be more general on unseen problems, 
-but would show its strength only with longer time limits.
-Some new implementation features in Vampire~5.0, e.g., term ordering diagrams~\cite{HC+25}, could 
-also have had a positive influence.
+As in \LAST{}, the Vampires dominated the division again, but this year there is clear progress
+from Vampire~5.0 to Vampire~5.0.1.
+The developers explained: ASKED MARTIN.
+Table~\ref{FOFSummary} and the results plot\footnote{%
+\url{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html\#FOFProblems}} show clear grouping
+of the systems, but the grouping has changed since the last two CASC editions.
+This year the Vampires are out front as usual, then there is a group of CSI++, E, and iProver,
+then a middle group of Drodi, LisaST, Prover9~2026-6A, and Zipperposition, a lower group of
+FindProof, mrs, Prover9---1109a, and SUPr, and finally the bottom group of Connect++, 
+SATResetCoP, SPASS-SCL (noting that SPASS-SCL cannot attempt problems with equality), and 
+VIP.
+It is not easily possible to find common features of the systems in each group, other than
+years of developmental experience.
+The top groups include systems that have many years of active development and participation in 
+CASC, while the lower groups include newcomers.
+CASC clear provides opportunities for system developers to learn from others!
 
-A key differentiator between the FOF division systems is their abilities to generate acceptable 
-proofs.
-There is a notable difference between the ranking by number of acceptable proofs output, and the 
-ranking by the number of problems solved.
-Vampire~5.0, E, and LisaTT were the only systems to output an acceptable proof for every
-problem solved.
-It was disappointing that iProver solved so many problems, but failed to output acceptable proofs
-for a significant fraction of them, thus pushing iProver down to third place.
-Prior to the running of \THIS{} the developer of CSI\_Enigma was close to completing proof 
-output, which if completed would have placed the system second.
-CSE\_E solved two FEQ problems close to the time limit, but did not finish proof output by 
-the time limit. 
-Hopefully more systems will consistently produce acceptable proofs in \NEXT{}.
+In \LAST{}, a key differentiator between the FOF division systems was their abilities to generate 
+acceptable proofs, with a notable difference between the ranking by number of acceptable proofs 
+output, and the ranking by the number of problems solved.
+It is pleasing to see a better correlation between the two rankings in \THIS{}, indicating that
+lessons were learned from the \LAST{} results.
+However, there is still room for improvement.
+The unacceptable proofs often had simple syntax mistakes, that can be easily fixed, e.g.,
+illegal formula names, missing brackets around binary formulae.
+Some other flaws were deeper, e.g., missing formulae.
+In \NEXT{} the requirements for proofs to be considered ``acceptable'' will be raised, as 
+explained in Section~\ref{Acceptable}.
 
-In terms of problems solved (without considering proof output) the ranking is similar to that of 
-\LAST{}.
-The exceptions were improved performance of CSI\_Enigma over that of CSI\_E in \LAST{}, and
-iProver switching positions with CSE\_E.
-The improved performance of CSI\_Enigma over CSI\_E can be attributed to the use of the Enigma 
-system~\cite{JU17-CICM} as the secondary system instead of E.
-Note that all of CSI\_Enigma's proofs took more than 1~s.
-The improvement in iProver was due to efficiency improvements and heuristic optimization.
-In \LAST{} a clear separation was observed between three groups of systems: ``Vampire~4.9, the 
-"hoi polloi", and the "also rans"''.
-The performance plots for the FOF division in \THIS{}\footnote{%
-\href{https://tptp.org/CASC/30/WWWFiles/ResultsPlots.html\#FOFProblems}{\tt tptp.org/CASC/30/WWWFiles/ResultsPlots.html}} 
-show a more progressive separation between the systems, with only Prover9, Connect++, hopCoP, and 
-SPASS-SCL being separated into a trailing group.
-While the Vampires still stand out ahead, CSI\_Enigma fills the gap between them and the pair
-of iProver and E.
+A highlight of \THIS{} was the number of newcomers to the competition.
+In the FOF division there were four absolute newcomers: FindProof, SUPr, mrs, and VIP.
+Aditionally there were four new variants of existing systems: CSI++, Prover9~2026-6A, LisaST, and
+SATResetCoP.
+It was particularly pleasing to see the new release of Prover9, which earned it the ``Honourable 
+Mention'' medal for CASC in the FLoC olympic games.
+The results show great improvement over Prover9~1109a, which has been the fixed point in the
+CASC FOF division since CASC-J6 in 2013.
+The improvement was not only in problems solved, but also TPTP format proof output.
+The developers explained: ASKED JEFF AND LARRY.
+
+CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
 
 \begin{table*}[tbh]
 \caption{FOF division results}
@@ -1339,7 +1334,7 @@ ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2
 \hline
 Vampire~5.0.1          &  380  &  381   &  9.5 & 0.58 & 309     & 3.5       & {\tiny /346} &   94 & 287 &  45 &  71 &  6.0  \\
 E~3.5.1                &  264  &  264   & 10.6 & 0.32 & 419     & 4.9       & {\tiny /142} &   75 & 189 &   0 &  55 &  4.3  \\
-CSI\_PP~1.0            &  264  &  264   & 14.1 & 0.32 & 406     & 4.6       & {\tiny /139} &   76 & 188 &   0 &  55 &  4.4  \\
+CSI++~1.0              &  264  &  264   & 14.1 & 0.32 & 406     & 4.6       & {\tiny /139} &   76 & 188 &   0 &  55 &  4.4  \\
 iProver~3.9.4          &  222  &  250   & 23.0 & 0.30 & 176     & 4.0       & {\tiny /231} &   64 & 186 &   0 &  54 &265.6  \\
 Drodi~4.1.1            &  214  &  215   & 20.3 & 0.24 & 312     & 6.0       & {\tiny /126} &   60 & 155 &   0 &  40 & 10.3  \\
 Prover9~2026-6A        &  139  &  143   & 13.0 & 0.13 & 208     & 5.3       & {\tiny /98 } &   50 &  93 &   0 &  25 &  2.0  \\
@@ -1351,7 +1346,7 @@ VIP~1.718              &   32  &   32   & 26.1 & 0.01 &  34     & 0.0       & {\
 Connect++~0.7.2        &   24  &   64   & 60.0 & 0.04 &  22     & 0.0       & {\tiny /0  } &   27 &  37 &   0 &  13 &  2.0  \\
 SATResetCoP~1.0        &   20  &   20   & 70.5 & 0.01 &   3     & 0.0       & {\tiny /0  } &   3A &  17 &   0 &   9 &456.0  \\
 SPASS-SCL~0.1.1        &   14  &   14   & 21.9 & 0.01 &  12     & 0.0       & {\tiny /0  } &   14 &   0 &   0 &   0 &  4.7  \\
-Zipperp'n 2.1.9999     &  TBA  &  TBA   &  TBA &  TBA & TBA     & TBA       & {\tiny /TBA} &  TBA & TBA & TBA & TBA &  TBA  \\
+Zipperp'n 2.1.9999     &    0  &  192   & 19.6 & 0.18 & 196     & 4.9       & {\tiny /143} &   46 & 146 &   0 &  47 &    -  \\
 \hline
 \multicolumn{13}{c}{Demonstration division} \\
 \hline
@@ -1361,29 +1356,12 @@ Prover9~1109a          &    -  &   92   & 14.7 &    - & 134     & 0.0       & {\
 \end{tabular}
 \end{table*}
 
-NOTES:
-CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
-Big drop from Drodi to Prover9.
-LisaST high number solved fast. LisaST lost lots.
-FindProof good core usage. All proofs fast.
-mrs relatively high efficiency.
-VIP large startup time? Look at size of binary. No core usage, none fast.
-ConnectPP lost lots. Check! Huge time - check! No core usage, none fast.
+ConnectPP Huge time - check! No core usage, none fast.
+VIP Huge time large startup time? No core usage, none fast.
 SATResetCoP huger time - check! HUGE granularity.
-
-The Vampires had the lowest average wall clock times, and correspondingly the highest efficiencies.
-Vampire~5.0 had a high SotAC, thanks to it's ability to solve problems that no other systems
-solved (see below).
-Drodi made the most use of the multiple cores thanks to its parallelisation architecture.
-The developer explained: ``Preprocessing is done only once before multiprocessing is started, 
-after which the parent process forks as many additional processes as there are cores available. 
-The processes share basic information by sharing a small portion of memory that holds a list
-of strategies with an associated time slice.
-The processes repeatedly take a strategy off the list and run it for the associated time slice.
-If a proof is found all processes are stopped, otherwise the process loops to take another
-strategy.
-This way there is no need to repeat the preprocessing or start a new process for each new 
-strategy.''
+mrs relatively high efficiency.
+FindProof good core usage. All proofs fast.
+LisaST high number solved fast. LisaST lost lots.
 
 The performances in the two problem categories are well aligned with the overall performance,
 except for SPASS-SCL's poor performance on problems with equality.
@@ -1398,23 +1376,27 @@ In contrast, Drodi performed relatively well on the new problems, but failed to 
 problems to E.
 
 The individual problem results (without considering proof output) show that
-12 problems were unsolved,
+14 problems were unsolved,
 no problems were solved by all the systems, and
-36 problems were solved by only one system (19 problems were solved by only the two versions of
-Vampire, and are counted as unique solutions for Vampire~5.0).
-Of the 36 unique solutions,
-22 were by Vampire~5.0,
-8 by Vampire~4.9,
-5 by cvc5,
+48 problems were solved by only one system.
+% (19 problems were solved by only the two versions of
+% Vampire, and are counted as unique solutions for Vampire~5.0).
+Of the 48 unique solutions,
+45 were by Vampire~5.0.1,
 and
-1 by CSI\_Enigma.
-A portfolio of the two Vampires, cvc5, and CSI\_Enigma, with 60~s allocated to each, would 
-solve 484 problems.
+3 by Vampire~5.0.
+That means that between them, the two Vampires solved a superset of union of the problems solved 
+by other the systems.
+
+% A portfolio of the two Vampires, cvc5, and CSI\_Enigma, with 60~s allocated to each, would 
+% solve 484 problems.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{The FNT Division}
 \label{FNT}
-%
+
+Return from hiatus.
+
 Table~\ref{FNTSummary} summarizes the results of the FNT division.
 The Vampires came out ahead of the other systems, by a large margin.
 As in the FOF division, in terms of the numbers of problems solved, Vampire~4.8 showed only
@@ -1466,28 +1448,31 @@ Mace4~2026-6A 44 FMo
 E~3.5.1               42 Sat
 Drodi~4.1.1           41 Sat
 
+iProver 64 with syntax errors, 42 duplicate formula name, 22 unquantified variables. Needs only simple fixes.
+Vampire 4.8 92 with syntax errors, simple redeclaration of \$i. Historical error, could be easily fixed.
+
 % There are quite large ranges in average time taken (from E's 9.9~s up to cvc5's 35.1~s),
 % SotAC (from E's 0.08 up to Vampire~4.8's 0.33), efficiency (from cvc5's 163 up to Vampire~4.8's
 % 513), and core usage (from cvc5's 0.9 up to Vampire~4.7's 4.7).
 cvc5's low core usage led to its high average time taken and low efficiency.
 The problem category rankings reflect the overall ranking except for E's better performance
 on FNQ problems.
-%
+
 The individual problem results show that
-only 2 problems were unsolved,
-11 problems were solved by all the systems, and
-26 problems were solved by only one system (21 problems were solved by only the two versions of
-Vampire, and are counted as a unique solutions for Vampire~4.8).
-Of the 26 unique solutions,
-23 were by Vampire~4.8,
-and
-3 by iProver.
-A portfolio approach does not help much -- a combination of Vampire~4.8, iProver, and cvc5,
-with 60~s allocated to each, would solve just 146 problems.
-%
-The ongoing research and development of model finding, in the context of the TPTP World, and
-its impact on CASC, is discussed in Section~\ref{ModelFinding}.
-The conclusion that most affects CASC is that the FNT division will go on hiatus for \NEXT{}.
+4 problems were unsolved,
+2 problems were solved by all the systems, and
+16 problems were solved by only one system.
+% (21 problems were solved by only the two versions of
+% Vampire, and are counted as a unique solutions for Vampire~4.8).
+Of the 16 unique solutions,
+14 were by Vampire~5.0.1, 
+and 2 by Vampire~4.8.
+As is the case in the FOF division, between them, the two Vampires solved a superset of union of 
+the problems solved by other the systems.
+
+% A portfolio approach does not help much -- a combination of Vampire~4.8, iProver, and cvc5,
+% with 60~s allocated to each, would solve just 146 problems.
+
 %--------------------------------------------------------------------------------------------------
 % \subsection{The EPR Division}
 % \label{EPR}
@@ -1629,19 +1614,20 @@ This is in contrast to, e.g., the FOF division, where the average (excluding the
 not try to use multiple cores) is 76\%.
 
 The individual problem results (without considering proof output) show that
-4 problems were unsolved,
-59 problems were solved by all the systems, and
-17 problems were solved by only one system (4 problems were solved by only the two versions
-of Vampire, and are counted as unique solutions for Vampire~5.0).
-Of the 17 unique solutions,
-7 were by Vampire~5.0,
-6 by Twee~2.6.0,
+3 problems were unsolved,
+43 problems were solved by all the systems, and
+30 problems were solved by only one system.
+% (4 problems were solved by only the two versions
+% of Vampire, and are counted as unique solutions for Vampire~5.0).
+Of the 30 unique solutions,
+17 were by Vampire~5.0.1,
+6 by Prover9,
+3 by Vampire~5.0,
+2 by Twee,
 and
-5 by Vampire~4.9.
-A portfolio of Vampire~5.0, Twee, and E, with 80~s allocated to each, would solve 285 problems.
-Although there were no problems that only E solved, its ability to solve problems quickly makes
-it a useful contributor to a portfolio.
-For the suggested portfolio there are 11 problems that only E can solve within 80~s.
+1 each by CSI++, E, FindProof, and iProver.
+A portfolio does not help much, the best being a combination of Vampire~5.0.1 and CSI++~1.0
+with 90~s allocated to each, which would solve 373 problems.
 
 %--------------------------------------------------------------------------------------------------
 % \subsection{The SLH Division}
@@ -1948,7 +1934,25 @@ These short descriptions of the systems were written by their entrants.
 
 \textbf{SUPr} is
 
-\textbf{mrs} is 
+\textbf{mrs}~\cite{Rol26} is is an automated theorem prover for first-order logic with equality. 
+It implements the superposition calculus~\cite{BG94} in a given-clause loop, with ordered 
+resolution, factoring, equality resolution, equality factoring, and paramodulation, all oriented 
+by KBO or LPO with rarity-based symbol precedence. 
+Non-Horn clauses are split via AVATAR~\cite{Vor14} using the CaDiCaL~\cite{BF+24} SAT solver.
+mrs is written in Rust.
+The search runs a parallel portfolio, with each strategy maintaining its own clause set. 
+A central design feature is proof-preserving cross-strategy sharing: workers exchange selected 
+positive unit equalities with complete ancestor chains, remap those chains into the receiving proof 
+store, and use only the equality heads in subsequent search.
+Rust's ownership and thread-safety checks make the synchronized shared pool explicit and race-safe.
+The portfolio for each category division (FNE, FEQ, UEQ) was selected by running all 15 base 
+strategies solo and using greedy set-cover analysis to choose an eight-strategy portfolio. 
+Local analysis identified clause generation and redundancy, rather than raw iteration speed, as 
+the main bottleneck. 
+The competition's objective scores and rapid feedback loop made profiling, debugging, and heuristic 
+experiments focused, repeatable, and fun, directly shaping subsequent work on inference 
+restrictions, resource controls, and proof-preserving sharing. 
+CASC pushed mrs to fix real bugs and close gaps that show up only at scale.
 
 %--------------------------------------------------------------------------------------------------
 \section{Acceptable Proofs}
@@ -1975,8 +1979,15 @@ available to the systems' developers so that they could check their proofs.
 Despite this, many proofs were still syntactically or structurally flawed.
 The \THIS{} panel ruled that the documentation of the TPTP proof format was inadequate, which
 meant many of those proofs were eventually counted.
-
 What got better?
+
+New for next year
+\begin{packed_enumerate}
+\item Proofs that negate the conjecture must correctly annotate the step as
+      \smalltt{status(cth)} and have a a single parent with the role \smalltt{conjecture}.
+\item Inference steps must list exactly those parents that are used in the inference.
+\item Leaf checking
+\end{packed_enumerate}
 
 There are 482 proofs that failed structural checking.
 The reasons for failure are varied: 
@@ -2090,6 +2101,7 @@ Changes being planned for \NEXT{} are:
 \begin{packed_itemize}
 \item Only two installation package will be allowed for each entry -- one for theorem proving/
       unsatisfiability checking, and one for coutermodel finding/satisfiability checking.
+\item All solutions (proofs and models) must be in TPTP sytax, error-free according to TPTP4X.
 \item Proof checking will be extended to include:
       \begin{packed_itemize}
       \item Leaves must come from the problem.
