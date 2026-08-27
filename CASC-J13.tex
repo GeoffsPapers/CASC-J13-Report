@@ -558,7 +558,8 @@ Table~\ref{ProblemNumbers} gives the numbers of eligible problems, the maximal n
 be used after taking into account the limitation on very similar problems,
 % (in the context of the numbers of problems used),
 and the numbers of problems used in each division and category.
-ENOUGH NEW??
+As can be seen, that target of 50\% new problems was not met, but there were enough new problems 
+in the TEQ, FEQ, and UEQ categories to expose any excessive tuning to the previous TPTP release.
 See Section~\ref{Conclusion} for a plea to the community to submit new problems to the TPTP 
 problem library.
 
@@ -766,11 +767,11 @@ The minimal time limit for each problem is 120~s.
 % , except for the ICU division where the minimal time limit is 300~s.
 The maximal time limit for each problem is constrained by the same factors that constrain the
 numbers of problems that are used, taking into account the phenomenon that ATP systems solve most
-problems quickly and very few slowly~\cite{SS01,Sut24} -- this phenomenon is evident in the 
-performance plots from the competition\footnote{%
-\href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}}, 
-and from the ratios of total times taken to solved times given in Section~\ref{Computers}.
-CHECK THIS
+problems quickly and very few slowly~\cite{SS01,Sut24}.
+This phenomenon is evident in the performance plots from the competition\footnote{%
+\href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}}.
+% and from the ratios of total times taken to solved times given in Section~\ref{Computers} --
+% 1618 vs. 185 CPU hours, and 453 vs. 34 wall clock hours.
 The time limit is chosen value within the range allowed according to the judgement of the
 organizer, and is announced at the competition.
 In \THIS{} a 180~s wall clock time limit was imposed for each problem.
@@ -815,7 +816,6 @@ when a wall clock time limit is used.
 % batch.
 
 %---------------------------------------------------------------------------------------------------
-HERE WE ARE
 \section{System Evaluation}
 \label{Evaluation}
 
@@ -1067,8 +1067,8 @@ some cases duplicate formulae, and others have the SZS \smalltt{status(esa)} whe
 the conjecture, while it should be \smalltt{status(cth)}.
 These are flaws that should be easily fixed, so that Zipperposition is upgraded for \NEXT{}.
 The 13 missing proofs from Leo-III are interesting: they come from Leo-III using bracketed
-quantifiers as terms that can be applied, e.g., \smalltt{((!) @ \$i)}, which might be 
-acceptable as a higher-order notion, but is not permitted in the TPTP syntax.
+quantifiers as terms that are applied, e.g., \smalltt{((!)\,@\,\ldots)}, instead of the
+combinator equivalents expected in the TPTP language, e.g., \smalltt{(!!\,@\,\ldots)}.
 
 \begin{table*}[tbh]
 \caption{THF division results}
@@ -1078,11 +1078,11 @@ acceptable as a higher-order notion, but is not permitted in the TPTP syntax.
 ATP System             & Solns & Solved & Avg  & Sot  & WC       & \multicolumn{2}{r}{Core} & TNE & TEQ &Uniq & New & Gr'ty \\
                        & /400  & /400   & WC   & AC   & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300 & /31 & /31 &       \\
 \hline
-Vampire~5.0.1          &  340  &  352   &  6.5 & 0.32 & 615      & 3.9       & {\tiny /212} &  67 & 285 &   3 &  31 & 10.1  \\
-E~3.5.1                &  323  &  324   & 10.7 & 0.29 & 593      & 4.2       & {\tiny /129} &  73 & 251 &  23 &  28 & 26.4  \\
+Vampire~5.0.1          &  \bb{340}  &  \bb{352}   &  \bb{6.5} & \bb{0.32} & \bb{615}      & 3.9       & {\tiny /212} &  67 & \bb{285} &   3 &  \bb{31} & \bb{10.1}  \\
+E~3.5.1                &  323  &  324   & 10.7 & 0.29 & 593      & 4.2       & {\tiny /129} &  \bb{73} & 251 &  \bb{23} &  28 & 26.4  \\
 Leo-III~1.8.0          &  137  &  160   & 14.4 & 0.07 &  83      & 2.5       & {\tiny /160} &  38 & 122 &   1 &   7 & 53.3  \\
 LEO-II~1.7.0           &   67  &   67   & 11.0 & 0.01 & 110      & 0.0       & {\tiny /0  } &  26 &  41 &   0 &   0 & 84.8  \\
-Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & 5.7       & {\tiny /268} &  67 & 280 &   1 &  29 &    -  \\
+Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & \bb{5.7}       & {\tiny \bb{/268}} &  67 & 280 &   1 &  29 &    -  \\
 \hline
 \multicolumn{13}{c}{Demonstration division} \\
 \hline
@@ -1094,20 +1094,24 @@ Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & 5.7       & {
 Zipperposition had the highest average time taken, but made the bext use of the multiple cores.
 E solved the most problems before starting to use multiple cores, and had good core usage
 Leo-III used multiple cores for all the problems it solved.
+E had solved the most TNE problems, largely because it uniquely solved 19 graph theory 
+(\smalltt{GRA}) problems.
+These problems have been in the TPTP problem library since release v3.6.0 from 2008.
+E's developer suggested that the progress was simply due to several bugs being fixed in the 
+higher-order code.
+The new problems were mostly solved by the non-Leo systems.
+
 This is the first CASC in which the new granularity data has been provided, motivated by the
 very last numbers of parents listed in individual inferences of \LAST{}.
 The report on \LAST{} noted that final calls to external ATP systems were typically reported 
-with all the clauses sent to the external system listed as parents.
-The most extreme case listed 72367 parent clauses that were sent to the external Z3 system.
+with all the clauses sent to the external system listed as parents, with the most extreme 
+case listing 72367 parent clauses that were sent to the external Z3 system.
 The granularity figures for the THF division (recall, they are the average maximal number of
 parents in inferences over problems solved with acceptable proof output) are not extreme.
 Deeper analysis revealed that LEO-II and Leo-III often had inference with many parents, by
 virtue of calls to the E system.
-
-E had solved the most TNE problems, largely because it uniquely solved 19 graph theory (\smalltt{GRA}) problems.
-These problems have been in the TPTP problem library since release v3.6.0 from 2008.
-E's developer explained ASKED STEPHAN.
-The new problems were mostly solved by the non-Leo systems.
+The largest contributor to E's granularity was deeply nested \smalltt{apply\_def} steps, in 
+which definitions were sequentially applied in a single inference.
 
 The individual problem results (without considering proof output) show that
 11 problems were unsolved,
@@ -1289,15 +1293,15 @@ Table~\ref{FOFSummary} and the results plot\footnote{%
 \url{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html\#FOFProblems}} show clear grouping
 of the systems, but the grouping has changed since the last two CASC editions.
 This year the Vampires are out front as usual, then there is a group of CSI++, E, and iProver,
-then a middle group of Drodi, LisaST, Prover9~2026-6A, and Zipperposition, a lower group of
-FindProof, mrs, Prover9---1109a, and SUPr, and finally the bottom group of Connect++, 
+followed by a middle group of Drodi, LisaST, Prover9~2026-6A, and Zipperposition, then a lower 
+group of FindProof, mrs, Prover9---1109a, and SUPr, and finally the bottom group of Connect++, 
 SATResetCoP, SPASS-SCL (noting that SPASS-SCL cannot attempt problems with equality), and 
 VIP.
 It is not easily possible to find common features of the systems in each group, other than
 years of developmental experience.
 The top groups include systems that have many years of active development and participation in 
 CASC, while the lower groups include newcomers.
-CASC clear provides opportunities for system developers to learn from others!
+CASC clearly provides opportunities for system developers to learn from others!
 
 In \LAST{}, a key differentiator between the FOF division systems was their abilities to generate 
 acceptable proofs, with a notable difference between the ranking by number of acceptable proofs 
@@ -1308,7 +1312,12 @@ However, there is still room for improvement.
 The unacceptable proofs often had simple syntax mistakes, that can be easily fixed, e.g.,
 illegal formula names, missing brackets around binary formulae.
 Some other flaws were deeper, e.g., missing formulae.
-In \NEXT{} the requirements for proofs to be considered ``acceptable'' will be raised, as 
+LisaST suffered the most in this regard.
+CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
+\smalltt{SEU269+1} solved by CSI++, but no SZS status line. Also solved by E.
+\smalltt{SYN986+1.004} not solved by E alone, but solved by E in CSI++..
+ASKED THEM.
+In \NEXT{} the requirements for proofs to be considered ``acceptable'' will be tightened, as 
 explained in Section~\ref{Acceptable}.
 
 A highlight of \THIS{} was the number of newcomers to the competition.
@@ -1317,12 +1326,13 @@ Aditionally there were four new variants of existing systems: CSI++, Prover9~202
 SATResetCoP.
 It was particularly pleasing to see the new release of Prover9, which earned it the ``Honourable 
 Mention'' medal for CASC in the FLoC olympic games.
-The results show great improvement over Prover9~1109a, which has been the fixed point in the
-CASC FOF division since CASC-J6 in 2013.
-The improvement was not only in problems solved, but also TPTP format proof output.
-The developers explained: ASKED JEFF AND LARRY.
-
-CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
+The old Prover9~1109a has been the fixed point in the CASC FOF division since CASC-J6 in 2013 
+(see Section~\ref{DivisionsSystems}). 
+The old version was clearly outperformed by the new version.
+The developers explained that the main reason for the new version's strong performance is
+a sliding window scheduler that rotates through 96 strategies that had been found using machine 
+learning.
+It is also noteworthy that the new Prover9 outputs proofs in TPTP format.
 
 \begin{table*}[tbh]
 \caption{FOF division results}
@@ -1332,18 +1342,18 @@ CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How 
 ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} & FNE & FEQ  &Uniq & New & Gr'ty \\
                        & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}&/100 &/300  & /48 & /79 &       \\
 \hline
-Vampire~5.0.1          &  380  &  381   &  9.5 & 0.58 & 309     & 3.5       & {\tiny /346} &   94 & 287 &  45 &  71 &  6.0  \\
-E~3.5.1                &  264  &  264   & 10.6 & 0.32 & 419     & 4.9       & {\tiny /142} &   75 & 189 &   0 &  55 &  4.3  \\
+Vampire~5.0.1          &  \bb{380}  &  \bb{381}   &  \bb{9.5} & \bb{0.58} & 309     & 3.5       & {\tiny /346} &   \bb{94} & \bb{287} &  \bb{45} &  \bb{71} &  6.0  \\
+E~3.5.1                &  264  &  264   & 10.6 & 0.32 & \bb{419}     & 4.9       & {\tiny /142} &   75 & 189 &   0 &  55 &  4.3  \\
 CSI++~1.0              &  264  &  264   & 14.1 & 0.32 & 406     & 4.6       & {\tiny /139} &   76 & 188 &   0 &  55 &  4.4  \\
 iProver~3.9.4          &  222  &  250   & 23.0 & 0.30 & 176     & 4.0       & {\tiny /231} &   64 & 186 &   0 &  54 &265.6  \\
 Drodi~4.1.1            &  214  &  215   & 20.3 & 0.24 & 312     & 6.0       & {\tiny /126} &   60 & 155 &   0 &  40 & 10.3  \\
-Prover9~2026-6A        &  139  &  143   & 13.0 & 0.13 & 208     & 5.3       & {\tiny /98 } &   50 &  93 &   0 &  25 &  2.0  \\
-LisaST~0.9             &  127  &  199   & 18.5 & 0.21 &  74     & 5.1       & {\tiny /192} &   54 & 145 &   0 &  52 &  2.0  \\
-FindProof~0.1          &   91  &   91   & 19.8 & 0.07 &  46     & 6.4       & {\tiny /91 } &   26 &  65 &   0 &  18 & 13.3  \\
+Prover9~2026-6A        &  139  &  143   & 13.0 & 0.13 & 208     & 5.3       & {\tiny /98 } &   50 &  93 &   0 &  25 &  \bb{2.0}  \\
+LisaST~0.9             &  127  &  199   & 18.5 & 0.21 &  74     & 5.1       & {\tiny /192} &   54 & 145 &   0 &  52 &  \bb{2.0}  \\
+FindProof~0.1          &   91  &   91   & 19.8 & 0.07 &  46     & \bb{6.4}       & {\tiny \bb{/91} } &   26 &  65 &   0 &  18 & 13.3  \\
 SUPr~1.0               &   73  &   73   & 16.7 & 0.05 &  92     & 4.0       & {\tiny /54 } &   22 &  51 &   0 &  21 &  3.7  \\
 mrs~0.2.0              &   71  &   79   & 12.6 & 0.05 & 106     & 5.1       & {\tiny /59 } &   23 &  56 &   0 &  18 &  2.5  \\
-VIP~1.718              &   32  &   32   & 26.1 & 0.01 &  34     & 0.0       & {\tiny /0  } &   13 &  19 &   0 &   8 &  2.0  \\
-Connect++~0.7.2        &   24  &   64   & 60.0 & 0.04 &  22     & 0.0       & {\tiny /0  } &   27 &  37 &   0 &  13 &  2.0  \\
+VIP~1.718              &   32  &   32   & 26.1 & 0.01 &  34     & 0.0       & {\tiny /0  } &   13 &  19 &   0 &   8 &  \bb{2.0}  \\
+Connect++~0.7.2        &   24  &   64   & 60.0 & 0.04 &  22     & 0.0       & {\tiny /0  } &   27 &  37 &   0 &  13 &  \bb{2.0}  \\
 SATResetCoP~1.0        &   20  &   20   & 70.5 & 0.01 &   3     & 0.0       & {\tiny /0  } &   3A &  17 &   0 &   9 &456.0  \\
 SPASS-SCL~0.1.1        &   14  &   14   & 21.9 & 0.01 &  12     & 0.0       & {\tiny /0  } &   14 &   0 &   0 &   0 &  4.7  \\
 Zipperp'n 2.1.9999     &    0  &  192   & 19.6 & 0.18 & 196     & 4.9       & {\tiny /143} &   46 & 146 &   0 &  47 &    -  \\
@@ -1356,24 +1366,41 @@ Prover9~1109a          &    -  &   92   & 14.7 &    - & 134     & 0.0       & {\
 \end{tabular}
 \end{table*}
 
-ConnectPP Huge time - check! No core usage, none fast.
-VIP Huge time large startup time? No core usage, none fast.
-SATResetCoP huger time - check! HUGE granularity.
-mrs relatively high efficiency.
-FindProof good core usage. All proofs fast.
-LisaST high number solved fast. LisaST lost lots.
+Vampire~5.0.1's high SotAC correlates to its high number of unique solutions.
+E's higher efficiency comes from solving most problems very quickly, with relatively fewer being 
+solved slowly compared to the Vampires.
+This can be seen from E having a sharper upwards swing than the Vampires in the results
+plot.
+mrs also had a high efficiency relative to its ranking.
+FindProof had the highest core usage, using multiple cores in all the problems it solved.
+LisaST used multiple cores for most of the problems it solved ASKED SIMON.
+Drodi also had high core usage, but solved 89 problems in less than 1~s when multiple cores
+would be expected to be used ASKED OSCAR.
+Several of the systems, in particular Connect++, SATResetCoP, and VIP, had high average wall 
+clock times and no core usage.
+The developers of the systems said respectively: ``There could be a few possible reasons for 
+this but without some profiling I'd have a hard time making a concrete suggestion.'', ``I bet that 
+the issue with SATResetCoP is the Python backend; importing all the libraries needed for the 
+initial run is slow.'', and ``WAITING TO HEAR FROM ILIES''.
+The expected benefit of using multiple cores to reduce wall clock time taken, as noted in
+Section~\ref{TimeLimits}, is evident here.
+The granularity values are very reasonble for most of the systems.
+The best came from Connect++, LisaST, Prover9~2026-6A, and VIP, which all had a granularity of 2.0. 
+That means those systems' inference had an average of maximally two parents per inference, making 
+the proof as fine-grained as can be expected.
+% ASKED ILIES ABOUT THIS BROKEN PROOF
+% (only VIP has one proof with a maximal of one parent
+% per inference, in the problem \smalltt{GEO498+1} whose conjecture is already effectively in CNF,
+% and was solved by VIP with a single rewrite step using that one formula)
 
 The performances in the two problem categories are well aligned with the overall performance,
-except for SPASS-SCL's poor performance on problems with equality.
-The new problems provided different challenges for the systems.
-Vampire's monolithic schedule showed its intended ability to solve unseen problems.
-E performed worse on the new problems, failing to solve some new logic calculi (the TPTP 
-{\tt LCL} domain) problems converted from CNF versions that have been in the TPTP problem 
-library for a long time~\cite{RW+23}, hereditary finite set theory (the TPTP {\tt SEV} 
-domain) problems~\cite{Bro24}, and software verification (the TPTP {\tt SWX} domain) problems 
-encoding arithmetic operations~\cite{MMP24}.
-In contrast, Drodi performed relatively well on the new problems, but failed to solve similar 
-problems to E.
+except for LisaST's stronger performance and SPASS-SCL's zero performance on problems with 
+equality.
+The new problems provided consistent challenges for the systems, with about 20\% of the problems
+solved being new problems, except for Prover9~2026-6A where a slighty-lower 17\% of the problems
+it solved were new.
+Does this suggest some over tuning - ASKED JEFF AND LARRY.
+Only 2 of the 45 problems uniquely solved by Vampire~5.0.1 were new problems.
 
 The individual problem results (without considering proof output) show that
 14 problems were unsolved,
@@ -1385,8 +1412,8 @@ Of the 48 unique solutions,
 45 were by Vampire~5.0.1,
 and
 3 by Vampire~5.0.
-That means that between them, the two Vampires solved a superset of union of the problems solved 
-by other the systems.
+That means that between them, the two Vampires solved a superset of the union of the problems 
+solved by other the systems.
 
 % A portfolio of the two Vampires, cvc5, and CSI\_Enigma, with 60~s allocated to each, would 
 % solve 484 problems.
@@ -1395,21 +1422,36 @@ by other the systems.
 \subsection{The FNT Division}
 \label{FNT}
 
-Return from hiatus.
-
+The FNT division return to \THIS{} after two years on hiatus.
+The winner from CASC-29 in 2003 was enetered as the previuous winner.
 Table~\ref{FNTSummary} summarizes the results of the FNT division.
-The Vampires came out ahead of the other systems, by a large margin.
-As in the FOF division, in terms of the numbers of problems solved, Vampire~4.8 showed only
-a small improvement over the \LAST{} winner, Vampire 4.7.
-In contrast to the FOF division, the performance plot\footnote{%
-\url{https://tptp.org/CASC/29/WWWFiles/ResultsPlots.html\#FNTProblems}}
-shows a reversal of the impact of the refreshed strategy schedules in Vampire~4.8, with the
-older Vampire~4.7 having the more gradual increase in the CPU time taken over problems solved.
-The large numbers of problems solved without a model output by Vampire and iProver is
-explained in Section~\ref{TFN}.
-In the FNT division Vampire had 31 saturations disallowed, iProver had 27 saturations disallowed,
-and iProver had 51 explicit Herbrand models disallowed.
-%
+Vampire~5.0.1 came out ahead of the other systems, by a large margin, surpssing Vampire~4.8
+that had come out way ahead in CASC-29.
+The key to the Vampires' success was strategy scheduling that tried to saturate the clause
+set, and alternatively find a finite model.
+The only other system that produced two types of models was iProver, which output saturations 
+and models expressed in a term algebra.
+The ratios of saturations to (finite) models ouput was as follows:
+Vampire~5.0.1 - 59:84, 
+Vampire~4.8 - 36:91,
+iProver - 6:65,
+FMB4J 0:51,
+Mace4 0:44,
+E - 42:0,
+and
+Drodi - 41:0.
+
+In contrast to the three theorem proving divisions, there was no checking of the models output
+in the FNT division.
+Post-competition analysis showed that all the competition systems' models passed TPTP syntax 
+checking, except for iProver in which some models had duplicate formula names and unquantified 
+variables -- these simple errors are easily rectified.
+Some of Vampire~4.8's models also had simple errors, but that's history.
+% iProver 64 with syntax errors, 42 duplicate formula name, 22 unquantified variables. 
+% Vampire 4.8 92 with syntax errors, simple redeclaration of \$i. 
+Syntax checking of models will be added in \NEXT{}, as explained in Section~\ref{Acceptable}.
+For one problem Mace4 found a model but did not complete the model output by the time limit.
+
 \begin{table*}[tbh]
 \caption{FNT division results}
 \label{FNTSummary}
@@ -1418,13 +1460,13 @@ and iProver had 51 explicit Herbrand models disallowed.
 ATP System             & Solns & Solved & Avg  &  Sot & WC       & \multicolumn{2}{r}{Core} & FNN & FNQ &Uniq & New  \\
                        & /150  & /150   & WC   &  AC  & $\mu$Eff & \multicolumn{2}{r}{usage}& /50 &/100 & /16 & /10  \\
 \hline
-Vampire~5.0.1          &  143  &  143   & 11.9 & 0.58 & 434      & 4.7       & {\tiny /87 } &  45 &  98 &  14 &  10  \\
+Vampire~5.0.1          &  \bb{143}  &  \bb{143}   & 11.9 & \bb{0.58} & 434      & 4.7       & {\tiny /87 } &  \bb{45} &  \bb{98} &  \bb{14} &  \bb{10}  \\
 iProver~3.9.4          &   71  &   71   & 25.5 & 0.19 & 176      & 3.3       & {\tiny /53 } &  15 &  56 &   0 &   8  \\
 FMB4J~0.1              &   51  &   51   &  9.3 & 0.11 & 241      & 1.3       & {\tiny /33 } &   8 &  43 &   0 &   7  \\
 Mace4~2026-6A          &   44  &   45   &  9.0 & 0.10 & 229      & 4.2       & {\tiny /12 } &   8 &  37 &   0 &   8  \\
 E~3.5.1                &   42  &   42   &  9.4 & 0.12 & 151      & 4.3       & {\tiny /22 } &  17 &  25 &   0 &   2  \\
-Drodi~4.1.1            &   41  &   41   &  6.1 & 0.09 & 175      & 4.9       & {\tiny /17 } &   7 &  34 &   0 &   2  \\
-Connect++~0.7.2        &    -  &   11   &  0.4 & 0.01 &  73      & 0.0       & {\tiny /0  } &   3 &   8 &   0 &   0  \\
+Drodi~4.1.1            &   41  &   41   &  6.1 & 0.09 & 175      & \bb{4.9}       & {\tiny \bb{/17} } &   7 &  34 &   0 &   2  \\
+Connect++~0.7.2        &    -  &   11   &  \bb{0.4} & 0.01 &  73      & 0.0       & {\tiny /0  } &   3 &   8 &   0 &   0  \\
 \hline
 \multicolumn{12}{c}{Demonstration division} \\
 \hline
@@ -1433,30 +1475,14 @@ Connect++~0.7.2        &    -  &   11   &  0.4 & 0.01 &  73      & 0.0       & {
 \end{tabular}
 \end{table*}
 
-NOTES:
-Mace4 lost one on output timeout
+Vampire~5.0.1 dominated the division across all performance measures.
+Drodi stood out as having a low average CPU time coupled with a high core usage -- the insights
+from Section~\ref{FOF} apply again here.
 FMB4J is fast. Good with equality.
-Mace4 good core usage.
-E good core usage. Better FNN.
-Drodi fast. Best core usage.
-
-Vampire~5.0.1 84 FMo, 59 Sat.
-Vampire~4.8   91 FMo, 36 Sat
-iProver~3.9.4 65 Mod,  6 Sat
-FMB4J~0.1     51 FMo
-Mace4~2026-6A 44 FMo
-E~3.5.1               42 Sat
-Drodi~4.1.1           41 Sat
-
-iProver 64 with syntax errors, 42 duplicate formula name, 22 unquantified variables. Needs only simple fixes.
-Vampire 4.8 92 with syntax errors, simple redeclaration of \$i. Historical error, could be easily fixed.
-
-% There are quite large ranges in average time taken (from E's 9.9~s up to cvc5's 35.1~s),
-% SotAC (from E's 0.08 up to Vampire~4.8's 0.33), efficiency (from cvc5's 163 up to Vampire~4.8's
-% 513), and core usage (from cvc5's 0.9 up to Vampire~4.7's 4.7).
-cvc5's low core usage led to its high average time taken and low efficiency.
 The problem category rankings reflect the overall ranking except for E's better performance
-on FNQ problems.
+on FNN problems.
+This is different from CASC-29 in which E~3.1 performed relatively better on FNQ problems.
+The developer of E ascribed the change to: ``just random luck'' of the problem selection.
 
 The individual problem results show that
 4 problems were unsolved,
@@ -1562,16 +1588,15 @@ the problems solved by other the systems.
 \label{UEQ}
 
 Table~\ref{UEQSummary} summarizes the results of the UEQ division.
-Vampire~5.0 won, with an improvement over Vampire~4.9.
-The recent advances in Vampire's UEQ calculus and implementation~\cite{HKV25,HC+25} have
-contributed significantly to Vampire's strong performance.
-Twee~2.6.0 solved the same number of problems as Vampire~4.9, indicating improvement since
-Twee~2.5.0, which was convincingly beaten by Vampire~4.9 in \LAST{}.
-The Twee developer explained: ``this year's version has fixes for some completeness bugs, 
-which allows some slightly more aggressive redundancy criteria to be used''.
-Only CSE\_E and iProver failed to output acceptable proofs for all problems solved.
-In the case of iProver this was quite severe, moving it from a possible fourth place down to
-the bottom of the competition division (see Section~\ref{Acceptable} for more details).
+Vampire~5.0.1 won, and as in the FOF division showed significant improvement over Vampire~5.0,
+for the same reasons.
+The goal directed technique pioneered by Twee~\cite{TBA}
+FindProof, mrs, and Prover9 failed to output acceptable proofs for all problems solved.
+FindProof simply did not output any proof for 18 problems, mrs output one proof with syntax 
+errors, and for Prover9, as the developers put it when fixing the ourput for their next
+release: ``The bug is an amusing one. Prover9 still registers Otter’s legacy infix v (disjunction) 
+as a parse rule, so when a TPTP problem legitimately uses v as a binary functor, the printer 
+rendered the legacy in infix notation''.
 
 \begin{table}[tbh]
 \caption{UEQ division results}
@@ -1581,14 +1606,14 @@ the bottom of the competition division (see Section~\ref{Acceptable} for more de
 ATP System             & Solns & Solved & Avg  & Sot & WC       & \multicolumn{2}{r}{Core} &Uniq & New & Gr'ty \\
                        & /400  & /400   & WC   & AC  & $\mu$Eff & \multicolumn{2}{r}{usage}& /30 & /21 &       \\
 \hline
-Vampire~5.0.1          &  370  &  370   & 11.8 & 0.40 & 222     & 4.1       & {\tiny /351} &  17 &  12 &  7.9  \\
+Vampire~5.0.1          &  \bb{370}  &  \bb{370}   & \bb{11.8} & \bb{0.40} & 222     & 4.1       & {\tiny /351} &  \bb{17} &  \bb{12} &  7.9  \\
 Twee~2.7               &  286  &  286   &164.3 & 0.24 & 225     & 6.4       & {\tiny /273} &   2 &   7 &  2.0  \\
-CSI\_PP~1.0            &  258  &  258   & 21.5 & 0.19 & 261     & 5.0       & {\tiny /223} &   1 &   9 & 10.4  \\
+CSI++~1.0              &  258  &  258   & 21.5 & 0.19 & \bb{261}     & 5.0       & {\tiny /223} &   1 &   9 & 10.4  \\
 E~3.5.1                &  255  &  255   & 20.4 & 0.19 & 244     & 5.3       & {\tiny /226} &   1 &   8 & 12.3  \\
 FindProof~0.1          &  251  &  269   & 25.3 & 0.21 & 118     & 6.5       & {\tiny /269} &   1 &   4 &  2.3  \\
-Prover9~2026-6A        &  207  &  208   & 21.4 & 0.15 & 202     & 6.2       & {\tiny /179} &   4 &  10 &  2.0  \\
+Prover9~2026-6A        &  207  &  208   & 21.4 & 0.15 & 202     & 6.2       & {\tiny /179} &   4 &  10 &  \bb{2.0}  \\
 iProver~3.9.4          &  198  &  198   & 37.9 & 0.12 &  73     & 5.1       & {\tiny /189} &   1 &   7 & 10.5  \\
-Drodi~4.1.1            &  163  &  163   & 37.2 & 0.09 & 127     & 6.7       & {\tiny /143} &   0 &   3 &  4.2  \\
+Drodi~4.1.1            &  163  &  163   & 37.2 & 0.09 & 127     & \bb{6.7}       & {\tiny \bb{/143}} &   0 &   3 &  4.2  \\
 mrs~0.2.0              &   75  &   76   & 36.8 & 0.02 &  33     & 5.8       & {\tiny /71 } &   0 &   2 &  3.8  \\
 \hline
 \multicolumn{11}{c}{Demonstration division} \\
