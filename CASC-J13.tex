@@ -2121,7 +2121,6 @@ The requirements for \NEXT{} will include:
 \end{packed_enumerate}
 A BNF-based parser~\cite{SS+06}, the TPTP4X parser and an improved version of GDV will be made
 available to the systems' developers so that they can check their proofs.
-
 These more rigorous requirements for proofs in CASC resonate with the ProoVer proof verifier 
 competition that was held as a companion competition to \THIS{}.
 ProoVer is described in Section~\ref{ProoVer}.
@@ -2129,8 +2128,8 @@ ProoVer is described in Section~\ref{ProoVer}.
 The question ``what is a proof'' has been discussed in great detail from many 
 perspectives~\cite{JEFF}.
 In ATP a common proof output is a refutation, which might in itself not be considered a proof
-{\em of} a theorem (that was a conjecture), but rather a proof that a conjecture {\em is} a 
-theorem.
+{\em of} a theorem (a formula that was a conjecture), but rather a proof that a conjecture 
+formula {\em is} a theorem.
 Consider these contrasting examples.
 First a proof of a theorem:
 \begin{quote}
@@ -2152,6 +2151,8 @@ Thus it is unimaginable that you don't take your umbrella.\\
 Theorem: Take your umbrella.
 \end{quote}
 
+In the long term ATP systems might strive to produce proofs {\em of} theorems, rather than
+only proofs that conjectures {\em are} theorems.
 
 %--------------------------------------------------------------------------------------------------
 \section{The ProoVer Competition}
