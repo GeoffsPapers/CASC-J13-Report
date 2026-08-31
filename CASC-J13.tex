@@ -1611,6 +1611,9 @@ Vampire~5.0.1 won, and as in the FOF division showed significant improvement ove
 for the same reasons.
 The goal directed technique pioneered by Twee~\cite{Sma21} is one of the techniques that led
 to Vampire~4.9 winning the UEQ division of CASC-J12 in 2024, and remains in Vampire~5.0.1.
+It's value is well appreciated by the Vampire developers, who said: ``tgt-ground {\em [the goal 
+directed technique]} is definitely worth having. We are actually considering baking it into the 
+default strategy.''
 Several other systems have adopted the idea: E, TBA.
 
 FindProof, mrs, and Prover9 failed to output acceptable proofs for all problems solved.
@@ -1972,8 +1975,28 @@ These short descriptions of the systems were written by their entrants.
 
 \textbf{FindProof} is 
 
-\textbf{SUPr} is
-
+\textbf{SUPr}~\cite{TBA} is a saturation-based theorem prover built as a native component of the 
+Sigma knowledge engineering environment (Rust implementation -- SigmaKEE-rs)~\cite{PS14}.
+SUPr is optimized to reason directly over the Suggested Upper Merged Ontology (SUMO)~\cite{Pea11}, 
+with additional support to solve standalone TPTP problems. 
+The core search procedure is a given-clause saturation loop implementing ordered resolution and 
+superposition with selective literal selection, forward and backward demodulation, and a 
+Knuth-Bendix reduction ordering. 
+Clauses and their constituent terms are represented in a content-addressed, hash-consed arena. 
+This content based addressing scheme is structured to allow batched, hardware accelerated 
+unification via binary arithmetic.
+As SUPr is built specifically for reasoning over SUMO, SUPr's proving strategy depends on heavy 
+caching of supporting evidence for new axioms at the time of ingest, and use-case-specific 
+semantic decoding.
+Novel pre-caching of SUMO Inference Engine~\cite{HV11} (SInE) occurences and trigger indices allows 
+for fast per-problem axiom selection. 
+Axioms are additionally ranked by structural relevance to the conjecture~\cite{LX22}, and those 
+that rank highly but were dropped by SInE are rescued and reintroduced to the problem.
+Search-loop tuning is organized as a small number of strategies running as concurrent threads 
+that race for a solution. 
+Threads share a single clause stack that remains unconflicted due to the atomicity of the 
+content-based hashing scheme.
+ 
 \textbf{mrs}~\cite{Rol26} is is an automated theorem prover for first-order logic with equality. 
 It implements the superposition calculus~\cite{BG94} in a given-clause loop, with ordered 
 resolution, factoring, equality resolution, equality factoring, and paramodulation, all oriented 
@@ -2011,9 +2034,10 @@ acceptable, based on the following guidelines~\cite{Sut24-CASC-J12}:
       inferred formula.
 \item[5.] Inference steps must be reasonably fine-grained.
 \end{packed_enumerate}
-The CASC-J12 report noted~\cite{Sut25-CASC} the benefits of moving towards a ``verified track'' 
+The CASC-J12 report~\cite{Sut25-CASC} noted the benefits of moving towards a ``verified track'' 
 in CASC.
-An incremental approach was adopted, and in \LAST{} the following requirements were added.
+An incremental approach was adopted, and the following requirements for acceptability were added 
+in \LAST{}:
 \begin{packed_enumerate}
 \item[6.] Proofs must be in the TPTP format.
 \item[7.] Annotated formulae in a proof must be uniquely named.
@@ -2023,22 +2047,22 @@ An incremental approach was adopted, and in \LAST{} the following requirements w
 \item[10.] Proofs that introduce new symbols in definitions must provide an \smalltt{introduced()} 
       record to document the new symbol.
 \end{packed_enumerate}
-TPTP4X parser~\cite{Sut10} and the GDV proof verifier~\cite{Sut06} were made 
-available to the systems' developers so that they could check their proofs.
+The TPTP4X parser~\cite{Sut10} and GDV proof verifier~\cite{Sut06} were made available to the 
+systems' developers so that they could check their proofs.
 Note that there was no requirement for logical correctness, and no proof verification was done.
-The impact was interesting, and it was clear that the ATP systems needed to further improve their
-proof output~\cite{Sut26-CASC}.
-There were two particular points of weakness observed in the \LAST{} proofs.
+The impact was interesting, and data in the \LAST{} report~\cite{Sut26-CASC} showed that the 
+ATP systems still needed to improve their proof output.
+There were two particular points of weakness that were observed in the \LAST{} proofs.
 First, 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and UEQ divisions had syntax or 
 structural flaws.
 The situation improved in \THIS{} with only 200 of 5065 proofs, i.e., 3.9\%, having those types
 of flaws.
 Second, and more fundamentally, it was observed that many of the ATP systems' proofs included
-``inference steps'' that were calls to SAT/ATP/SMT systems, which inferred {\tt \$false} to 
-end the ATP system's refutation.
-The report on \LAST{} noted that final calls to external ATP systems were typically reported 
-with all the clauses sent to the external system listed as parents, with the most extreme 
-case listing 72367 parent clauses that were sent to the external Z3 system.
+``inference steps'' that were calls to SAT/ATP/SMT systems, which typically inferred {\tt \$false}
+to end the ATP system's refutation.
+The \LAST{} report noted that final calls to external ATP systems were typically reported with all 
+the clauses sent to the external system listed as parents -- the most extreme case listed 72367 
+parent clauses that were sent to the external Z3 system.
 A limited analysis revealed that typically only a subset of the listed parents were used by the 
 SAT/ATP/SMT system to infer {\tt \$false}.
 The granularity values reported in Sections~\ref{THF}, \ref{FOF}, \ref{FNT}, and~\ref{UEQ} provide
@@ -2053,29 +2077,30 @@ requirements for acceptable proofs were refined in \THIS{}:
 \item[12.] Proofs that make \smalltt{assumption}s must propagate and eventually discharge the 
       assumptions.
 \end{packed_enumerate}
-Additionally, granularity measure was added to the results to track the maximal numbers of parents
-in the inference steps of proofs.
+Additionally, the granularity measure was added to the results, to track the maximal numbers of 
+parents in the inference steps of proofs.
 Discussions during the IJCAR-13 conference that hosted \THIS{} led to the conclusion that 
-requirement 11 is unrealistic, because precisely extracting the set of parents that were used 
+requirement 11 is unrealistic because precisely extracting the set of parents that were used 
 by a SAT/ATP/SMT system might not be possible in all cases.
-From the organizational side, checking conformance to that requirement might not be possible in 
+From the organizational side, checking conformance to the requirement might not be possible in 
 all cases. 
-It is clear that the systems can only ``aim to'' comply, leading to a change to the requirement.
+It became clear that the systems can only ``aim to'' comply, leading to a change to the 
+requirement, specified in requirement 11' below.
 Even with a minimization of the parents list in inference steps, it is debatable whether a 
 successful call to a SAT/ATP/SMT system is really an ``inference step''.
 The SAT/ATP/SMT systems typically build a proof of their own, and that proof structure is not 
 shown in the ATP system's proof that reports the step.
 It would be preferable for the SAT/ATP/SMT system's proof to be exposed, and grafted into the
 ATP system's proof.
-Grafting in the proofs of subsystems will be required in future CASCs.
+Grafting in the proofs of subsystems will be encouraged in \NEXT{}, specified in requirement
+14 below.
 
 After \THIS{} some further detailed analysis of the proofs revealed that many had ill-formed
 documentation of inference steps, in the \smalltt{introduced{}} and \smalltt{inference()} records.
 The \THIS{} panel ruled that the documentation of the required format for these records was 
 inadequate, which allowed those proofs to be counted.
-The documentation was improved after the competition, and more specific requirements became
-possible.
-
+The documentation has been improved for these two points and more, and more precise requirements 
+have became possible.
 The requirements for \NEXT{} will include:
 \begin{packed_enumerate}
 \item[9'.] Proofs that negate the conjecture must correctly annotate the step as
@@ -2158,8 +2183,10 @@ While the design of CASC is mature and stable, each year's experiences lead to i
 and improvements.
 Changes being planned for \NEXT{} are:
 \begin{packed_itemize}
-\item Only two installation package will be allowed for each entry -- one for theorem proving/
+\item Only two installation packages will be allowed for each entry -- one for theorem proving/
       unsatisfiability checking, and one for countermodel finding/satisfiability checking.
+      The organizer will provide template \smalltt{starexec\_run} packages to smooth out the
+      creation and submission of working installation packages.
 \item All solutions (proofs and models) must be in TPTP syntax, error-free according to TPTP4X.
 \item Proof checking will be extended to include:
       \begin{packed_itemize}
@@ -2169,7 +2196,8 @@ Changes being planned for \NEXT{} are:
             record.
       \item Skolemization steps must be correctly documented in an \smalltt{inference} record.
       \end{packed_itemize}
-\item Syntax checking of proofs will be done at runtime during the competition.
+\item Models must be in TPTP syntax.
+\item Syntax checking of solutions will be done at runtime during the competition.
 \item No sample proofs will be requested, to avoid any mistaken belief that an approved sample
       proof implies that all proofs will be accepted.
 \end{packed_itemize}
