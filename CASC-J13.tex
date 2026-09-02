@@ -114,13 +114,6 @@ The axioms and conjecture are written in an appropriately expressive logic, and 
 The CADE ATP System Competition (CASC)~\cite{Sut16} is the annual evaluation of fully automatic,
 classical logic, ATP systems – the world championship for such systems.
 One purpose of CASC is to provide a public evaluation of the relative capabilities of ATP systems.
-Additionally, CASC aims to
-stimulate ATP research,
-motivate development and implementation of robust ATP systems that can be easily and usefully
-deployed in applications,
-provide an inspiring environment for personal interaction between ATP researchers,
-and
-expose ATP systems within and beyond the ATP community.
 CASC evaluates the performance of the ATP systems in terms of
 the number of problems solved,
 the number of acceptable solutions (proofs and models) output, and
@@ -128,6 +121,13 @@ the average time taken for problems solved,
 in the context of
 a bounded number of eligible problems and
 specified time limits.
+Additionally, CASC aims to
+stimulate ATP research,
+motivate development and implementation of robust ATP systems that can be easily and usefully
+deployed in applications,
+provide an inspiring environment for personal interaction between ATP researchers,
+and
+expose ATP systems within and beyond the ATP community.
 
 CASC is held at each CADE (the International Conference on Automated Deduction) and IJCAR
 (the International Joint Conference on Automated Reasoning) conference -- the major forums
@@ -154,15 +154,15 @@ Aart Middeldorp, Cl{\' a}udia Nalon, and Martina Seidl.
 The CASC panel has a few, but important, responsibilities:
 \begin{packed_itemize}
 \item Advise (by email) on contentious issues that arise before the competition, and that cannot
-      be agreeably resolved by the organizers and entrants.
-\item With the help of the organizers, adjudicate on the acceptability of the sample proofs and
+      be agreeably resolved by the organizer and entrants.
+\item With the help of the organizer, adjudicate on the acceptability of the sample proofs and
       models that are submitted before the competition.
 \item Supply a seed digit for the random problem selection process.
 \item If possible, be physically present at the start of the competition, so entrants can see who
       they are and raise any issues they are concerned about.
 \item Be contactable during the competition to advise on contentious issues that arise and that
-      cannot be agreeably resolved by the organizers and entrants.
-\item With the help of the organizers, adjudicate on the acceptability of the winners' proofs and
+      cannot be agreeably resolved by the organizer and entrants.
+\item With the help of the organizer, adjudicate on the acceptability of the winners' proofs and
       models.
 \item If possible, be physically present at the end of the competition for resolving possible 
       open issues, confirming the final system ranking in each division, and assisting in winner 
@@ -185,9 +185,10 @@ Important changes for \THIS{} were
 \begin{packed_itemize}
 \item The TFA and EPR divisions went on hiatus.
 \item The FNT division returned from hiatus.
-\item Inference steps in proofs may not list parents that are not used in the inference.
-\item Proofs should graft in subproofs from external systems.
-\item A new performance measure, proof granularity, is recorded and reported.
+\item Inference steps in proofs were expected to list only parents that are not used in the 
+      inference.
+\item Proofs were expected to graft in subproofs from external systems.
+\item A new performance measure, proof granularity, was recorded and reported.
 \item The ProoVer competition for proof verifiers was held for the first time in 2026, 
       as a companion competition to \THIS{}.
 \end{packed_itemize}
@@ -202,17 +203,6 @@ The panel is allowed to disqualify entrants due to unfairness, and to adjust the
 rules in case of misuse.
 
 \vspace*{0.5em}
-\emph{Executive summary:} \THIS{} was the \NTHCOMPETITION{} annual evaluation of fully 
-automatic, classical logic, Automated Theorem Proving (ATP) systems.
-\THIS{} fulfilled its objectives by evaluating the relative capabilities of ATP systems,
-and stimulating development and interest in ATP.
-The highlights of \THIS{} were many new entrants, and the companion ProoVer competition.
-Despite the continued dominance of the Vampire systems, the stimulating and interactive nature
-of CASC has kept the developer and user communities engaged.
-The experience gained from \THIS{} has prompted further focus on proof production and verification
-in \NEXT{}.
-
-\vspace*{0.5em}
 The rest of this paper is organized as follows:
 Section~\ref{DivisionsSystems} describes the competition divisions and the ATP systems that
 entered the various divisions.
@@ -222,9 +212,22 @@ Section~\ref{Evaluation} describes how the systems are evaluated.
 Section~\ref{Results} provides a commentated summary of the results.
 Section~\ref{Systems} contains short descriptions of three of the ATP systems.
 % the winning systems.
-Section~\ref{ProoVer} describes the design of the ProoVer competition, presents the results,
-and discusses new requirements for proofs in the TPTP format NEED REF.
+Section~\ref{Acceptable} discusses the increasingly precise definition and requirements for
+acceptable proofs in TPTP format, in preparation for \NEXT{}.
+Section~\ref{ProoVer} gives an overview of the companion ProoVer competition, and its ongoing
+relationship with CASC.
 Section~\ref{Conclusion} concludes and discusses plans for future CASCs.
+
+\vspace*{0.5em}
+\emph{Executive summary:} \THIS{} was the \NTHCOMPETITION{} annual evaluation of fully 
+automatic, classical logic, Automated Theorem Proving (ATP) systems.
+\THIS{} fulfilled its objectives by evaluating the relative capabilities of ATP systems,
+and stimulating development and interest in ATP.
+The highlights of \THIS{} were many new entrants, and the companion ProoVer competition.
+Despite the continued dominance of the Vampire systems, the stimulating and interactive nature
+of CASC has kept the developer and user communities engaged.
+The experience gained from \THIS{} has prompted further focus on proof production and verification
+in \NEXT{}.
 
 \vspace*{0.5em}
 \emph{A Tense Note:}
@@ -396,14 +399,14 @@ the entrant.
 The demonstration division results are presented along with the competition divisions' results,
 but might not be comparable with those results.
 
-\NUMBEROFENTRANTS{} ATP systems competed in the various divisions of \THIS{}.
-The division winners of the previous CASC (\LAST{}) and the Prover9~1109a system are automatically
-entered into the FOF demonstration division to provide benchmarks against which progress can be 
-judged.
-The systems, the divisions in which they were entered, and their entrants, are listed in
-Table~\ref{Entrants}.
+Table~\ref{Entrants} lists the 23 
+% \NUMBEROFENTRANTS{} 
+ATP systems that competed in \THIS{}, which divisions they entered, and their entrants' 
+information.
 A division acronym in {\em italics} indicates the system was in the demonstration division.
-System descriptions are in these competition proceedings~\cite{Sut24-CASC-J12} and on the \THIS{}
+The division winners of the previous CASC (\LAST{}) and the Prover9~1109a system are automatically
+entered into the demonstration division to provide benchmarks against which progress can be judged.
+System descriptions are in the competition proceedings~\cite{Sut24-CASC-J12} and on the \THIS{}
 web site.
 
 \begin{table*}
@@ -470,7 +473,6 @@ and \texttt{setrlimit} to limit memory use to 128 GiB.
 This separation avoids contention that might affect performance measurements~\cite{BLW19,FG+24}.
 Systems can use all the cores on the CPU.
 In \THIS{} all the demonstration division systems used the competition computers.
-
 The StarExec Miami computers used for CASC are the same as are publicly available to the TPTP 
 community, which allows system developers to test and tune their systems in exactly the same 
 environment as is used for the competition.
@@ -483,7 +485,9 @@ For the problems that were solved, 185 CPU hours were used in 34 wall clock hour
 \subsection{Problems for the TPTP-based Divisions}
 \label{TPTPProblems}
 
-The problems for the THF, FOF, EPR, and UEQ divisions were taken from the latest release of the
+The problems for CASC
+% for the THF, FOF, EPR, and UEQ divisions 
+are taken from the latest release of the
 Thousands of Problems for Theorem Provers (TPTP) problem library~\cite{Sut17}.
 For \THIS{} that was release v9.3.0.
 The TPTP version used for CASC is released only after the competition has started, so that new
@@ -504,8 +508,7 @@ The problems have to meet certain criteria to be eligible for use:
       exclude problems that would be solved by most of the systems and thus not differentiate
       between the systems.
       Problems of lesser and greater ratings are made eligible if there are not enough problems
-      with ratings in that range.
-      There were none in \THIS{}.
+      with ratings in that range -- this was unnecessary in \THIS{}.
 
       \hspace*{1em}
       Systems can be submitted before the competition so that their performance data is used in
@@ -558,10 +561,10 @@ Table~\ref{ProblemNumbers} gives the numbers of eligible problems, the maximal n
 be used after taking into account the limitation on very similar problems,
 % (in the context of the numbers of problems used),
 and the numbers of problems used in each division and category.
-As can be seen, that target of 50\% new problems was not met, but there were enough new problems 
+As can be seen, the target of 50\% new problems was not met, but there were enough new problems 
 in the TEQ, FEQ, and UEQ categories to expose any excessive tuning to the previous TPTP release.
-See Section~\ref{Conclusion} for a plea to the community to submit new problems to the TPTP 
-problem library.
+% See Section~\ref{Conclusion} for a plea to the community to submit new problems to the TPTP 
+% problem library.
 
 \begin{table*}[tbh]
 \caption{Numbers of eligible and used problems}
@@ -621,7 +624,7 @@ in increasing order of TPTP difficulty rating.
 % For the ICU division each entrant had to submit 20 FOF theorems (axioms with a provable conjecture).
 % The problems had to be provided in decreasing order of desired use in the division, e.g., from 
 % hardest to easiest for other systems.
-% The problems had to be all different, as assessed by the competition organizers.
+% The problems had to be all different, as assessed by the competition organizer.
 % It was expected that each entrant would submit problems that are easy enough for that entrant's
 % system, but difficult for the other entrants' systems, i.e., each entrant is saying to the
 % others: ``I Challenge yoU!''.
@@ -762,21 +765,22 @@ in increasing order of TPTP difficulty rating.
 \subsection{Time Limits}
 \label{TimeLimits}
 
-In the THF, FOF, FNT, and UEQ divisions a wall clock time limit is imposed for each problem.
-The minimal time limit for each problem is 120~s.
+% In the THF, FOF, FNT, and UEQ divisions 
+A wall clock time limit is imposed on each system's execution.
+The minimal time limit is 120~s.
 % , except for the ICU division where the minimal time limit is 300~s.
-The maximal time limit for each problem is constrained by the same factors that constrain the
-numbers of problems that are used, taking into account the phenomenon that ATP systems solve most
-problems quickly and very few slowly~\cite{SS01,Sut24}.
-This phenomenon is evident in the performance plots from the competition\footnote{%
-\href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}}.
+The maximal time limit is constrained by the same factors that constrain the numbers of problems 
+that are used, taking into account the phenomenon that ATP systems solve most problems quickly 
+and very few slowly~\cite{SS01,Sut24}.
+(This phenomenon is evident in the performance plots from the competition.\footnote{%
+\href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}})
 % and from the ratios of total times taken to solved times given in Section~\ref{Computers} --
 % 1618 vs. 185 CPU hours, and 453 vs. 34 wall clock hours.
 The time limit is chosen value within the range allowed according to the judgement of the
 organizer, and is announced at the competition.
-In \THIS{} a 180~s wall clock time limit was imposed for each problem.
-No CPU time limits are imposed, so it can be advantageous to use all the cores on the CPU
-when a wall clock time limit is used.
+In \THIS{} a 180~s wall clock time limit was imposed on each system's execution.
+No CPU time limits are imposed, so it can be advantageous to use all the cores on the CPU.
+% when a wall clock time limit is used.
 
 % \footnote{%
 % CPU limits emphasize underlying algorithmic/search quality, while wall
@@ -816,121 +820,12 @@ when a wall clock time limit is used.
 % batch.
 
 %---------------------------------------------------------------------------------------------------
-\section{System Evaluation}
-\label{Evaluation}
-
-CASC ranks the ATP systems at the division level.
-For each system, for each problem, four items of data are recorded:
-whether or not the problem was solved,
-whether or not a solution (proof or model) was output,
-the CPU and wall clock times taken to solve the problem and the times taken to output the
-solution (taken from the time stamps prepended to each line of the system's \smalltt{stdout}
-by StarExec's \smalltt{runsolver} utility),
-and
-the maximal number of parents in any inference.
-The systems are ranked at (only) the division level, according to the number of problems solved
-with an acceptable solution output.
-Ties are broken by the average time taken over problems solved.
-% (The models are ``counter-models'' for problems with an unprovable conjecture,
-% and ``models'' for satisfiable axiom sets without a conjecture.)
-Trophies are awarded to the competition divisions' winners.
-A system that is not entered into a division is assumed to perform worse than the entered systems,
-for that type of problem -- wimping out is not an option.
-% Additionally in CASC-28, Jasmin Blanchette at the Vrije Universiteit Amsterdam
-% contributed a travel prize of a ``romantic hotel stay in Amsterdam'' for the
-% SLH division, with expenses covered by the Matryoshka project\footnote{%
-% \url{https://matryoshka-project.github.io}}~\cite{BF+17}.
-In the demonstration division the systems are not ranked, and no trophies are awarded.
-
-The competition panel decides whether or not the systems' solutions are ``acceptable''. 
-The criteria include:
-\begin{packed_itemize}
-\item Proofs should not use a TPTP language that is more expressive than that of the problem.
-\item Proofs must be syntactically correct in TPTP format~\cite{Sut07-CSR}.
-\item Proofs must be structurally correct:
-      \begin{packed_itemize}
-      \item Annotated formulae must be uniquely named.
-      \item Proofs must be acyclic.
-      \item Proofs must show only relevant inference steps.
-      \item Proofs must have formulae from the problem as leaves, and end at the conjecture (for
-            axiomatic proofs) or \smalltt{\$false} formulae (for proofs by contradiction,
-            e.g.,~CNF refutations and closed tableau).
-      \item Proofs that make \smalltt{assumption}s must propagate and eventually discharge the
-            assumptions.
-      \end{packed_itemize}
-      Proof structure is checked using GDV~\cite{SB05}.
-      This can be done in SystemOnTSTP.
-\item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
-\item Inference steps must be reasonably fine-grained.
-      The maximal number of parents in any inference is considered in this regard.
-\item Proofs should graft in subproofs from external systems.
-\item An unsatisfiable set of ground instances of clauses is acceptable for establishing the
-      unsatisfiability of a set of clauses.
-\item Models must be complete, documenting the domain and symbol maps.
-      The domain and symbol maps may be specified by explicit ground lists (of mappings), or by
-      any clear, terminating algorithm.
-      Saturations are acceptable if their models are a subset of the models of the problem formulae.
-      Use of the TPTP format for interpretations~\cite{SS+26} is encouraged.
-\end{packed_itemize}
-
-In addition to the ranking data, other measures are made and presented in the results:
-\begin{packed_itemize}
-\item The \textit{state-of-the-art contribution} (SotAC) quantifies the unique abilities of each
-      system (excluding the previous year's winners that are earlier versions of competing systems).
-      For each problem solved by a system, its SotAC for the problem is the fraction of systems 
-      that do not solve the problem.
-      A system's overall SotAC is the average over the problems it solves but that are not solved 
-      by all the systems.
-\item The \textit{efficiency} balances the number of problems solved with the time taken.
-      It is the average solution rate (the reciprocal of the time taken to solve it) over the 
-      problems it solves, multiplied by the fraction of problems solved.
-      Efficiency is computed for both CPU time and wall clock time, to measure how efficiently the
-      systems use one core and multiple cores respectively.
-\item The \textit{core usage} measures the extent to which the systems take advantage of multiple
-      cores.
-      The raw core usage is the ratio of CPU time to wall clock time used, and the average core
-      usage is over the problems it solves with a raw core usage greater than 1.0.
-      The competition ran on octa-core computers, thus the maximal core usage was 8.0.
-      The ability to solve problems quickly before multi-core search is used is also of interest.
-      The number of problems solved with a raw core usage less than 1.0 is noted as an imprecise
-      cutoff for separating proofs that are found in preprocessing on a single core from proofs
-      found later after multi-core search has started. 
-      It is understood that some systems use multiple cores from before 1~s.
-\item The \textit{granularity} measures the extent to which inference steps combine multiple 
-      parent formulae into a single inferred formula.
-      The granularity of a proof is the maximal number of parents in an inference, and the 
-      overall granularity is the average over the problems it solves with acceptable proof output.
-%\item In the ISA problem category of the LTB division, the {\em number
-%      of axiom lists} (output of a list of axioms sufficient for a proof)
-%      is counted.
-%      A well-formed proof can be used to provide such a list.
-%\item In the SMO problem category of the LTB division, the number of
-%      {\em questions answered} (output of the bindings for the outermost
-%      existentially quantified variables) is counted
-%      (see Section~\ref{Output}).
-\end{packed_itemize}
-
-% In the ISA problem category of the LTB division, the \textit{axiom accuracy}
-% compares the numbers of axioms used in proofs.
-% For each problem solved by a system, its problem axiom accuracy is
-% the smallest number of axioms used in any system's proof, divided by the
-% number of axioms in this system's proof (or 0 if this system does
-% not output a proof).
-% A system's overall axiom accuracy is its average problem axiom
-% accuracy over the problems it solved, multiplied by the fraction of
-% problems solved.
-% This was the basis for the ISA category prize.
-% In the SMO problem category of the LTB division, the \textit{number of questions
-% answered}, i.e., output of the bindings for the outermost existentially
-% quantified variables, is counted.
-% This was the basis for the SMO category prize.
-
-%--------------------------------------------------------------------------------------------------
 \section{System Registration, Delivery, and Execution}
 \label{Registration}
 
-The ATP systems are registered for the competition by the registration deadline, using the
-system registration form,
+The ATP systems are registered for the competition 
+% by the registration deadline, 
+using an system registration form,
 Systems can be entered at only the division level, and can be entered into more than one division.
 Entering many similar variants of a system is deprecated, and entrants may be required to limit
 the number of variants that they enter.
@@ -941,16 +836,17 @@ difficulties) arising before, during, and after the competition.
 The nominated entrant must formally register for CASC.
 It is not necessary for entrants to physically attend the competition.
 
-The ATP systems are delivered to the competition organizers by the system delivery deadline,
+The ATP systems are delivered to the competition organizer 
+% by the system delivery deadline,
 as StarExec \smalltt{.tgz} installation packages.
-The installation packages may contain only the components necessary for running the system, i.e.,
+The installation packages can contain only the components necessary for running the system, i.e.,
 not including source code, etc.
-The competition organizers install and test the packages on StarExec.
+The competition organizer installs and tests the packages on StarExec.
 Source code is delivered separately, under the trusting assumption that the installation package
 corresponds to the source code.
-The entrants must email a \smalltt{.tgz} file of the source code and any files required for
-building the StarExec installation package to the competition organizers by the system delivery
-deadline.
+% The entrants must submit a \smalltt{.tgz} file of the source code and any files required for
+% building the StarExec installation package to the competition organizer.
+% by the system delivery deadline.
 
 After the competition all competition division systems' StarExec and source code packages are made
 available on the competition web site.
@@ -966,7 +862,7 @@ the web site.
 
 % For systems running on entrant supplied computers in the demonstration division, entrants must
 % email a \smalltt{.tgz} file containing the source code and any files required for building the
-% executable system to the competition organizers by the system delivery deadline.
+% executable system to the competition organizer by the system delivery deadline.
 % In the demonstration division the entrant specifies whether or not the source code is placed on
 % the CASC web site.
 
@@ -998,21 +894,136 @@ All disqualifications and ranking changes are explained in the competition repor
 
 In CASC each ATP system is entered under one name, but it is common for the entrant to deliver
 multiple installation packages, each specialized to particular divisions in the competition,
-e.g., separate packages for the TFA and TFN divisions, and separate packages for the FOF, EPR, 
-and UEQ divisions.
-In some cases multiple packages are combined into one by adding a wrapper that detects the 
-SPC of the problem, and then calls the appropriate package's entry point.
+e.g., separate packages for the FOF and UEQ divisions.
+% In some cases multiple packages are combined into one by adding a wrapper that detects the 
+% SPC of the problem, and then calls the appropriate package's entry point.
 Requiring the use of a different package depending on the problem type is a coarse level of 
 non-automation.
-Users of ATP systems can have different intentions, that produce distinct tasks for the systems.
-Common examples are theorem proving vs. disproving, and testing for unsatisfiability vs. model 
-finding.
-The latter is often the implementation of the former.
-In \NEXT{} entrants will be restricted to maximally two installation packages, corresponding
-to those use cases.
-The ATP systems will be responsible for detecting the problem type and running appropriate 
-components.
-This will improve the level of automation in the ATP systems.
+Users of ATP systems can have different intentions that produce distinct tasks for ATP, the
+most common of which is theorem proving/unsatisfiability checking vs. countermodel 
+finding/satisfiability checking
+In \NEXT{} entrants will be restricted to maximally two installation packages, one for each
+of these two types of task.
+The ATP systems will be responsible for detecting the problem type within each type of task,
+and running appropriate components.
+This will improve the level of automation in ATP systems.
+
+%--------------------------------------------------------------------------------------------------
+\section{System Evaluation}
+\label{Evaluation}
+
+CASC ranks the ATP systems at (only) the division level.
+For each system, for each problem, four items of data are recorded:
+whether or not the problem was solved,
+whether or not a solution (proof or model) was output,
+the CPU and wall clock times taken to solve the problem and the times taken to output the
+solution (taken from the time stamps prepended to each line of the system's \smalltt{stdout}
+by StarExec's \smalltt{runsolver} utility),
+and
+the maximal number of parents in any inference.
+The systems are ranked according to the number of problems solved with an acceptable solution 
+output.
+Ties are broken by the average time taken over problems solved.
+% (The models are ``counter-models'' for problems with an unprovable conjecture,
+% and ``models'' for satisfiable axiom sets without a conjecture.)
+Trophies are awarded to the competition divisions' winners.
+A system that is not entered into a division is assumed to perform worse than the entered systems,
+for that type of problem -- wimping out is not an option.
+% Additionally in CASC-28, Jasmin Blanchette at the Vrije Universiteit Amsterdam
+% contributed a travel prize of a ``romantic hotel stay in Amsterdam'' for the
+% SLH division, with expenses covered by the Matryoshka project\footnote{%
+% \url{https://matryoshka-project.github.io}}~\cite{BF+17}.
+In the demonstration division the systems are not ranked, and no trophies are awarded.
+
+The competition panel decides whether or not the systems' solutions are ``acceptable''. 
+The criteria include:
+\begin{packed_itemize}
+\item Proofs should not use a TPTP language that is more expressive than that of the problem.
+\item Proofs must be syntactically correct in TPTP format~\cite{Sut07-CSR}.
+      Proof syntax is checked using TPTP4X~\cite{Sut10}.
+      This can be done in SystemOnTSTP.\footnote{%
+\href{https://tptp.org/cgi-bin/SystemOnTSTP}{\tt tptp.org/cgi-bin/SystemOnTSTP}}
+\item Proofs must be structurally correct:
+      \begin{packed_itemize}
+      \item Annotated formulae must be uniquely named.
+      \item Proofs must be acyclic.
+      \item Proofs must show only relevant inference steps.
+      \item Proofs must have formulae from the problem as leaves, and end at the conjecture (for
+            axiomatic proofs) or \smalltt{\$false} formulae (for proofs by contradiction,
+            e.g.,~CNF refutations and closed tableau).
+      \item Inference steps should list only parents that are used in the inference.
+      \item Proofs that make \smalltt{assumption}s must propagate and eventually discharge the
+            assumptions.
+      \end{packed_itemize}
+      Proof structure is checked using GDV~\cite{SB05}.
+      This can be done in SystemOnTSTP.
+\item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
+\item Inference steps must be reasonably fine-grained.
+      The maximal number of parents in any inference is considered in this regard.
+\item Proofs should graft in subproofs from external systems.
+\item An unsatisfiable set of ground instances of clauses is acceptable for establishing the
+      unsatisfiability of a set of clauses.
+\item Models must be complete, documenting the domain and symbol maps.
+      The domain and symbol maps may be specified by explicit ground lists (of mappings), or by
+      any clear, terminating algorithm.
+      Saturations are acceptable if their models are a subset of the models of the problem formulae.
+      Use of the TPTP format for interpretations~\cite{SS+26} is encouraged.
+\end{packed_itemize}
+
+In addition to the ranking data, other measures are made and presented in the results:
+\begin{packed_itemize}
+\item The \textit{state-of-the-art contribution} (SotAC) quantifies the unique abilities of each
+      system (excluding the previous year's winners that are earlier versions of competing systems).
+      For each problem solved by a system, its SotAC for the problem is the fraction of systems 
+      that do not solve the problem.
+      A system's overall SotAC is the average over the problems solved but that are not solved 
+      by all the systems.
+\item The \textit{efficiency} balances the number of problems solved with the time taken.
+      It is the average solution rate (the reciprocal of the time taken to solve it) over the 
+      problems solved, multiplied by the fraction of problems solved.
+      Efficiency is computed for both CPU time and wall clock time, to measure how efficiently the
+      systems use one core and multiple cores respectively.
+\item The \textit{core usage} measures the extent to which the systems take advantage of multiple
+      cores.
+      The raw core usage is the ratio of CPU time to wall clock time used, and the average core
+      usage is over the problems solved with a raw core usage greater than 1.0.
+      The competition ran on octa-core computers, thus the maximal core usage was 8.0.
+      The ability to solve problems quickly before multi-core search is used is also of interest.
+      The number of problems solved with a raw core usage less than 1.0 is noted as an imprecise
+      cutoff for separating proofs that are found in preprocessing on a single core, from proofs
+      found later after multi-core search has started. 
+      It is understood that some systems use multiple cores from before 1~s.
+\item The \textit{granularity} measures the extent to which inference steps combine multiple 
+      parent formulae into a single inferred formula.
+      The granularity of a proof is the maximal number of parents in an inference, and the 
+      overall granularity is the average over the problems solved with acceptable proof output.
+      Granularity is a new measure in \THIS{}. 
+      It was motivated by the very large numbers of parents listed in individual inferences of 
+      \LAST{}, as discussed in the competition report~\cite{Sut26-CASC}.
+%\item In the ISA problem category of the LTB division, the {\em number
+%      of axiom lists} (output of a list of axioms sufficient for a proof)
+%      is counted.
+%      A well-formed proof can be used to provide such a list.
+%\item In the SMO problem category of the LTB division, the number of
+%      {\em questions answered} (output of the bindings for the outermost
+%      existentially quantified variables) is counted
+%      (see Section~\ref{Output}).
+\end{packed_itemize}
+
+% In the ISA problem category of the LTB division, the \textit{axiom accuracy}
+% compares the numbers of axioms used in proofs.
+% For each problem solved by a system, its problem axiom accuracy is
+% the smallest number of axioms used in any system's proof, divided by the
+% number of axioms in this system's proof (or 0 if this system does
+% not output a proof).
+% A system's overall axiom accuracy is its average problem axiom
+% accuracy over the problems it solved, multiplied by the fraction of
+% problems solved.
+% This was the basis for the ISA category prize.
+% In the SMO problem category of the LTB division, the \textit{number of questions
+% answered}, i.e., output of the bindings for the outermost existentially
+% quantified variables, is counted.
+% This was the basis for the SMO category prize.
 
 %--------------------------------------------------------------------------------------------------
 \section{Results}
@@ -1023,7 +1034,7 @@ This will improve the level of automation in the ATP systems.
 % criteria (see Section~\ref{Evaluation}),
 The result tables below give 
 the number of problems solved with an acceptable solution output,
-the number of problems solved (without considering solution output),
+the number of problems solved without considering solution output,
 the average wall clock time taken over the problems solved,
 the state-of-the-art contribution,
 the (micro-)\allowbreak efficiency,
@@ -1039,17 +1050,15 @@ Detailed results, including the systems' output files, are available on the \THI
 site.\footnote{%
 \href{https://tptp.org/CASC/30/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}} 
 
-The structural checking of proofs in the competition theorem proving divisions -- the THF, 
-FOF, and UEQ divisions -- was new in \LAST{}.
-It was the first step along a path to full verification of proofs in CASC.
-In \LAST{}, for most systems, some of their proofs failed the structural checking,
-and it was hoped that the situation would have improved by \THIS{}. 
-Sadly, it was not the case.
-The result tables show the difference between the number of solutions output
-and the number of acceptable solutions output, and some commentary is provided.
-Some developers knew in advance that their system's proof output was not acceptable, and 
-``number of problems solved with an acceptable solution output'' is set to ``-'' rather than 0.
-A full analysis of the reasons for the failures is given in Section~\ref{Acceptable}.
+The structural checking of proofs in the competition theorem proving divisions 
+was new in \LAST{}, and many systems' proofs had structural flaws.
+Those results were expected to provide motivation for developers of systems in \THIS{} to ensure 
+that their systems' proofs are acceptable.
+Some developers knew in advance that their systems' proofs would not be acceptable, and their
+numbers of problems solved with an acceptable solution output is set to ``-'' rather than 0
+in the results tables.
+Discussion of the progress in proof output from \LAST{} to \THIS{}, in terms of proof structure
+and inference granularity, is given in Section~\ref{Acceptable}.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{The THF Division}
@@ -1064,9 +1073,9 @@ The higher-order components of Vampire are being incrementally merged into the m
 of development, which is clearly producing some growing pains.
 Zipperposition ran the same code as it has since CASC-29 in 2023, and its proofs that were 
 acceptable in the past are now unacceptable due to the stricter requirements.
-These flaws in the proof are quite simple, e.g., many of them have duplicate formulae names, in 
-some cases duplicate formulae, and others have the SZS \smalltt{status(esa)} when negating 
-the conjecture, while it should be \smalltt{status(cth)}.
+The flaws in Zipperposition's proofs are quite simple, e.g., many of them have duplicate formulae 
+names, in some cases duplicate formulae, and others give the SZS \smalltt{status(esa)} when 
+negating the conjecture (it should be \smalltt{status(cth)}).
 These are flaws that should be easily fixed, so that Zipperposition is upgraded for \NEXT{}.
 The 13 missing proofs from Leo-III are interesting: they come from Leo-III using bracketed
 quantifiers as terms that are applied, e.g., \smalltt{((!)\,@\,\ldots)}, instead of the
@@ -1096,20 +1105,19 @@ Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & \bb{5.7}     
 Zipperposition had the highest average time taken, but made the best use of the multiple cores.
 E solved the most problems before starting to use multiple cores, and had good core usage
 Leo-III used multiple cores for all the problems it solved.
-E had solved the most TNE problems, largely because it uniquely solved 19 graph theory 
+E solved the most TNE problems, largely because it uniquely solved 19 graph theory 
 (\smalltt{GRA}) problems.
 These problems have been in the TPTP problem library since release v3.6.0 from 2008.
 E's developer suggested that the progress was simply due to several bugs being fixed in the 
 higher-order code.
 The new problems were mostly solved by the non-Leo systems.
 
-This is the first CASC in which the new granularity data has been provided, motivated by the
-very last numbers of parents listed in individual inferences of \LAST{}.~\cite{}
-See Section~\ref{Acceptable} for some discussion.
-The granularity figures are not extreme (recall, they are the average maximal number of
-parents in inferences over problems solved with acceptable proof output).
-Deeper analysis revealed that LEO-II and Leo-III often had inference with many parents, by
-virtue of calls to the E system.
+The granularity figures are not extreme, with the Leos having the highest values.
+Analysis revealed that their higher granularities came from inferences that were to the E system.
+The developer said: ``LEO-II does exactly this: Just list all of the clauses that were sent to 
+E as inference parents. \ldots Leo-III does some naive filtering {\em [of the clauses sent to E]}, 
+but it does not filter the parents wrt. actual usage by E. This is ongoing work, but will 
+definitely lead to more realistic/lower number of inference parents on average.''
 The largest contributor to E's granularity was deeply nested \smalltt{apply\_def} steps, in 
 which definitions were sequentially applied in a single inference.
 
@@ -1377,7 +1385,9 @@ This can be seen from E having a sharper upwards swing than the Vampires in the 
 plot.
 mrs also had a high efficiency relative to its ranking.
 FindProof had the highest core usage, using multiple cores in all the problems it solved.
-LisaST used multiple cores for most of the problems it solved ASKED SIMON.
+LisaST used multiple cores for most of the problems it solved, which is the intention of
+the system design as the developer explained: ``there are 8 built-in strategies, and it 
+always runs the 8 in parallel''.
 Drodi also had high core usage, and solved 89 problems in less than 1~s.
 The developer of Drodi provided analysis of the first five and last five problems solved in 
 less than 1~s, revealing that eight of those 10 proofs were found during multi-core search.
@@ -1397,7 +1407,7 @@ The best came from Connect++, LisaST, Prover9~2026-6A, and VIP, which all had a 
 That means those systems' inference had an average of maximally two parents per inference, making 
 the proof as fine-grained as can be expected.
 At the other end of the scale, iProver and SATResetCoP had high granularity values.
-iProver had eight prof with a granularity of over 1000, three of which were over 10000, with
+iProver had eight proofs with a granularity of over 1000, three of which were over 10000, and with
 the maximal being 12651.
 As was the case in \LAST{} iProver's use of Z3 to finish a refutation is the common culprit,
 seen in iProver's inference rule \smalltt{smt\_impl\_just}.
@@ -2050,8 +2060,8 @@ in \LAST{}:
 The TPTP4X parser~\cite{Sut10} and GDV proof verifier~\cite{Sut06} were made available to the 
 systems' developers so that they could check their proofs.
 Note that there was no requirement for logical correctness, and no proof verification was done.
-The impact was interesting, and data in the \LAST{} report~\cite{Sut26-CASC} showed that the 
-ATP systems still needed to improve their proof output.
+The impact was interesting, and data in the \LAST{} report showed that the ATP systems still 
+needed to improve their proof output.
 There were two particular points of weakness that were observed in the \LAST{} proofs.
 First, 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and UEQ divisions had syntax or 
 structural flaws.
@@ -2125,6 +2135,8 @@ These more rigorous requirements for proofs in CASC resonate with the ProoVer pr
 competition that was held as a companion competition to \THIS{}.
 ProoVer is described in Section~\ref{ProoVer}.
 
+MAYBE USE THIS. One thing which you could say about the LisaST if you have space and find it interesting, is that it is, if I'm not mistaken, the first solver to be reasonably competitive at CASC that can produce proofs that directly checkable by a small kernel/proof assistant, including clausification :)
+
 The question ``what is a proof'' has been discussed in great detail from many 
 perspectives~\cite{JEFF}.
 In ATP a common proof output is a refutation, which might in itself not be considered a proof
@@ -2151,6 +2163,7 @@ Thus it is unimaginable that you don't take your umbrella.\\
 Theorem: Take your umbrella.
 \end{quote}
 
+Should I define my general axiomatic proof notion here?
 In the long term ATP systems might strive to produce proofs {\em of} theorems, rather than
 only proofs that conjectures {\em are} theorems.
 
