@@ -2247,6 +2247,80 @@ only proofs that conjectures {\em are} theorems.
 \section{The ProoVer Competition}
 \label{ProoVer}
 
+The Proof Verification Competition (ProoVer) is a new competition, evaluating proof
+checkers, i.e.,~systems that verify whether a given proof is correct wrt its conjecture. 
+ProoVer 2026 was the first edition, held as a companion competition to \THIS{}, sharing its 
+computers and much of its organizational machinery.
+ProoVer 2026 was organized by Julie Cailler and Simon Guilloud, and overseen by the same 
+panel as \THIS{}: Cl\'audia Nalon, Aart Middeldorp, and Martina Seidl.
+Full details of the competition design, the entrant systems, and the results are given in the 
+ProoVer 2026 proceedings~\cite{ProoVer2026}. 
+This section gives an overview of the competition.
+
+A ProoVer entrant is a proof checker that, given an untyped first-order (FOF) TPTP problem and a
+corresponding TSTP derivation~\cite{SS+06}, must decide whether the derivation is a valid
+refutation of the problem.
+A derivation consists of a sequence of syntactically correct TSTP inference steps.
+The competition problem set was made of $50$ correct proofs and $50$ incorrect (aka ``evil'') 
+ones that had been altered to become incorrect.
+Most steps can be discharged to an external ATP system, but the proof checker must verify a small
+set of specified rules (Skolemization, the negated conjecture, and correspondence between the 
+problem file and the proof file) internally.
+
+Ten proof checkers competed: eight in the ranked regular division, and two in the unranked 
+demonstration division (due to the need for internet access).
+
+The ProoVer 2026 problem set comprised $100$ proof-validation problems, each a valid (Good) or 
+a flawed (Bad) TSTP derivation. 
+However, $9$ problems were later cancelled as ambiguous or non-compliant, leaving 91 (44~Good, 
+47~Bad) that counted for the ranking. The possible score ranged therefore from $138$ to $-514$.
+The systems are ranked according to the following grading scheme:
+
+\begin{itemize}
+    \item Identifying a bad proof as bad = $+2$
+    \item Identifying a good proof as good = $+1$
+    \item Giving up = $0$
+    \item Identifying a good proof as bad = $-1$
+    \item Identifying a bad proof as good = $-10$
+\end{itemize}
+
+
+Table~\ref{ProoVerSummary} lists the entrants, grouped by division, together with their final 
+score. 
+GAPT~2.20 won the regular division and, having a student developer, also won the 
+\emph{ProoVer 2026 Best Student Proof Checker} award.
+VaLeaDate~0.1, which had the best record at identifying Bad proofs, won the 
+\emph{ProoVer 2026 Safest Proof Checker} award.
+
+\begin{table*}[tbh]
+\caption{ProoVer 2026 entrants and final ranking}
+\label{ProoVerSummary}
+\begin{tabular}{llr}
+\hline
+Proof Checker & Entrant & Score \\
+\hline
+\multicolumn{3}{c}{\textit{Regular division}} \\
+\hline
+GAPT~2.20         & Fabian Achammer \& Martin Riener         & 111 \\
+VaLeaDate~0.1     & Jonas Bodingbauer \& Laura Kovacs        & 98  \\
+N\"orgler~1.1     & Alexander Steen et al.                   & 93  \\
+ProofCheck~1.0    & Jeff Machado \& Larry Lesyna             & 75  \\
+ProofGuard~1.0    & Matthew Farah \& Alicia Marinache        & 49  \\
+mrs-proover~0.2.0 & Olivier Roland                           & 47  \\
+PyCheck~0.1       & Stephan Schulz                           & 41  \\
+CheckProof~0.1    & Nik Murzin                               & $-103$ \\
+\hline
+\multicolumn{3}{c}{\textit{Demonstration division}} \\
+\hline
+GDV~2.0           & Geoff Sutcliffe                         & $-4$ \\
+GDV-LP~2.0        & Fr\'ed\'eric Blanqui \& Geoff Sutcliffe & $-6$ \\
+\hline
+\end{tabular}
+\end{table*}
+
+The ProoVer 2026 problem set is available online, together with an explanation of each problem.
+ProoVer's first edition led to multiple discussions, serving the broader goal of improving the 
+TSTP specification.
 
 %--------------------------------------------------------------------------------------------------
 \section{Conclusion}
