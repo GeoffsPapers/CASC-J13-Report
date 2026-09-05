@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{wasysym}
 \usepackage{amsfonts}
+\usepackage{amsmath}
 % \usepackage{graphicx}
 % \usepackage{algorithm2e}
 \newcommand{\smalltt}[1]{\small \texttt{#1}}
@@ -1323,11 +1324,13 @@ In \LAST{} a key differentiator between the FOF division systems was their abili
 acceptable proofs, with a notable difference between the ranking by number of acceptable proofs 
 output and the ranking by the number of problems solved.
 It is pleasing to see a better correlation between the two rankings in \THIS{}, indicating that
-lessons were learned from the \LAST{}.
-However, there is still room for improvement.
+lessons were learned from the \LAST{} -- more analysis of the improvement is in 
+Section~\ref{Acceptable}.
+However, there is still room for further improvement.
 This year the unacceptable proofs often had simple syntax mistakes, that can be easily fixed, 
 e.g.,~illegal formula names, missing brackets around binary formulae.
 Some other flaws were deeper, e.g., missing formulae.
+Vampire~5.0.1 had one proof with a syntax error.
 LisaST suffered the most, with a mixture of syntax mistakes and deeper flaws.
 CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
 \smalltt{SEU269+1} solved by CSI++, but no SZS status line. Also solved by E.
@@ -2115,33 +2118,46 @@ requirements for acceptable proofs were refined in \THIS{}:
 \begin{table}[htb]
 \caption{Progress in acceptable proof output}
 \label{ProofProgress}
-\begin{tabular}{l|lrrr|lrrr|r}
+\begin{tabular}{l|lrrr|lrrr|rr}
 \hline
-            &\multicolumn{4}{l|}{\LAST{}}         & \multicolumn{4}{l|}{\THIS{}}       &          \\
-System      & Version  & Solns & Solved & Loss \% & Version & Solns & Solved & Loss \% & Delta \% \\
+            &\multicolumn{4}{l|}{\LAST{}}         & \multicolumn{4}{l|}{\THIS{}}       & $\Delta$ Loss &Progress \\
+System      & Version  & Solved & Solns &  Loss   & Version & Solved & Solns &  Loss  &               &         \\
 \hline
-            &\multicolumn{4}{l|}{THF/500}         & \multicolumn{4}{l|}{THF/400}       &          \\
-E           & 3.3.0    &   375 &    395 & 4.00\%  & 3.5.1   &   323 &    324 & 0.25\%  &  3.75\%  \\
-Vampire     & 5.0      &   439 &    449 & 2.00\%  & 5.0.1   &   340 &    352 & 3.00\%  & -1.00\%  \\
-Leo-III     & 1.7.19   &   241 &    242 & 0.20\%  & 1.8.0   &   137 &    160 & 5.75\%  & -5.55\%  \\
+            &\multicolumn{4}{l|}{THF/500}         & \multicolumn{4}{l|}{THF/400}       &               &          \\
+E           & 3.3.0    &   395 &    375 &  5.06\% & 3.5.1   &   324 &    323 &  0.31\% &       -4.75\% &   3.75\% \\
+Vampire     & 5.0      &   449 &    439 &  2.23\% & 5.0.1   &   352 &    340 &  3.41\% &        1.18\% &  -1.00\% \\
+Leo-III     & 1.7.19   &   242 &    241 &  0.41\% & 1.8.0   &   160 &    137 & 14.38\% &       13.96\% &  -5.55\% \\
 \hline
-            &\multicolumn{4}{l|}{FOF/500}         & \multicolumn{4}{l|}{FOF/400}       &          \\
-Drodi       & 4.1.0    &   210 &    325 &23.00\%  & 4.1.1   &   214 &    215 & 0.25\%  & 22.75\%  \\
-iProver     & 3.9.3    &   278 &    367 &17.80\%  & 3.9.3   &   222 &    250 & 7.00\%  & 10.80\%  \\
-Connect++   & 0.6.1    &     0 &    102 &20.40\%  & 0.7.2   &    24 &     64 &10.00\%  & 10.40\%  \\
-SPASS-SCL   & 0.1      &     0 &     11 & 2.20\%  & 0.1.1   &    14 &     14 & 0.00\%  &  2.20\%  \\
-E           & 3.3.0    &   364 &    364 & 0.00\%  & 3.5.1   &   264 &    264 & 0.00\%  &  0.00\%  \\
-Vampire     & 5.0      &   455 &    455 & 0.00\%  & 5.0.1   &   380 &    381 & 0.25\%  & -0.25\%  \\
+            &\multicolumn{4}{l|}{FOF/500}         & \multicolumn{4}{l|}{FOF/400}       &               &          \\
+Drodi       & 4.1.0    &   325 &    210 & 35.38\% & 4.1.1   &   215 &    214 &  0.47\% &      -34.92\% &  22.75\% \\
+iProver     & 3.9.3    &   367 &    278 & 24.25\% & 3.9.3   &   250 &    222 & 11.20\% &      -13.05\% &  10.80\% \\
+Connect++   & 0.6.1    &   102 &      0 &100.00\% & 0.7.2   &    64 &     24 & 62.50\% &      -37.50\% &  10.40\% \\
+E           & 3.3.0    &   364 &    364 &  0.00\% & 3.5.1   &   264 &    264 &  0.00\% &             - &   6.80\% \\
+SPASS-SCL   & 0.1      &    11 &      0 &100.00\% & 0.1.1   &    14 &     14 &  0.00\% &     -100.00\% &   2.20\% \\
+Vampire     & 5.0      &   455 &    455 &  0.00\% & 5.0.1   &   381 &    380 &  0.26\% &        0.26\% &  -0.25\% \\
 \hline
-            &\multicolumn{4}{l|}{UEQ/300}         & \multicolumn{4}{l|}{UEQ/400}       &          \\
-iProver     & 3.9.3    &    62 &    205 &47.67\%  & 3.9.3   &   198 &    198 & 0.00\%  & 47.67\%  \\
-Vampire     & 5.0      &   263 &    263 & 0.00\%  & 5.0.1   &   370 &    370 & 0.00\%  &  0.00\%  \\
-E           & 3.3.0    &   222 &    222 & 0.00\%  & 3.5.1   &   255 &    255 & 0.00\%  &  0.00\%  \\
-Twee        & 2.6.0    &   258 &    258 & 0.00\%  & 2.7     &   286 &    286 & 0.00\%  &  0.00\%  \\
-Drodi       & 4.1.0    &   121 &    121 &23.00\%  & 4.1.1   &   163 &    163 & 0.00\%  &  0.00\%  \\
+            &\multicolumn{4}{l|}{UEQ/300}         & \multicolumn{4}{l|}{UEQ/400}       &               &          \\
+iProver     & 3.9.3    &   205 &     62 & 69.76\% & 3.9.3   &   198 &    198 &  0.00\% &      -69.76\% &  47.67\% \\
+Twee        & 2.6.0    &   258 &    258 &  0.00\% & 2.7     &   286 &    286 &  0.00\% &             - &  14.50\% \\
+E           & 3.3.0    &   222 &    222 &  0.00\% & 3.5.1   &   255 &    255 &  0.00\% &             - &  10.25\% \\
+Vampire     & 5.0      &   263 &    263 &  0.00\% & 5.0.1   &   370 &    370 &  0.00\% &             - &  -4.83\% \\
+Drodi       & 4.1.0    &   121 &    121 &  0.00\% & 4.1.1   &   163 &    163 &  0.00\% &             - &  -0.42\% \\
 \hline
 \end{tabular}
 \end{table}
+
+\[
+Loss\,\text{\em \%} = 
+\dfrac{Solved - Solns}{Solved}
+\]
+
+\[
+Progress = 
+\begin{cases}
+\text{if 0\% Loss both years} , & \text{\em \LAST{}}\!\left(\dfrac{Solved}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved}{Problems}\right) \\[10pt]
+\text{otherwise}              , & \text{\em \LAST{}}\!\left(\dfrac{Solved - Solns}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved - Solns}{Problems}\right)
+\end{cases}
+\]
 
 There were two particular points of weakness that were observed in the \LAST{} proofs.
 First, 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and UEQ divisions had syntax or 
