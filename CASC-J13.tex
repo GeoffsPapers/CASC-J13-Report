@@ -2091,7 +2091,7 @@ systems' developers so that they could check their proofs.
 Note that there was no requirement for logical correctness, and no proof verification was done.
 
 The impact was interesting, and the data showed that the ATP systems still needed to improve 
-their proofs.
+their proofs~\cite{Sut26-CASC}.
 A particular phenomenon that was observed was that many of the ATP systems' proofs included
 ``inference steps'' that were calls to SAT/ATP/SMT systems, which typically inferred {\tt \$false}
 to end the ATP system's refutation.
@@ -2112,23 +2112,51 @@ requirements for acceptable proofs were refined in \THIS{}:
 \end{packed_enumerate}
 
 %--------------------------------------------------------------------------------------------------
-\subsection{Progress}
+\subsection{Progress from \LAST{} to \THIS{}}
 \label{Progress}
+
+Table~\ref{ProofProgress} provides data comparing the progress in acceptable proof production
+between \LAST{} and \THIS{}, for systems that had versions entered in both competitions.
+Loss measures what percentage of the problems solved did not have acceptable proof output:
+\[
+Loss\,\text{\em \%} = 
+\dfrac{Solved - Solns}{Solved}
+\]
+A reduction in Loss, indicated by a negative $\Delta$~Loss, directly indicates improvement.
+The Progress column measures that improvement in the context of the numbers of problems
+solved and the numbers of problems in the divisions:
+\[
+Progress = 
+\begin{cases}
+\text{if 0\% Loss both years} , & \text{\em \LAST{}}\!\left(\dfrac{Solns}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solns}{Problems}\right) \\[10pt]
+\text{otherwise}              , & \text{\em \LAST{}}\!\left(\dfrac{Solved - Solns}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved - Solns}{Problems}\right)
+\end{cases}
+\]
+The progress values for systems that had 0\% loss in both years when $Solved = Solns$, indicated 
+by a `-' in the $\Delta$~Loss column, are not directly comparable with the others, but do measure ``progress''.
+
+There are very definite signs of progress, partiularly in the FOF division.
+Drodi's improvement is salient, with iProver also having significant improvement (also in UEQ).
+E is noteworthy for having consistently minimal loss, coupled with improved performance.
+As an overall measure, in \LAST{} 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and 
+UEQ divisions had syntax or structural flaws.
+The situation improved in \THIS{} with only 200 of 5065 proofs, i.e., 3.9\%, having those types
+of flaws.
 
 \begin{table}[htb]
 \caption{Progress in acceptable proof output}
 \label{ProofProgress}
 \begin{tabular}{l|lrrr|lrrr|rr}
 \hline
-            &\multicolumn{4}{l|}{\LAST{}}         & \multicolumn{4}{l|}{\THIS{}}       & $\Delta$ Loss &Progress \\
+Division    & \LAST{}  &Problems&       &         & \THIS{} &Problems&       &        & $\Delta$ Loss &Progress \\
 System      & Version  & Solved & Solns &  Loss   & Version & Solved & Solns &  Loss  &               &         \\
 \hline
-            &\multicolumn{4}{l|}{THF/500}         & \multicolumn{4}{l|}{THF/400}       &               &          \\
+THF         &          &   500 &        &         &         &   400 &        &        &               &          \\
 E           & 3.3.0    &   395 &    375 &  5.06\% & 3.5.1   &   324 &    323 &  0.31\% &       -4.75\% &   3.75\% \\
 Vampire     & 5.0      &   449 &    439 &  2.23\% & 5.0.1   &   352 &    340 &  3.41\% &        1.18\% &  -1.00\% \\
 Leo-III     & 1.7.19   &   242 &    241 &  0.41\% & 1.8.0   &   160 &    137 & 14.38\% &       13.96\% &  -5.55\% \\
 \hline
-            &\multicolumn{4}{l|}{FOF/500}         & \multicolumn{4}{l|}{FOF/400}       &               &          \\
+FOF         &          &   500 &        &         &         &   400 &        &        &               &          \\
 Drodi       & 4.1.0    &   325 &    210 & 35.38\% & 4.1.1   &   215 &    214 &  0.47\% &      -34.92\% &  22.75\% \\
 iProver     & 3.9.3    &   367 &    278 & 24.25\% & 3.9.3   &   250 &    222 & 11.20\% &      -13.05\% &  10.80\% \\
 Connect++   & 0.6.1    &   102 &      0 &100.00\% & 0.7.2   &    64 &     24 & 62.50\% &      -37.50\% &  10.40\% \\
@@ -2136,7 +2164,7 @@ E           & 3.3.0    &   364 &    364 &  0.00\% & 3.5.1   &   264 &    264 &  
 SPASS-SCL   & 0.1      &    11 &      0 &100.00\% & 0.1.1   &    14 &     14 &  0.00\% &     -100.00\% &   2.20\% \\
 Vampire     & 5.0      &   455 &    455 &  0.00\% & 5.0.1   &   381 &    380 &  0.26\% &        0.26\% &  -0.25\% \\
 \hline
-            &\multicolumn{4}{l|}{UEQ/300}         & \multicolumn{4}{l|}{UEQ/400}       &               &          \\
+UEQ         &          &   300 &        &         &         &   400 &        &        &               &          \\
 iProver     & 3.9.3    &   205 &     62 & 69.76\% & 3.9.3   &   198 &    198 &  0.00\% &      -69.76\% &  47.67\% \\
 Twee        & 2.6.0    &   258 &    258 &  0.00\% & 2.7     &   286 &    286 &  0.00\% &             - &  14.50\% \\
 E           & 3.3.0    &   222 &    222 &  0.00\% & 3.5.1   &   255 &    255 &  0.00\% &             - &  10.25\% \\
@@ -2146,32 +2174,9 @@ Drodi       & 4.1.0    &   121 &    121 &  0.00\% & 4.1.1   &   163 &    163 &  
 \end{tabular}
 \end{table}
 
-\[
-Loss\,\text{\em \%} = 
-\dfrac{Solved - Solns}{Solved}
-\]
-
-\[
-Progress = 
-\begin{cases}
-\text{if 0\% Loss both years} , & \text{\em \LAST{}}\!\left(\dfrac{Solved}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved}{Problems}\right) \\[10pt]
-\text{otherwise}              , & \text{\em \LAST{}}\!\left(\dfrac{Solved - Solns}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved - Solns}{Problems}\right)
-\end{cases}
-\]
-
-There were two particular points of weakness that were observed in the \LAST{} proofs.
-First, 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and UEQ divisions had syntax or 
-structural flaws.
-The situation improved in \THIS{} with only 200 of 5065 proofs, i.e., 3.9\%, having those types
-of flaws.
-
-After \THIS{} some further detailed analysis of the proofs revealed that many had ill-formed
-documentation of inference steps, in the \smalltt{introduced{}} and \smalltt{inference()} records.
-The \THIS{} panel ruled that the documentation of the required format for these records was 
-inadequate, which allowed those proofs to be counted.
-The documentation has been improved for these two points and more, and more precise requirements 
-have became possible.
-
+A comparison of the granularity values between \LAST{} and \THIS{} would be ``unfair'', because
+the measure was not part of the \LAST{} design, and thus developers had no motivation to minimise
+granularity.
 The granularity values reported in Sections~\ref{THF}, \ref{FOF}, \ref{FNT}, and~\ref{UEQ} provide
 some indication of the situation in \THIS{}.
 As a counter point to the maximal value of 72367 in \LAST{}, the maximal value in \THIS{} was
@@ -2180,6 +2185,13 @@ As a counter point to the maximal value of 72367 in \LAST{}, the maximal value i
 %--------------------------------------------------------------------------------------------------
 \subsection{The Future}
 \label{FutureProofs}
+
+After \THIS{} some further detailed analysis of the proofs revealed that many had ill-formed
+documentation of inference steps, in the \smalltt{introduced{}} and \smalltt{inference()} records.
+The \THIS{} panel ruled that the documentation of the required format for these records was 
+inadequate, which allowed those proofs to be counted.
+The documentation has been improved for these two points and more, and more precise requirements 
+have became possible.
 
 Discussions during the IJCAR-13 conference that hosted \THIS{} led to the conclusion that 
 requirement 11 is unrealistic because precisely extracting the set of parents that were used 
@@ -2264,79 +2276,104 @@ only proofs that conjectures {\em are} theorems.
 \label{ProoVer}
 
 The Proof Verification Competition (ProoVer) is a new competition, evaluating proof
-checkers, i.e.,~systems that verify whether a given proof is correct wrt its conjecture. 
-ProoVer 2026 was the first edition, held as a companion competition to \THIS{}, sharing its 
+verifiers, i.e.,~systems that verify whether a proof is correct wrt its conjecture. 
+ProoVer~2026 was the first edition, held as a companion competition to \THIS{}, sharing its 
 computers and much of its organizational machinery.
-ProoVer 2026 was organized by Julie Cailler and Simon Guilloud, and overseen by the same 
-panel as \THIS{}: Cl\'audia Nalon, Aart Middeldorp, and Martina Seidl.
-Full details of the competition design, the entrant systems, and the results are given in the 
-ProoVer 2026 proceedings~\cite{ProoVer2026}. 
-This section gives an overview of the competition.
+ProoVer~2026 was organized by Julie Cailler and Simon Guilloud.
+An overview of the competition is given here.
+Full details of the competition design and the entrant systems are given in the 
+ProoVer~2026 proceedings~\cite{CG26}. 
 
-A ProoVer entrant is a proof checker that, given an untyped first-order (FOF) TPTP problem and a
-corresponding TSTP derivation~\cite{SS+06}, must decide whether the derivation is a valid
-refutation of the problem.
-A derivation consists of a sequence of syntactically correct TSTP inference steps.
-The competition problem set was made of $50$ correct proofs and $50$ incorrect (aka ``evil'') 
-ones that had been altered to become incorrect.
-Most steps can be discharged to an external ATP system, but the proof checker must verify a small
-set of specified rules (Skolemization, the negated conjecture, and correspondence between the 
-problem file and the proof file) internally.
+A ProoVer~2026 entrant is a proof verifier that is given an untyped first-order (FOF) TPTP 
+problem and a corresponding refutation proof~\cite{SS+06}, and decides whether or not 
+the refutation proof is valid.
+A refutation proof consists of a sequence of syntactically correct TSTP inference steps ending
+at \texttt{\$false}.
+Most inference steps could be discharged by an external ATP system, but the verifiers had to
+verify a small set of specified rules internally -- Skolemization, negation of the conjecture, 
+and correspondence between the problem file and the proof file.
+A wall clock time limit of 60~s was imposed on each verification attempt.
+The systems had to report their decision using the SZS ontology, one of VerifiedGood (VSG), 
+VerifiedBad (VSB), or Unknown (UNK).
+Any other result, e.g., a timeout, was treated as UNK.
+
+The systems were ranked according to the following grading scheme:
+\begin{itemize}
+    \item Identifying a bad proof as bad = +2
+    \item Identifying a good proof as good = +1
+    \item Unknown = 0
+    \item Identifying a good proof as bad = -1
+    \item Identifying a bad proof as good = -10
+\end{itemize}
+The problem set originally had $50$ good proofs and $50$ bad (aka ``evil'') ones that had 
+invalid inferences or other bad features.
+However, 9 proofs were later removed as ambiguous or non-compliant, leaving 91 -- 44~good and
+47~bad -- that were used for the ranking. 
+The possible score therefore ranged from 138 to -514.
 
 Ten proof checkers competed: eight in the ranked regular division, and two in the unranked 
 demonstration division (due to the need for internet access).
-
-The ProoVer 2026 problem set comprised $100$ proof-validation problems, each a valid (Good) or 
-a flawed (Bad) TSTP derivation. 
-However, $9$ problems were later cancelled as ambiguous or non-compliant, leaving 91 (44~Good, 
-47~Bad) that counted for the ranking. The possible score ranged therefore from $138$ to $-514$.
-The systems are ranked according to the following grading scheme:
-
-\begin{itemize}
-    \item Identifying a bad proof as bad = $+2$
-    \item Identifying a good proof as good = $+1$
-    \item Giving up = $0$
-    \item Identifying a good proof as bad = $-1$
-    \item Identifying a bad proof as good = $-10$
-\end{itemize}
-
-
-Table~\ref{ProoVerSummary} lists the entrants, grouped by division, together with their final 
-score. 
+Table~\ref{ProoVerSummary} lists the entrants, and Table~\ref{Results-Table} shows the results. 
 GAPT~2.20 won the regular division and, having a student developer, also won the 
 \emph{ProoVer 2026 Best Student Proof Checker} award.
 VaLeaDate~0.1, which had the best record at identifying Bad proofs, won the 
 \emph{ProoVer 2026 Safest Proof Checker} award.
+The ProoVer 2026 problem set is available online, together with an explanation of each problem.
+ProoVer's first edition led to multiple discussions, serving the broader goal of improving the 
+TSTP specification.
 
 \begin{table*}[tbh]
-\caption{ProoVer 2026 entrants and final ranking}
+\caption{ProoVer 2026 entrants.}
 \label{ProoVerSummary}
-\begin{tabular}{llr}
+\begin{tabular}{ll}
 \hline
-Proof Checker & Entrant & Score \\
+Verifier          & Entrants \\
 \hline
-\multicolumn{3}{c}{\textit{Regular division}} \\
+\multicolumn{2}{c}{\textit{Regular division}} \\
 \hline
-GAPT~2.20         & Fabian Achammer \& Martin Riener         & 111 \\
-VaLeaDate~0.1     & Jonas Bodingbauer \& Laura Kovacs        & 98  \\
-N\"orgler~1.1     & Alexander Steen et al.                   & 93  \\
-ProofCheck~1.0    & Jeff Machado \& Larry Lesyna             & 75  \\
-ProofGuard~1.0    & Matthew Farah \& Alicia Marinache        & 49  \\
-mrs-proover~0.2.0 & Olivier Roland                           & 47  \\
-PyCheck~0.1       & Stephan Schulz                           & 41  \\
-CheckProof~0.1    & Nik Murzin                               & $-103$ \\
+GAPT~2.20         & Fabian Achammer \& Martin Riener          \\
+VaLeaDate~0.1     & Jonas Bodingbauer \& Laura Kovacs        \\
+N\"orgler~1.1     & Alexander Steen et al.                   \\
+ProofCheck~1.0    & Jeff Machado \& Larry Lesyna              \\
+ProofGuard~1.0    & Matthew Farah \& Alicia Marinache         \\
+mrs-proover~0.2.0 & Olivier Roland                           \\
+PyCheck~0.1       & Stephan Schulz                            \\
+CheckProof~0.1    & Nik Murzin                               \\
 \hline
-\multicolumn{3}{c}{\textit{Demonstration division}} \\
+\multicolumn{2}{c}{Demonstration division} \\
 \hline
-GDV~2.0           & Geoff Sutcliffe                         & $-4$ \\
-GDV-LP~2.0        & Fr\'ed\'eric Blanqui \& Geoff Sutcliffe & $-6$ \\
+GDV~2.0    & Geoff Sutcliffe                          \\
+GDV-LP~2.0 & Fr\'ed\'eric Blanqui \& Geoff Sutcliffe \\
 \hline
 \end{tabular}
 \end{table*}
 
-The ProoVer 2026 problem set is available online, together with an explanation of each problem.
-ProoVer's first edition led to multiple discussions, serving the broader goal of improving the 
-TSTP specification.
+\begin{table}[tbhp]
+\caption{Proover 2026 scores}
+\label{Results-Table}
+\begin{tabular}{l|rrrr|rrrr|r}
+\hline
+                  &\multicolumn{4}{c|}{44 Good proofs}& \multicolumn{4}{c|}{47 Bad proofs} & Score \\
+ \hline
+Verifier          & VSG & VSB & UNK &   /44 & VSB & VSG & UNK & /94 & /138 \\
+\hline
+GAPT~2.20         &  34 &   5 &   5 &    29 &  41 &   0 &   6 &  82 &  111 \\
+VaLeaDate~0.1     &  24 &  18 &   2 &     6 &  46 &   0 &   1 &  92 &   98 \\
+N\"orgler~1.1     &  27 &  16 &   1 &    11 &  46 &   1 &   0 &  82 &   93 \\
+ProofCheck~1.0    &  31 &  10 &   3 &    21 &  42 &   3 &   2 &  54 &   75 \\
+ProofGuard~1.0    &  30 &  11 &   3 &    19 &  40 &   5 &   2 &  30 &   49 \\
+mrs-proover~0.2.0 &  31 &  12 &   1 &    19 &  39 &   5 &   3 &  28 &   47 \\
+PyCheck~1.0       &  37 &   2 &   5 &    35 &  28 &   5 &  14 &   6 &   41 \\
+CheckProof~0.1    &  28 &  11 &   5 &    17 &  25 &  17 &   5 &-120 & -103 \\
+\hline
+\multicolumn{8}{c}{\textit{Demonstration division}} \\
+\hline
+GDV~2.0           &  35 &   5 &   4 &    30 &   8 &   5 &  34 & -34 &   -4 \\
+GDV-LP~2.0        &  33 &   5 &   6 &    28 &   8 &   5 &  34 & -34 &   -6 \\
+\hline
+\end{tabular}
+\end{table}
+
 
 %--------------------------------------------------------------------------------------------------
 \section{Conclusion}
