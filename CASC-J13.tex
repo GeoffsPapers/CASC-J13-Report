@@ -2313,7 +2313,7 @@ The possible score therefore ranged from 138 to -514.
 
 Ten proof checkers competed: eight in the ranked regular division, and two in the unranked 
 demonstration division (due to the need for internet access).
-Table~\ref{ProoVerSummary} lists the entrants, and Table~\ref{Results-Table} shows the results. 
+Table~\ref{ProoVerSummary} lists the entrants and the results. 
 GAPT~2.20 won the regular division and, having a student developer, also won the 
 \emph{ProoVer 2026 Best Student Proof Checker} award.
 VaLeaDate~0.1, which had the best record at identifying Bad proofs, won the 
@@ -2322,54 +2322,40 @@ The ProoVer 2026 problem set is available online, together with an explanation o
 ProoVer's first edition led to multiple discussions, serving the broader goal of improving the 
 TSTP specification.
 
-\begin{table*}[tbh]
-\caption{ProoVer 2026 entrants.}
-\label{ProoVerSummary}
-\begin{tabular}{ll}
-\hline
-Verifier          & Entrants \\
-\hline
-\multicolumn{2}{c}{\textit{Regular division}} \\
-\hline
-GAPT~2.20         & Fabian Achammer \& Martin Riener          \\
-VaLeaDate~0.1     & Jonas Bodingbauer \& Laura Kovacs        \\
-N\"orgler~1.1     & Alexander Steen et al.                   \\
-ProofCheck~1.0    & Jeff Machado \& Larry Lesyna              \\
-ProofGuard~1.0    & Matthew Farah \& Alicia Marinache         \\
-mrs-proover~0.2.0 & Olivier Roland                           \\
-PyCheck~0.1       & Stephan Schulz                            \\
-CheckProof~0.1    & Nik Murzin                               \\
-\hline
-\multicolumn{2}{c}{Demonstration division} \\
-\hline
-GDV~2.0    & Geoff Sutcliffe                          \\
-GDV-LP~2.0 & Fr\'ed\'eric Blanqui \& Geoff Sutcliffe \\
-\hline
-\end{tabular}
-\end{table*}
-
 \begin{table}[tbhp]
-\caption{Proover 2026 scores}
-\label{Results-Table}
-\begin{tabular}{l|rrrr|rrrr|r}
+\caption{ProoVer~2026 summary}
+\label{ProoVerSummary}
+\begin{tabular}{ll|rrrr|rrrr|r}
 \hline
-                  &\multicolumn{4}{c|}{44 Good proofs}& \multicolumn{4}{c|}{47 Bad proofs} & Score \\
+                  &          
+    &\multicolumn{4}{c|}{44 Good proofs}& \multicolumn{4}{c|}{47 Bad proofs} & Score \\
  \hline
-Verifier          & VSG & VSB & UNK &   /44 & VSB & VSG & UNK & /94 & /138 \\
+Verifier          & Entrants 
+    & VSG & VSB & UNK &   /44 & VSB & VSG & UNK & /94 & /138 \\
 \hline
-GAPT~2.20         &  34 &   5 &   5 &    29 &  41 &   0 &   6 &  82 &  111 \\
-VaLeaDate~0.1     &  24 &  18 &   2 &     6 &  46 &   0 &   1 &  92 &   98 \\
-N\"orgler~1.1     &  27 &  16 &   1 &    11 &  46 &   1 &   0 &  82 &   93 \\
-ProofCheck~1.0    &  31 &  10 &   3 &    21 &  42 &   3 &   2 &  54 &   75 \\
-ProofGuard~1.0    &  30 &  11 &   3 &    19 &  40 &   5 &   2 &  30 &   49 \\
-mrs-proover~0.2.0 &  31 &  12 &   1 &    19 &  39 &   5 &   3 &  28 &   47 \\
-PyCheck~1.0       &  37 &   2 &   5 &    35 &  28 &   5 &  14 &   6 &   41 \\
-CheckProof~0.1    &  28 &  11 &   5 &    17 &  25 &  17 &   5 &-120 & -103 \\
+GAPT~2.20         & Fabian Achammer \& Martin Riener 
+    &  34 &   5 &   5 &    29 &  41 &   0 &   6 &  82 &  \bb{111} \\
+VaLeaDate~0.1     & Jonas Bodingbauer \& Laura Kovacs 
+    &  24 &  18 &   2 &     6 &  \bb{46} &   0 &   1 &  \bb{92} &   98 \\
+N\"orgler~1.1     & Alexander Steen et al.            
+    &  27 &  16 &   1 &    11 &  \bb{46} &   1 &   0 &  82 &   93 \\
+ProofCheck~1.0    & Jeff Machado \& Larry Lesyna     
+    &  31 &  10 &   3 &    21 &  42 &   3 &   2 &  54 &   75 \\
+ProofGuard~1.0    & Matthew Farah \& Alicia Marinache 
+    &  30 &  11 &   3 &    19 &  40 &   5 &   2 &  30 &   49 \\
+mrs-proover~0.2.0 & Olivier Roland
+    &  31 &  12 &   1 &    19 &  39 &   5 &   3 &  28 &   47 \\
+PyCheck~1.0       & Stephan Schulz                    
+    &  \bb{37} &   \bb{2} &   5 &    \bb{35} &  28 &   5 &  14 &   6 &   41 \\
+CheckProof~0.1    & Nik Murzin
+    &  28 &  11 &   5 &    17 &  25 &  17 &   5 &-120 & -103 \\
 \hline
-\multicolumn{8}{c}{\textit{Demonstration division}} \\
+\multicolumn{9}{c}{\textit{Demonstration division}} \\
 \hline
-GDV~2.0           &  35 &   5 &   4 &    30 &   8 &   5 &  34 & -34 &   -4 \\
-GDV-LP~2.0        &  33 &   5 &   6 &    28 &   8 &   5 &  34 & -34 &   -6 \\
+GDV~2.0           & Geoff Sutcliffe
+    &  35 &   5 &   4 &    30 &   8 &   5 &  34 & -34 &   -4 \\
+GDV-LP~2.0        & Fr\'ed\'eric Blanqui \& Geoff Sutcliffe
+    &  33 &   5 &   6 &    28 &   8 &   5 &  34 & -34 &   -6 \\
 \hline
 \end{tabular}
 \end{table}
