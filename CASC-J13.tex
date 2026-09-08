@@ -91,10 +91,11 @@ automated theorem proving\sep competition
 %
 \end{frontmatter}
 %--------------------------------------------------------------------------------------------------
-\paragraph{Author contributions:} The paper, except for Section~\ref{Systems}, was written by 
+\paragraph{Author contributions:} With the following caveats, the paper was written by 
 the paper author.
 The three subsections of Section~\ref{Systems} were written by Nicolas Murzin (FindProof), 
 Olivier Roland (mrs), and Theodore Kim (SUPr).
+Section~\ref{ProoVer} was written in collaboration with Julie Cailler and Simon Guilloud.
 
 \paragraph{Statements and Declarations:} 
 Ethical considerations - Not applicable.
@@ -941,9 +942,7 @@ The criteria include:
 \begin{packed_itemize}
 \item Proofs should not use a TPTP language that is more expressive than that of the problem.
 \item Proofs must be syntactically correct in TPTP format~\cite{Sut07-CSR}.
-      Proof syntax is checked using the BNF-based parser~\cite{VS06} and TPTP4X~\cite{Sut10}.
-      This can be done in SystemOnTSTP.\footnote{%
-\href{https://tptp.org/cgi-bin/SystemOnTSTP}{\tt tptp.org/cgi-bin/SystemOnTSTP}}
+      In \THIS{} syntax was checked using TPTP4X~\cite{Sut10}.
 \item Proofs must be structurally correct:
       \begin{packed_itemize}
       \item Annotated formulae must be uniquely named.
@@ -956,8 +955,7 @@ The criteria include:
       \item Proofs that make \smalltt{assumption}s must propagate and eventually discharge the
             assumptions.
       \end{packed_itemize}
-      Proof structure is checked using GDV~\cite{SB05}.
-      This can be done in SystemOnTSTP.
+      In \THIS{} structure was checked using GDV~\cite{SB05}.
 \item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
 \item Inference steps must be reasonably fine-grained.
       The maximal number of parents in any inference is considered in this regard.
@@ -1049,17 +1047,15 @@ In each column the best value in the competition division is {\bf emboldened}.
 The \LAST{} winner is \textit{emphasized} in the demonstration divisions.
 Detailed results, including the systems' output files, are available on the \THIS{} web 
 site.\footnote{%
-\href{https://tptp.org/CASC/30/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}} 
+\href{https://tptp.org/CASC/30/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}}
 
-The structural checking of proofs in the competition theorem proving divisions 
-was new in \LAST{}, and many systems' proofs had structural flaws.
-Those results were expected to provide motivation for developers of systems in \THIS{} to ensure 
-that their systems' proofs are acceptable.
-Some developers knew in advance that their systems' proofs would not be acceptable, and their
-numbers of problems solved with an acceptable solution output is set to ``-'' rather than 0
-in the results tables.
-Discussion of the progress in proof output from \LAST{} to \THIS{}, in terms of proof structure
-and inference granularity, is given in Section~\ref{Acceptable}.
+The structural checking of proofs in the competition theorem proving divisions was new in \LAST{}, 
+and many systems' proofs had structural flaws.
+In \THIS{} some developers declared in advance that their systems' proofs would not be acceptable, 
+and their numbers of problems solved with an acceptable solution output is set to ``-'' rather 
+than 0 in the results tables.
+Discussion of the progress in proof output from \LAST{} to \THIS{} is given in 
+Section~\ref{Acceptable}.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{The THF Division}
@@ -1104,7 +1100,7 @@ Zipperp'n~2.1.9999     &    0  &  347   & 16.7 & 0.31 & 334      & \bb{5.7}     
 \end{table*}
 
 Zipperposition had the highest average time taken, but made the best use of the multiple cores.
-E solved the most problems before starting to use multiple cores, and had good core usage
+E solved the most problems before starting to use multiple cores, and had good core usage.
 Leo-III used multiple cores for all the problems it solved.
 E solved the most TNE problems, largely because it uniquely solved 19 graph theory 
 (\smalltt{GRA}) problems.
@@ -1114,13 +1110,23 @@ higher-order code.
 The new problems were mostly solved by the non-Leo systems.
 
 The granularity figures are not extreme, with the Leos having the highest values.
-Analysis revealed that their higher granularities came from inferences that were to the E system.
+Analysis revealed that their higher granularities came from inferences that were calls to the 
+E system.
 The developer said: ``LEO-II does exactly this: Just list all of the clauses that were sent to 
 E as inference parents. \ldots Leo-III does some naive filtering {\em [of the clauses sent to E]}, 
 but it does not filter the parents wrt. actual usage by E. This is ongoing work, but will 
 definitely lead to more realistic/lower number of inference parents on average.''
 The largest contributor to E's granularity was deeply nested \smalltt{apply\_def} steps, in 
 which definitions were sequentially applied in a single inference.
+Vampire~5.0.1 improved over Vampire~5.0 because the old \smalltt{avatar\_sat\_refutation} 
+inferences have been replaced by the CaDiCaL refutation steps.
+The main motivation for this work was the ongoing proof-checking efforts in Vampire.
+The developer responisble for this change explained: ``it wasn't so hard with CaDiCaL's 
+spiffy new Tracer API. You hook your own Tracer subclass into CaDiCaL and it tells you when 
+it learns new clauses.''
+% This made it possible to extend the Vampire refutation with the CaDiCaL refutation.
+The developer admitted that although: ``the dreaded "avatar sat refutation" is no more. The 
+even-more-dreaded "avatar smt refutation" remains at large.''
 
 The individual problem results (without considering proof output) show that
 11 problems were unsolved,
@@ -1128,13 +1134,13 @@ The individual problem results (without considering proof output) show that
 31 problems were solved by only one system.
 % (6 problems were solved by only the two versions
 % of Vampire, and are counted as unique solutions for Vampire 5.0.1).
-Of the 31 unique solutions,
-23 were by E (including the 19 \smalltt{GRA} problems),
-3 were by Vampire~5.0.1,
-3 were by Vampire~5.0,
-1 by Leo-III,
-and
-1 by Zipperposition.
+% Of the 31 unique solutions,
+% 23 were by E (including the 19 \smalltt{GRA} problems),
+% 3 were by Vampire~5.0.1,
+% 3 were by Vampire~5.0,
+% 1 by Leo-III,
+% and
+% 1 by Zipperposition.
 A portfolio (sharing the time between several systems) of Vampire~5.0 and E, with 90~s
 allocated to each, would solve 383 problems.
 
@@ -1296,26 +1302,26 @@ allocated to each, would solve 383 problems.
 
 Table~\ref{FOFSummary} summarizes the results of the FOF division.
 As in \LAST{}, the Vampires dominated the division, but this year there is clear progress
-from the previous version to the new version of the system.
-The developers explained: ``most of the improvement between 5.0 and 5.0.1 comes from the addition 
-of the neurally guided clause-selection strategies~\cite{Sud25} \ldots~Since we solve many hard 
-(previously unsolved) problems with the neurally guided strategies, I think a key was to submit 
-the new version of Vampire early, for the problem rating, so that these problems would become 
-eligible for CASC and could showcase the improvement.''.
+from the previous version of the system to the new version.
+One of the Vampire developers explained: ``most of the improvement between 5.0 and 5.0.1 comes 
+from the addition of the neurally guided clause-selection strategies~\cite{Sud25} \ldots~Since 
+we solve many hard (previously unsolved) problems with the neurally guided strategies, I think 
+a key was to submit the new version of Vampire early, for the problem rating, so that these 
+problems would become eligible for CASC and could showcase the improvement.''
 Table~\ref{FOFSummary} and the results plot\footnote{%
 \url{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html\#FOFProblems}} show clear grouping
-of the systems, but the grouping has changed since the last two CASC editions.
+of the systems, but the grouping has changed since \LAST{}.
 In \LAST{} there were three groups: the Vampires, a middle group of six systems including E, 
 iProver, Drodi, and Zipperposition, then a lower group of four systems.
 It was noted in the \LAST{} report that the grouping was less pronounced than in CASC-J12.
-This year the grouping is even less pronounced, but three groups are evident:
+This year the grouping is even less pronounced, but is still evident:
 the Vampires are out front as usual, then there is a group of CSI++, E, and iProver,
 followed by a middle group of Drodi, LisaST, Prover9~2026-6A, and Zipperposition, then a lower 
 group of FindProof, mrs, Prover9---1109a, and SUPr, and finally the bottom group.
 % of Connect++, SATResetCoP, SPASS-SCL (noting that SPASS-SCL cannot attempt problems with 
 % equality), and VIP.
-It is not easily possible to find common features of the systems in each group, other than
-years of developmental experience.
+There are no salient technical features of the systems in each group. 
+The difference seems to be in years of developmental experience.
 The top groups include systems that have many years of active development and participation in 
 CASC, while the lower groups include newcomers.
 CASC clearly provides opportunities for system developers to learn from others!
@@ -1324,18 +1330,17 @@ In \LAST{} a key differentiator between the FOF division systems was their abili
 acceptable proofs, with a notable difference between the ranking by number of acceptable proofs 
 output and the ranking by the number of problems solved.
 It is pleasing to see a better correlation between the two rankings in \THIS{}, indicating that
-lessons were learned from the \LAST{} -- more analysis of the improvement is in 
-Section~\ref{Acceptable}.
+lessons were learned from the \LAST{}.
 However, there is still room for further improvement.
-This year the unacceptable proofs often had simple syntax mistakes, that can be easily fixed, 
+This year the unacceptable proofs often had simple syntax mistakes that can be easily fixed, 
 e.g.,~illegal formula names, missing brackets around binary formulae.
 Some other flaws were deeper, e.g., missing formulae.
 Vampire~5.0.1 had one proof with a syntax error.
 LisaST suffered the most, with a mixture of syntax mistakes and deeper flaws.
-CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
-\smalltt{SEU269+1} solved by CSI++, but no SZS status line. Also solved by E.
-\smalltt{SYN986+1.004} not solved by E alone, but solved by E in CSI++..
-ASKED THEM.
+% CSI - 5 found by own inferences (grep tabproof:). Were any not solved by E? How many others helped E?
+% \smalltt{SEU269+1} solved by CSI++, but no SZS status line. Also solved by E.
+% \smalltt{SYN986+1.004} not solved by E alone, but solved by E in CSI++..
+% ASKED THEM.
 In \NEXT{} the requirements for proofs to be considered ``acceptable'' will be tightened, as 
 explained in Section~\ref{Acceptable}.
 
@@ -1388,25 +1393,24 @@ Prover9~1109a          &    -  &   92   & 14.7 &    - & 134     & 0.0       & {\
 Vampire~5.0.1's high SotAC correlates to its high number of unique solutions.
 E's higher efficiency comes from solving most problems very quickly, with relatively fewer being 
 solved slowly compared to the Vampires.
-This can be seen from E having a sharper upwards swing than the Vampires in the results
-plot.
+This can be seen in the results plot, with E having a sharper upwards swing than the Vampires.
 mrs also had a high efficiency relative to its ranking.
 FindProof had the highest core usage, using multiple cores in all the problems it solved.
 LisaST used multiple cores for most of the problems it solved, which is the intention of
 the system design as the developer explained: ``there are 8 built-in strategies, and it 
 always runs the 8 in parallel''.
-Drodi also had high core usage, and solved 89 problems with a raw cores usage less than 1.
+Drodi also had high core usage, and solved 89 problems with a raw core usage less than 1.0.
 The developer of Drodi provided analysis of the first five and last five problems solved in 
 less than 1~s, revealing that eight of those 10 proofs were found during multi-core search.
 He explained: ``These results suggest that more than one core is used in most of the problems 
-solved in under 1 second and in some cases even a significant number of cores are used.''.
+solved in under 1 second and in some cases even a significant number of cores are used.''
 ASKED OSCAR FOR MORE.
 Several of the systems, in particular Connect++, SATResetCoP, and VIP, had high average wall 
 clock times and no core usage.
-The developers of the systems said respectively: ``There could be a few possible reasons for 
-this but without some profiling I'd have a hard time making a concrete suggestion.'', ``I bet that 
-the issue with SATResetCoP is the Python backend; importing all the libraries needed for the 
-initial run is slow.'', and ``WAITING TO HEAR FROM ILIES''.
+% The developers of the systems said respectively: ``There could be a few possible reasons for 
+% this but without some profiling I'd have a hard time making a concrete suggestion.'', ``I bet that 
+% the issue with SATResetCoP is the Python backend; importing all the libraries needed for the 
+% initial run is slow.'', and ``WAITING TO HEAR FROM ILIES''.
 The expected benefit of using multiple cores to reduce wall clock time taken, as noted in
 Section~\ref{TimeLimits}, is evident here.
 
@@ -1422,10 +1426,10 @@ seen in iProver's inference rule \smalltt{smt\_impl\_just}.
 SATResetCoP's proof structure always contains a formulae that is the conjunction of the axioms
 and negated conjecture, i.e., the granularity of the proof is the size of the problem.
 The problem \smalltt{CSR058+3} has 8006 formulae, and thus the granularity of SATResetCoP's proof 
-is also 8006.
+is 8006.
 Outliers such as these contributed to SATResetCoP's higher granularity value.
 The developer said (about these formulae): ``This is generated by the certificate generator, and 
-not by SATResetCoP instead. It might be not crucial for the final output''.
+not by SATResetCoP instead. It might be not crucial for the final output.''
 % , average 531, median 44.
 % ASKED ILIES ABOUT THIS BROKEN PROOF
 % (only VIP has one proof with a maximal of one parent
@@ -1449,12 +1453,12 @@ no problems were solved by all the systems, and
 48 problems were solved by only one system.
 % (19 problems were solved by only the two versions of
 % Vampire, and are counted as unique solutions for Vampire~5.0).
-Of the 48 unique solutions,
-45 were by Vampire~5.0.1,
-and
-3 by Vampire~5.0.
-That means that between them, the two Vampires solved a superset of the union of the problems 
-solved by other the systems.
+% Of the 48 unique solutions,
+% 45 were by Vampire~5.0.1,
+% and
+% 3 by Vampire~5.0.
+Between them, the two Vampires solved a superset of the union of the problems solved by 
+the other systems.
 
 % A portfolio of the two Vampires, cvc5, and CSI\_Enigma, with 60~s allocated to each, would 
 % solve 484 problems.
@@ -1468,8 +1472,8 @@ The winner from CASC-29 in 2003 was entered as the previous winner.
 Table~\ref{FNTSummary} summarizes the results.
 Vampire~5.0.1 came out ahead of the other systems, by a large margin, surpassing Vampire~4.8
 that had come out way ahead in CASC-29.
-The key to the Vampires' success was strategy scheduling that tried to saturate the clause
-set, and alternatively find a finite model.
+The key to the Vampires' success was strategy scheduling that tries to saturate the clause
+set and alternatively find a finite model.
 The only other system that produced two types of models was iProver, which output saturations 
 and models expressed in a term algebra.
 The ratios of saturations to (finite) models output was as follows:
@@ -1490,8 +1494,8 @@ variables -- these simple errors are easily rectified.
 Some of Vampire~4.8's models also had simple errors, but that's history.
 % iProver 64 with syntax errors, 42 duplicate formula name, 22 unquantified variables. 
 % Vampire 4.8 92 with syntax errors, simple redeclaration of \$i. 
-Syntax checking of models will be added in \NEXT{}, as explained in Section~\ref{Acceptable}.
 For one problem Mace4 found a model but did not complete the model output by the time limit.
+Syntax checking of models will be added in \NEXT{}, as explained in Section~\ref{Acceptable}.
 
 \begin{table*}[tbh]
 \caption{FNT division results}
@@ -1530,9 +1534,9 @@ The individual problem results show that
 16 problems were solved by only one system.
 % (21 problems were solved by only the two versions of
 % Vampire, and are counted as a unique solutions for Vampire~4.8).
-Of the 16 unique solutions,
-14 were by Vampire~5.0.1, 
-and 2 by Vampire~4.8.
+% Of the 16 unique solutions,
+% 14 were by Vampire~5.0.1, 
+% and 2 by Vampire~4.8.
 As is the case in the FOF division, between them, the two Vampires solved a superset of union of 
 the problems solved by the other systems.
 
@@ -1632,9 +1636,9 @@ Vampire~5.0.1 won, and as in the FOF division showed significant improvement ove
 for the same reasons.
 The goal directed technique pioneered by Twee~\cite{Sma21} is one of the techniques that led
 to Vampire~4.9 winning the UEQ division of CASC-J12 in 2024, and remains in Vampire~5.0.1.
-It's value is well appreciated by the Vampire developers, who said: ``tgt-ground {\em [the goal 
-directed technique]} is definitely worth having. We are actually considering baking it into the 
-default strategy.''
+It's value is well appreciated by the Vampire developers, one of whom said: ``tgt-ground 
+{\em [the goal directed technique]} is definitely worth having. We are actually considering 
+baking it into the default strategy.''
 E also tried to adopt the idea, but sadly, as the developer explained: ``my hack for CASC was 
 in vain ;-). I carefully added the goal-directed transformation strategy to every search schedule,
 but \ldots the preprocessing schedules are now separate data structures, and the transformation 
@@ -1646,7 +1650,7 @@ errors.
 For Prover9, as the developers put it when fixing the output for their next release: ``The bug 
 is an amusing one. Prover9 still registers Otter’s legacy infix v (disjunction) as a parse rule, 
 so when a TPTP problem legitimately uses \smalltt{v} as a binary functor, the printer rendered 
-the legacy in infix notation''.
+the legacy in infix notation.''
 
 \begin{table}[tbh]
 \caption{UEQ division results}
@@ -1687,13 +1691,13 @@ The individual problem results (without considering proof output) show that
 30 problems were solved by only one system.
 % (4 problems were solved by only the two versions
 % of Vampire, and are counted as unique solutions for Vampire~5.0).
-Of the 30 unique solutions,
-17 were by Vampire~5.0.1,
-6 by Prover9,
-3 by Vampire~5.0,
-2 by Twee,
-and
-1 each by CSI++, E, FindProof, and iProver.
+% Of the 30 unique solutions,
+% 17 were by Vampire~5.0.1,
+% 4 by Prover9,
+% 3 by Vampire~5.0,
+% 2 by Twee,
+% and
+% 1 each by CSI++, E, FindProof, and iProver.
 A portfolio does not help much, the best being a combination of Vampire~5.0.1 and CSI++~1.0
 with 90~s allocated to each, which would solve 373 problems.
 
@@ -1998,7 +2002,44 @@ For \THIS{} the salient systems are the newcomers that performed relatively well
 in the FOF division: FindProof~0.1, SUPr~1.0, and mrs~0.2.0.
 These short descriptions of the systems were written by their entrants.
 
-\textbf{FindProof} is 
+\textbf{FindProof}~\cite{Mur26} is an equational theorem prover for unit-equality problems, based 
+on unfailing (ordered) Knuth-Bendix completion~\cite{BDP89}. 
+It continues the Waldmeister line of provers~\cite{HL02}: the completion loop, critical-pair 
+selection, queue management, and normalisation.
+On algebraic problems the default configuration reproduces Waldmeister's critical-pair selection 
+sequence exactly.
+The axioms are saturated towards a convergent rewrite system while the goals are kept normalised.
+% and a proof is reported when the two sides of every goal are joined.
+Equations that cannot be oriented by the reduction ordering are used unfailingly, so that both 
+faces are superposed, which preserves refutational completeness. 
+The Knuth-Bendix ordering and the lexicographic path ordering are supported, with symbol 
+precedences generated automatically. 
+Redundant critical pairs are discarded by ground-joinability testing, the connectedness criterion, 
+forward and backward subsumption and demodulation, and right-hand-side interreduction. 
+Proofs are reconstructed from the recorded completion trace, the closing rewrite chain re-derived 
+against the final rule set and rendered as a refutation.
+% Full first-order input is handled by equationalization, in which propositions are Skolemized and 
+% encoded as equations over a Boolean-algebra axiomatisation, proved by the same completion core, 
+% and decoded back into a predicate-logic proof. 
+The search is ordered by a weighted critical-pair selection heuristic over a priority queue, with 
+a Waldmeister-style selection ratio that interleaves a first-in-first-out pick at a fixed cadence, 
+so that 
+% fairness, and hence 
+completeness is retained. 
+% The default configuration is the Waldmeister strategy stack. 
+The full strategy surface, some fifty-five switches covering the reduction ordering, critical-pair 
+weighting, weight limits, redundancy criteria, goal treatment, and queue management, is exposed 
+as command-line options, and named configurations modelled on the published defaults of 
+Waldmeister, Twee, and Vampire are provided. 
+In the competition a fixed schedule of such configurations was run, each in its own child process 
+under a slice of the wall-clock limit, stopping at the first proof. 
+% The schedule and its slice allocation are derived from coverage measurements on the problem sets 
+% of previous competitions; strategy selection is not tuned to individual problems.
+FindProof is a single self-contained C program with no external dependencies. 
+% Terms are represented as flatterms over a term bank; rewriting and subsumption retrieval use 
+% perfect discrimination trees; the critical-pair queue is a binary heap over a compact twelve-byte 
+% critical-pair encoding; and the completion trace is kept off-heap in a packed store from which 
+% proof objects are reconstructed on demand. 
 
 \textbf{SUPr}~\cite{KP26} is a saturation-based theorem prover built as a native component of the 
 Sigma knowledge engineering environment (Rust implementation -- SigmaKEE-rs)~\cite{PS14}.
@@ -2046,22 +2087,22 @@ CASC pushed mrs to fix real bugs and close gaps that show up only at scale.
 \section{Acceptable Proofs}
 \label{Acceptable}
 
-In Sections~\ref{THF}, \ref{FOF}, and~\ref{UEQ}, the extent to which the systems did not
-output acceptable proofs is discussed.
-For newcomers to CASC this is quite understandable, as generating proofs is a non-trivial task.
+In the commentary of the results in the THF, FOF, and UEQ divisions (Sections~\ref{THF}, \ref{FOF}, 
+and~\ref{UEQ}, the extent to which the systems output acceptable proofs is discussed.
+For newcomers to CASC imperfect proof output might be forgiven.
 For the old timers, the increasing emphasis on proof production since CASC-J12 should be
 having a positive effect.
 This section examines the requirements for acceptable proofs for the last three CASCs -- CASC-J12,
 \LAST{}, and \THIS{}, and evaluates the progress made between \LAST{} and \THIS{} for systems
-that were entered in both (with an updated version in \THIS{}).
+that were entered in both.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{Requirements}
 \label{Requirements}
 
-Prior to \LAST{} the CASC panel was the only adjudication of whether systems' proofs were
-acceptable. 
-The following guidelines were set for CASC-J12~\cite{Sut24-CASC-J12}:
+Prior to \LAST{} the opinion of the CASC panel was the only adjudication of whether systems' 
+proofs were acceptable. 
+These guidelines were set for CASC-J12~\cite{Sut24-CASC-J12}:
 \begin{packed_enumerate}
 \item[1.] Proofs must be complete, starting at formulae from the problem, and ending at the 
       conjecture (for axiomatic proofs) or a false formula (for proofs by contradiction, 
@@ -2075,8 +2116,7 @@ The following guidelines were set for CASC-J12~\cite{Sut24-CASC-J12}:
 \end{packed_enumerate}
 The CASC-J12 report~\cite{Sut25-CASC} noted the benefits of moving towards a ``verified track'' 
 in CASC.
-An incremental approach was adopted, and the following requirements for acceptability were added 
-in \LAST{}:
+An incremental approach was adopted, and the following requirements were added in \LAST{}:
 \begin{packed_enumerate}
 \item[6.] Proofs must be in the TPTP format.
 \item[7.] Annotated formulae in a proof must be uniquely named.
@@ -2086,18 +2126,18 @@ in \LAST{}:
 \item[10.] Proofs that introduce new symbols in definitions must provide an \smalltt{introduced()} 
       record to document the new symbol.
 \end{packed_enumerate}
-The TPTP4X parser~\cite{Sut10} and GDV proof verifier~\cite{Sut06} were made available to the 
-systems' developers so that they could check their proofs.
+The TPTP4X parser and GDV proof verifier were made available to the 
+systems' developers so that they could check their proofs in using the same tools as were used for 
+the competition evaluation (see Section~\ref{Evaluation}).
 Note that there was no requirement for logical correctness, and no proof verification was done.
 
 The impact was interesting, and the data showed that the ATP systems still needed to improve 
 their proofs~\cite{Sut26-CASC}.
-A particular phenomenon that was observed was that many of the ATP systems' proofs included
-``inference steps'' that were calls to SAT/ATP/SMT systems, which typically inferred {\tt \$false}
-to end the ATP system's refutation.
-These final calls to external ATP systems were typically reported with all the clauses sent to 
-the external system listed as parents -- the most extreme case listed 72367 parent clauses that 
-were sent to the external Z3 system.
+A particular phenomenon observed was that many of the ATP systems' proofs included ``inference 
+steps'' that were calls to SAT/ATP/SMT systems that inferred {\tt \$false} to end the refutation.
+These final calls to external systems were typically reported with all the clauses sent to the 
+external system listed as parents -- the most extreme case listed 72367 parent clauses that were 
+sent to the external Z3 system!
 A limited analysis revealed that typically only a subset of the listed parents were used by the 
 SAT/ATP/SMT system to infer {\tt \$false}.
 
@@ -2123,6 +2163,7 @@ Loss\,\text{\em \%} =
 \dfrac{Solved - Solns}{Solved}
 \]
 A reduction in Loss, indicated by a negative $\Delta$~Loss, directly indicates improvement.
+
 The Progress column measures that improvement in the context of the numbers of problems
 solved and the numbers of problems in the divisions:
 \[
@@ -2132,15 +2173,17 @@ Progress =
 \text{otherwise}              , & \text{\em \LAST{}}\!\left(\dfrac{Solved - Solns}{Problems}\right) - \text{\em \THIS{}}\!\left(\dfrac{Solved - Solns}{Problems}\right)
 \end{cases}
 \]
-The progress values for systems that had 0\% loss in both years when $Solved = Solns$, indicated 
-by a `-' in the $\Delta$~Loss column, are not directly comparable with the others, but do measure ``progress''.
+The Progress values for systems that had 0\% loss in both years, when $Solved = Solns$ and 
+indicated by a `-' in the $\Delta$~Loss column, are not directly comparable with the others, 
+but do measure progress in acceptable proof production.
 
 There are very definite signs of progress, partiularly in the FOF division.
-Drodi's improvement is salient, with iProver also having significant improvement (also in UEQ).
+Drodi's improvement is salient, with iProver also having significant improvement (again in the
+UEQ division).
 E is noteworthy for having consistently minimal loss, coupled with improved performance.
-As an overall measure, in \LAST{} 459 of the 3961 proofs, i.e.,~11.5\%, from the THF, FOF, and 
-UEQ divisions had syntax or structural flaws.
-The situation improved in \THIS{} with only 200 of 5065 proofs, i.e., 3.9\%, having those types
+As an overall measure, in \LAST{} 459 of the 3961 proofs from the THF, FOF, and UEQ divisions, 
+i.e.~11.5\%, had syntax or structural flaws.
+The situation improved in \THIS{} with only 200 of 5065 proofs, i.e.,~3.9\%, having those types
 of flaws.
 
 \begin{table}[htb]
@@ -2148,15 +2191,15 @@ of flaws.
 \label{ProofProgress}
 \begin{tabular}{l|lrrr|lrrr|rr}
 \hline
-Division    & \LAST{}  &Problems&       &         & \THIS{} &Problems&       &        & $\Delta$ Loss &Progress \\
+Division    & \bb{\LAST{}}&Problems&    &         & \bb{\THIS{}}&Problems&   &        & $\Delta$ Loss &Progress \\
 System      & Version  & Solved & Solns &  Loss   & Version & Solved & Solns &  Loss  &               &         \\
 \hline
-THF         &          &   500 &        &         &         &   400 &        &        &               &          \\
+\bb{THF}    &          &   500 &        &         &         &   400 &        &        &               &          \\
 E           & 3.3.0    &   395 &    375 &  5.06\% & 3.5.1   &   324 &    323 &  0.31\% &       -4.75\% &   3.75\% \\
 Vampire     & 5.0      &   449 &    439 &  2.23\% & 5.0.1   &   352 &    340 &  3.41\% &        1.18\% &  -1.00\% \\
 Leo-III     & 1.7.19   &   242 &    241 &  0.41\% & 1.8.0   &   160 &    137 & 14.38\% &       13.96\% &  -5.55\% \\
 \hline
-FOF         &          &   500 &        &         &         &   400 &        &        &               &          \\
+\bb{FOF}    &          &   500 &        &         &         &   400 &        &        &               &          \\
 Drodi       & 4.1.0    &   325 &    210 & 35.38\% & 4.1.1   &   215 &    214 &  0.47\% &      -34.92\% &  22.75\% \\
 iProver     & 3.9.3    &   367 &    278 & 24.25\% & 3.9.3   &   250 &    222 & 11.20\% &      -13.05\% &  10.80\% \\
 Connect++   & 0.6.1    &   102 &      0 &100.00\% & 0.7.2   &    64 &     24 & 62.50\% &      -37.50\% &  10.40\% \\
@@ -2164,7 +2207,7 @@ E           & 3.3.0    &   364 &    364 &  0.00\% & 3.5.1   &   264 &    264 &  
 SPASS-SCL   & 0.1      &    11 &      0 &100.00\% & 0.1.1   &    14 &     14 &  0.00\% &     -100.00\% &   2.20\% \\
 Vampire     & 5.0      &   455 &    455 &  0.00\% & 5.0.1   &   381 &    380 &  0.26\% &        0.26\% &  -0.25\% \\
 \hline
-UEQ         &          &   300 &        &         &         &   400 &        &        &               &          \\
+\bb{UEQ}    &          &   300 &        &         &         &   400 &        &        &               &          \\
 iProver     & 3.9.3    &   205 &     62 & 69.76\% & 3.9.3   &   198 &    198 &  0.00\% &      -69.76\% &  47.67\% \\
 Twee        & 2.6.0    &   258 &    258 &  0.00\% & 2.7     &   286 &    286 &  0.00\% &             - &  14.50\% \\
 E           & 3.3.0    &   222 &    222 &  0.00\% & 3.5.1   &   255 &    255 &  0.00\% &             - &  10.25\% \\
@@ -2179,19 +2222,20 @@ the measure was not part of the \LAST{} design, and thus developers had no motiv
 granularity.
 The granularity values reported in Sections~\ref{THF}, \ref{FOF}, \ref{FNT}, and~\ref{UEQ} provide
 some indication of the situation in \THIS{}.
-As a counter point to the maximal value of 72367 in \LAST{}, the maximal value in \THIS{} was
-12651.
+As a counter point to the maximal value of 72367 clauses sent to Z3 in \LAST{}, the maximal value 
+in \THIS{} was 12651.
 
 %--------------------------------------------------------------------------------------------------
 \subsection{The Future}
 \label{FutureProofs}
 
-After \THIS{} some further detailed analysis of the proofs revealed that many had ill-formed
-documentation of inference steps, in the \smalltt{introduced{}} and \smalltt{inference()} records.
+Analysis after \THIS{} revealed that many proofs had ill-formed documentation in their 
+\smalltt{introduced{}} and \smalltt{inference()} records.
 The \THIS{} panel ruled that the documentation of the required format for these records was 
-inadequate, which allowed those proofs to be counted.
+inadequate, and thus those flawed proofs were counted.
 The documentation has been improved for these two points and more, and more precise requirements 
 have became possible.
+These are given in requirements 12', 13', and 14 below.
 
 Discussions during the IJCAR-13 conference that hosted \THIS{} led to the conclusion that 
 requirement 11 is unrealistic because precisely extracting the set of parents that were used 
@@ -2202,74 +2246,114 @@ It became clear that the systems can only ``aim to'' comply, leading to a change
 requirement, specified in requirement 11' below.
 Even with a minimization of the parents list in inference steps, it is debatable whether a 
 successful call to a SAT/ATP/SMT system is really an ``inference step''.
-The SAT/ATP/SMT systems typically build a proof of their own, and that proof structure is not 
-shown in the ATP system's proof that reports the step.
-It would be preferable for the SAT/ATP/SMT system's proof to be exposed, and grafted into the
-ATP system's proof.
-Grafting in the proofs of subsystems will be encouraged in \NEXT{}, specified in requirement
-14 below.
+The SAT/ATP/SMT systems typically build a proof of their own, and that proof structure is often not 
+shown in the ATP system's proof.
+It would be preferable for the SAT/ATP/SMT system's proof to be exposed by being grafted onto the
+ATP system's proof (as done in Vampire~5.0.1's use of CaDiCaL - see Section~\ref{THF}).
+Grafting on the proofs of subsystems will be encouraged in \NEXT{}, specified in requirement
+15 below.
 
-The requirements for \NEXT{} will include:
+In addition to these reactive changes to observations from \THIS{}, two further requirements
+will be added.
+Firstly, users of ATP systems can reasonably expect proofs to not use TPTP language features
+that are not supported by the language used for the problem.
+For example, proofs for FOF problems should not use THF higher-order features, and if that
+restriction is observed then the proofs can be expected to be written in FOF.
+That that end requirement 9 below will be added.
+Secondly, as another incremental step towards a verified track in CASC, leaves of proofs will
+be required to directly copied from the problem, modulo variable renaming.
+That that end requirement 10 below will be added.
+This is in agreement with the requirements of the ProoVer competition described in 
+Section~\ref{ProoVer}.
+
+The requirements for \NEXT{} will include: 
 \begin{packed_enumerate}
-\item[9'.] Proofs that negate the conjecture must correctly annotate the step as
-      \smalltt{status(cth)} and have a single parent with the role \smalltt{conjecture}.
-\item[10'.] New symbols introduced in derivations must be documented in a \smalltt{new\_symbols()}
-      record. 
-      The new symbols listed in a \smalltt{new\_symbols()} record must be unique and globally new.
+\item[9.] Proofs should not use a TPTP language that is more expressive than that of the problem.
+\item[10.] Leaf annotated formulae of proofs must be alpha-equivalent to the corresponding named
+      annotated formula in the problem.
 \item[11'.] Inference steps must aim to list exactly those parents that are used in the inference. 
-      Inference steps may list parents that are not necessary for the inference\footnote{%
+      Inference steps may list parents that are not necessary for the inference.\footnote{%
       For example, in the inference of \smalltt{p(a)} from the parents \smalltt{p(a)} and 
       \smalltt{a = a}, the equality is not necessary but might be used in an (unnecessary) 
       equality substitution step, but in contrast \smalltt{p(b)} would probably not be used 
-      as a parent in that inference step.}.
-\item[13.] Proofs should not use a TPTP language that is more expressive than that of the problem.
-\item[14.] Proofs should graft in subproofs from external systems.
-\item[15.] Particular requirements for symbol definitions, introduced tautologies, theory axioms, 
-      and Skolemization steps will be provided.
+      as a parent in that inference step.}
+\item[12'.] Proofs that negate the conjecture must correctly annotate the step as
+      \smalltt{status(cth)} and have a single parent with the role \smalltt{conjecture}.
+\item[13'.] New symbols introduced in derivations must be documented in a \smalltt{new\_symbols()}
+      record. 
+      The new symbols listed in a \smalltt{new\_symbols()} record must be unique and globally new.
+\item[14.] Requirements for the \smalltt{introduced()} records of symbol definitions, 
+      introduced tautologies, and theory axioms will be provided.
+      Requirements for the \smalltt{inference()} records of Skolemization steps will be provided.
+\item[15.] Proofs should graft in subproofs from external systems.
 \end{packed_enumerate}
-The BNF-based parser, the TPTP4X parser, and an improved version of GDV will be made available 
-to the systems' developers so that they can check their proofs.
+The BNF-based parser~\cite{VS06}, the TPTP4X parser, and an improved version of GDV will be 
+made available to the systems' developers so that they can check their proofs.
+This can be done online in SystemOnTSTP.\footnote{%
+\href{https://tptp.org/cgi-bin/SystemOnTSTP}{\tt tptp.org/cgi-bin/SystemOnTSTP}}
 These more rigorous requirements for proofs in CASC resonate with the ProoVer proof verifier 
 competition that was held as a companion competition to \THIS{}.
 ProoVer is described in Section~\ref{ProoVer}.
 
-Syntax checking of models will be added in \NEXT{}, as explained in Section~\ref{Acceptable}.
+%--------------------------------------------------------------------------------------------------
+\subsection{Acceptable Models}
+\label{AcceptableModels}
 
-MAYBE USE THIS. One thing which you could say about the LisaST if you have space and find it interesting, is that it is, if I'm not mistaken, the first solver to be reasonably competitive at CASC that can produce proofs that directly checkable by a small kernel/proof assistant, including clausification :)
+Up to and including \THIS{}, the CASC panel was the only adjudication of whether systems' 
+models were acceptable. 
+The following guidelines were set for \THIS{} (see Section~\ref{Evaluation}):
+\begin{quote}
+Models must be complete, documenting the domain and symbol maps. 
+The domain and symbol maps may be specified by explicit ground lists (of mappings), or by 
+any clear, terminating algorithm. 
+Saturations are acceptable if their models are a subset of the models of the problem formulae. 
+Use of the TPTP format for interpretations is encouraged.
+\end{quote}
+For \NEXT{} the requirements will be made more precise:
+\begin{packed_enumerate}
+\item[1.] Models must be written as annotated formulae in TPTP syntax.
+\item[2.] Annotated formulae in a model must be uniquely named.
+\item[3.] Models must be complete, documenting the domain and symbol maps.
+\item[4.] The domain and symbol maps may be specified by explicit ground lists (of mappings), 
+          or by any clear, terminating algorithm.
+\item[5.] Models must show all and only relevant information.
+\item[6.] Use of the TPTP format for interpretations is encouraged.
+\end{packed_enumerate}
+Models will syntax checked using the BNF-based parser and the TPTP4X parser.
 
 %--------------------------------------------------------------------------------------------------
-\subsection{What is a Proof?}
-\label{WhatIsAProof}
-
-The question ``what is a proof'' has been discussed in great detail from many 
-perspectives~\cite{JEFF}.
-In ATP a common proof output is a refutation, which might in itself not be considered a proof
-{\em of} a theorem (a formula that was a conjecture), but rather a proof that a conjecture 
-formula {\em is} a theorem.
-Consider these contrasting examples.
-First a proof of a theorem:
-\begin{quote}
-Rule: If it is raining, take your umbrella.\\
-Fact: It's raining.\\
-Conjecture: Take your umbrella.\\
-Proof: The fact makes the rule apply, so accept the conclusion of the rule.\\
-Theorem: Take your umbrella.
-\end{quote}
-Now a proof that the conjecture is a theorem:
-\begin{quote}
-Rule: If it is raining, take your umbrella.\\
-Fact: It's raining.\\
-Conjecture: Take your umbrella.\\
-Proof: Imagine you don't take your umbrella.
-Then from the contrapositive of the rule, it's not raining.
-That contradicts the fact that it's raining.
-Thus it is unimaginable that you don't take your umbrella.\\
-Theorem: Take your umbrella.
-\end{quote}
-
-Should I define my general axiomatic proof notion here?
-In the long term ATP systems might strive to produce proofs {\em of} theorems, rather than
-only proofs that conjectures {\em are} theorems.
+%% \subsection{What is a Proof?}
+%% \label{WhatIsAProof}
+%% 
+%% The question ``what is a proof'' has been discussed in great detail from many 
+%% perspectives~\cite{JEFF}.
+%% In ATP a common proof output is a refutation, which might in itself not be considered a proof
+%% {\em of} a theorem (a formula that was a conjecture), but rather a proof that a conjecture 
+%% formula {\em is} a theorem.
+%% Consider these contrasting examples.
+%% First a proof of a theorem:
+%% \begin{quote}
+%% Rule: If it is raining, take your umbrella.\\
+%% Fact: It's raining.\\
+%% Conjecture: Take your umbrella.\\
+%% Proof: The fact makes the rule apply, so accept the conclusion of the rule.\\
+%% Theorem: Take your umbrella.
+%% \end{quote}
+%% Now a proof that the conjecture is a theorem:
+%% \begin{quote}
+%% Rule: If it is raining, take your umbrella.\\
+%% Fact: It's raining.\\
+%% Conjecture: Take your umbrella.\\
+%% Proof: Imagine you don't take your umbrella.
+%% Then from the contrapositive of the rule, it's not raining.
+%% That contradicts the fact that it's raining.
+%% Thus it is unimaginable that you don't take your umbrella.\\
+%% Theorem: Take your umbrella.
+%% \end{quote}
+%% 
+%% % Should I define my general axiomatic proof notion here?
+%% In the long term ATP systems might strive to produce proofs {\em of} theorems, rather than
+%% only proofs that conjectures {\em are} theorems.
 
 %--------------------------------------------------------------------------------------------------
 \section{The ProoVer Competition}
@@ -2279,7 +2363,8 @@ The Proof Verification Competition (ProoVer) is a new competition, evaluating pr
 verifiers, i.e.,~systems that verify whether a proof is correct wrt its conjecture. 
 ProoVer~2026 was the first edition, held as a companion competition to \THIS{}, sharing its 
 computers and much of its organizational machinery.
-ProoVer~2026 was organized by Julie Cailler and Simon Guilloud.
+ProoVer 2026 was organized by Julie Cailler and Simon Guilloud, and overseen by the same panel 
+as \THIS{}: Cl\'audia Nalon, Aart Middeldorp, and Martina Seidl.
 An overview of the competition is given here.
 Full details of the competition design and the entrant systems are given in the 
 ProoVer~2026 proceedings~\cite{CG26}. 
@@ -2307,17 +2392,21 @@ The systems were ranked according to the following grading scheme:
 \end{itemize}
 The problem set originally had $50$ good proofs and $50$ bad (aka ``evil'') ones that had 
 invalid inferences or other bad features.
-However, 9 proofs were later removed as ambiguous or non-compliant, leaving 91 -- 44~good and
-47~bad -- that were used for the ranking. 
+However, 9 proofs were later removed as ambiguous or non-compliant, leaving 44~good and
+47~bad proofs that were used for the ranking. 
 The possible score therefore ranged from 138 to -514.
 
 Ten proof checkers competed: eight in the ranked regular division, and two in the unranked 
 demonstration division (due to the need for internet access).
 Table~\ref{ProoVerSummary} lists the entrants and the results. 
-GAPT~2.20 won the regular division and, having a student developer, also won the 
-\emph{ProoVer 2026 Best Student Proof Checker} award.
-VaLeaDate~0.1, which had the best record at identifying Bad proofs, won the 
-\emph{ProoVer 2026 Safest Proof Checker} award.
+GAPT~2.20 won the competition with 111 points.
+Since at least one student was involved in the development of GAPT~2.20, it also won the 
+\textit{ProoVer 2026 Best Student Proof Checker} award.
+VaLeaDate~0.1 won the \emph{ProoVer 2026 Safest Proof Checker} award: it tied with N\"orgler 
+for the most Bad proofs correctly identified (46 out of 47), but it did so without any 
+VerifiedGood verdicts on a Bad proof.
+On the Good proofs side, PyCheck~0.1 performed best, correctly identifying 37 Good proofs against 
+only two misclassified as Bad.
 The ProoVer 2026 problem set is available online, together with an explanation of each problem.
 ProoVer's first edition led to multiple discussions, serving the broader goal of improving the 
 TSTP specification.
@@ -2345,7 +2434,7 @@ ProofGuard~1.0    & Matthew Farah \& Alicia Marinache
     &  30 &  11 &   3 &    19 &  40 &   5 &   2 &  30 &   49 \\
 mrs-proover~0.2.0 & Olivier Roland
     &  31 &  12 &   1 &    19 &  39 &   5 &   3 &  28 &   47 \\
-PyCheck~1.0       & Stephan Schulz                    
+PyCheck~0.1       & Stephan Schulz                    
     &  \bb{37} &   \bb{2} &   5 &    \bb{35} &  28 &   5 &  14 &   6 &   41 \\
 CheckProof~0.1    & Nik Murzin
     &  28 &  11 &   5 &    17 &  25 &  17 &   5 &-120 & -103 \\
@@ -2372,37 +2461,28 @@ Theorem Proving (ATP) systems.
 % automatic classical logic ATP systems.
 \THIS{} fulfilled its objectives by evaluating the relative capabilities of ATP systems,
 and stimulating development and interest in ATP.
-The highlight of \THIS{} was the structural checking of proofs, which revealed flaws in many
-systems proofs.
-This will lead to improvements in proof output over the next year.
+The highlight of \THIS{} was the large number of newcomers who provided counterpoints for the
+systems that have been enetered for many years.
+The lowlight was the number of syntactically and structurally flawed proofs, which hopefully will
+motivate developers to pay more attention to this aspect of their ATP systems.
 Despite the continued dominance of the Vampire systems, the developer and user communities have
 remained engaged with CASC.
 A key to this is CASC's stimulating and interactive nature: a live competition run during one day 
-of the conference; opportunities for users and observers to be involved; a social dinner where 
-entrants and associates can interact; distinctive T-shirts that identify system developers and 
-others who are part of the competition.
+of the conference that provides opportunities for developers, users, and observers to interact.
 
 While the design of CASC is mature and stable, each year's experiences lead to ideas for changes
 and improvements.
-Changes being planned for \NEXT{} are:
+Changes planned for \NEXT{} are:
 \begin{packed_itemize}
-\item Only two installation packages will be allowed for each entry -- one for theorem proving/
-      unsatisfiability checking, and one for countermodel finding/satisfiability checking.
+\item Only two installation packages will be allowed for each entry -- one for theorem 
+      proving/unsatisfiability checking, and one for countermodel finding/satisfiability checking.
       The organizer will provide template \smalltt{starexec\_run} packages to smooth out the
       creation and submission of working installation packages.
-\item All solutions (proofs and models) must be in TPTP syntax, error-free according to TPTP4X.
-\item Proof checking will be extended to include:
-      \begin{packed_itemize}
-      \item Leaves must come from the problem.
-      \item \smalltt{inference} and \smalltt{introduced} records must be correctly formatted.
-      \item All new symbols must be correctly and unique documented in an \smalltt{introduced} 
-            record.
-      \item Skolemization steps must be correctly documented in an \smalltt{inference} record.
-      \end{packed_itemize}
-\item Models must be in TPTP syntax.
-\item Syntax checking of solutions will be done at runtime during the competition.
-\item No sample proofs will be requested, to avoid any mistaken belief that an approved sample
-      proof implies that all proofs will be accepted.
+\item All solutions -- proofs and models -- must be in TPTP syntax, error-free according to 
+      the BNF-based and TPTP4X parsers.
+\item Proof checking will be extended as described in Section~\ref{FutureProofs}.
+\item No sample proofs will be requested, to avoid any mistaken belief that one sample proof
+      approved by the panel implies that all proofs will be acceptable.
 \end{packed_itemize}
 
 As always, the ongoing success and utility of CASC depends on ongoing contributions of problems
