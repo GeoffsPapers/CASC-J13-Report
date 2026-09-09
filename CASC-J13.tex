@@ -2003,44 +2003,27 @@ For \THIS{} the salient systems are the newcomers that performed relatively well
 in the FOF division: FindProof~0.1, SUPr~1.0, and mrs~0.2.0.
 These short descriptions of the systems were written by their entrants.
 
-\textbf{FindProof}~\cite{Mur26} is an equational theorem prover for unit-equality problems, based 
-on unfailing (ordered) Knuth-Bendix completion~\cite{BDP89}. 
-It continues the Waldmeister line of provers~\cite{HL02}: the completion loop, critical-pair 
-selection, queue management, and normalisation.
-On algebraic problems the default configuration reproduces Waldmeister's critical-pair selection 
-sequence exactly.
-The axioms are saturated towards a convergent rewrite system while the goals are kept normalised.
-% and a proof is reported when the two sides of every goal are joined.
-Equations that cannot be oriented by the reduction ordering are used unfailingly, so that both 
-faces are superposed, which preserves refutational completeness. 
-The Knuth-Bendix ordering and the lexicographic path ordering are supported, with symbol 
-precedences generated automatically. 
-Redundant critical pairs are discarded by ground-joinability testing, the connectedness criterion, 
-forward and backward subsumption and demodulation, and right-hand-side interreduction. 
-Proofs are reconstructed from the recorded completion trace, the closing rewrite chain re-derived 
-against the final rule set and rendered as a refutation.
-% Full first-order input is handled by equationalization, in which propositions are Skolemized and 
-% encoded as equations over a Boolean-algebra axiomatisation, proved by the same completion core, 
-% and decoded back into a predicate-logic proof. 
-The search is ordered by a weighted critical-pair selection heuristic over a priority queue, with 
-a Waldmeister-style selection ratio that interleaves a first-in-first-out pick at a fixed cadence, 
-so that 
-% fairness, and hence 
-completeness is retained. 
-% The default configuration is the Waldmeister strategy stack. 
-The full strategy surface, some fifty-five switches covering the reduction ordering, critical-pair 
-weighting, weight limits, redundancy criteria, goal treatment, and queue management, is exposed 
-as command-line options, and named configurations modelled on the published defaults of 
-Waldmeister, Twee, and Vampire are provided. 
-In the competition a fixed schedule of such configurations was run, each in its own child process 
-under a slice of the wall-clock limit, stopping at the first proof. 
-% The schedule and its slice allocation are derived from coverage measurements on the problem sets 
-% of previous competitions; strategy selection is not tuned to individual problems.
-FindProof is a single self-contained C program with no external dependencies. 
-% Terms are represented as flatterms over a term bank; rewriting and subsumption retrieval use 
-% perfect discrimination trees; the critical-pair queue is a binary heap over a compact twelve-byte 
-% critical-pair encoding; and the completion trace is kept off-heap in a packed store from which 
-% proof objects are reconstructed on demand. 
+\textbf{FindProof}~\cite{Mur26} is an equational theorem prover based on unfailing (ordered) 
+Knuth–Bendix completion~\cite{BDP89}; the completion loop and critical-pair selection follow 
+Waldmeister's design~\cite{HL02}, with selection and redundancy techniques from Twee, Vampire, 
+and E: ground joinability, connectedness, goal-directed and age–weight selection. 
+Orderings are KBO and LPO with generated precedences. 
+First-order input is clausified with definitional CNF and translated to equational and Horn form; 
+goal-subterm naming supports goal-directed search, and existential goals are closed by narrowing. 
+Proofs are emitted as TSTP derivations and checked internally before output.
+The implementation is one self-contained C program with no dependencies, using flatterms with 
+perfect discrimination trees. 
+In the competition about forty strategy configurations ran concurrently, each with the full wall 
+clock time limit. 
+The same engine ships as a Wolfram Language paclet: TFindProof resolves theories through 
+AxiomaticTheory and returns proof objects compatible with FindEquationalProof. 
+Development is AI-assisted: ports, dissection against reference implementations, and regression 
+testing are done largely by language model agents, with changes gated on byte-identical trajectory 
+pins.
+CASC drives development: fresh problem selection exposed overfitting to previous years' problems, 
+and comparison with Vampire, Twee, and E sets priorities. 
+Planned work extends coverage from UEQ and FOF to the typed, higher-order, satisfiability, and 
+large-theory divisions, and eventually all TPTP divisions.
 
 \textbf{SUPr}~\cite{KP26} is a saturation-based theorem prover built as a native component of the 
 Sigma knowledge engineering environment (Rust implementation -- SigmaKEE-rs)~\cite{PS14}.
