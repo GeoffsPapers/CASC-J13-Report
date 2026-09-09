@@ -108,7 +108,7 @@ Funding statement - Not applicable.
 \section{Introduction}
 \label{Introduction}
 
-Automated Theorem Proving (ATP) deals with the task of proving theorems from axioms – the
+Automated Theorem Proving (ATP) deals with the task of proving theorems from axioms –- the
 derivation of conclusions that follow inevitably from known facts~\cite{RV01-HAR}.
 The converse task of disproving conjectures is another facet of interest~\cite{CS03,BN10-ITP}.
 The axioms and conjecture are written in an appropriately expressive logic, and the solutions
@@ -136,7 +136,7 @@ CASC is held at each CADE (the International Conference on Automated Deduction) 
 for the presentation of new research in all aspects of automated deduction.
 \THIS{} was held on 27th July 2026, as part of the
 % 30th International Conference on Automated Deduction (CADE-30).
-13th International Joint Conference on Automated Reasoning (IJCAR 2024)\footnote{%
+13th International Joint Conference on Automated Reasoning (IJCAR 2026)\footnote{%
 CADE was a constituent conference of the 13th IJCAR, hence CASC-``J13'',
 which in turn was part of the Federated Logic Conference 2026},
 in Lisbon, Portugal.
@@ -187,8 +187,7 @@ Important changes for \THIS{} were
 \begin{packed_itemize}
 \item The TFA and EPR divisions went on hiatus.
 \item The FNT division returned from hiatus.
-\item Inference steps in proofs were expected to list only parents that are not used in the 
-      inference.
+\item Inference steps in proofs were expected to list only parents that are used in the inference.
 \item Proofs were expected to graft in subproofs from external systems.
 \item A new performance measure, proof granularity, was recorded and reported.
 \item The ProoVer competition for proof verifiers was held for the first time in 2026, 
@@ -903,7 +902,7 @@ Requiring the use of a different package depending on the problem type is a coar
 non-automation.
 Users of ATP systems can have different intentions that produce distinct tasks for ATP, the
 most common of which is theorem proving/unsatisfiability checking vs. countermodel 
-finding/satisfiability checking
+finding/satisfiability checking.
 In \NEXT{} entrants will be restricted to maximally two installation packages, one for each
 of these two types of task.
 The ATP systems will be responsible for detecting the problem type within each type of task,
@@ -956,9 +955,9 @@ The criteria include:
             assumptions.
       \end{packed_itemize}
       In \THIS{} structure was checked using GDV~\cite{SB05}.
-\item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
 \item Inference steps must be reasonably fine-grained.
       The maximal number of parents in any inference is considered in this regard.
+\item Translations from one form to another, e.g., FOF to CNF, must be adequately documented.
 \item Proofs should graft in subproofs from external systems.
 \item An unsatisfiable set of ground instances of clauses is acceptable for establishing the
       unsatisfiability of a set of clauses.
@@ -1051,9 +1050,9 @@ site.\footnote{%
 
 The structural checking of proofs in the competition theorem proving divisions was new in \LAST{}, 
 and many systems' proofs had structural flaws.
-In \THIS{} some developers declared in advance that their systems' proofs would not be acceptable, 
-and their numbers of problems solved with an acceptable solution output is set to ``-'' rather 
-than 0 in the results tables.
+In \THIS{}, some developers declared in advance that their systems' proofs would not be acceptable, 
+and their numbers of acceptable solutions output is set to ``-'' rather than 0 in the results 
+tables.
 Discussion of the progress in proof output from \LAST{} to \THIS{} is given in 
 Section~\ref{Acceptable}.
 
@@ -2072,7 +2071,7 @@ CASC pushed mrs to fix real bugs and close gaps that show up only at scale.
 \label{Acceptable}
 
 In the commentary of the results in the THF, FOF, and UEQ divisions (Sections~\ref{THF}, \ref{FOF}, 
-and~\ref{UEQ}, the extent to which the systems output acceptable proofs is discussed.
+and~\ref{UEQ}), the extent to which the systems output acceptable proofs is discussed.
 For newcomers to CASC imperfect proof output might be forgiven.
 For the old timers, the increasing emphasis on proof production since CASC-J12 should be
 having a positive effect.
@@ -2089,7 +2088,7 @@ proofs were acceptable.
 These guidelines were set for CASC-J12~\cite{Sut24-CASC-J12}:
 \begin{packed_enumerate}
 \item[1.] Proofs must be complete, starting at formulae from the problem, and ending at the 
-      conjecture (for axiomatic proofs) or a false formula (for proofs by contradiction, 
+      conjecture (for axiomatic proofs) or \smalltt{\$false} (for proofs by contradiction, 
       e.g.,~CNF refutations).
 \item[2.] For proofs that use translations from one form to another, e.g.,~translation of FOF 
       problems to CNF, the translations must be adequately documented.
@@ -2165,9 +2164,9 @@ There are very definite signs of progress, partiularly in the FOF division.
 Drodi's improvement is salient, with iProver also having significant improvement (again in the
 UEQ division).
 E is noteworthy for having consistently minimal loss, coupled with improved performance.
-As an overall measure, in \LAST{} 459 of the 3961 proofs from the THF, FOF, and UEQ divisions, 
+As an overall measure, in \LAST{}, 459 of the 3961 proofs from the THF, FOF, and UEQ divisions, 
 i.e.~11.5\%, had syntax or structural flaws.
-The situation improved in \THIS{} with only 200 of 5065 proofs, i.e.,~3.9\%, having those types
+The situation improved in \THIS{}, with only 200 of 5065 proofs, i.e.,~3.9\%, having those types
 of flaws.
 
 \begin{table}[htb]
@@ -2221,7 +2220,7 @@ The documentation has been improved for these two points and more, and more prec
 have became possible.
 These are given in requirements 12', 13', and 14 below.
 
-Discussions during the IJCAR-13 conference that hosted \THIS{} led to the conclusion that 
+Discussions during the IJCAR 2026 conference that hosted \THIS{} led to the conclusion that 
 requirement 11 is unrealistic because precisely extracting the set of parents that were used 
 by a SAT/ATP/SMT system might not be possible in all cases.
 From the organizational side, checking conformance to the requirement might not be possible in 
@@ -2245,7 +2244,7 @@ For example, proofs for FOF problems should not use THF higher-order features, a
 restriction is observed then the proofs can be expected to be written in FOF.
 That that end requirement 9 below will be added.
 Secondly, as another incremental step towards a verified track in CASC, leaves of proofs will
-be required to directly copied from the problem, modulo variable renaming.
+be required to be copied from the problem, modulo variable renaming.
 That that end requirement 10 below will be added.
 This is in agreement with the requirements of the ProoVer competition described in 
 Section~\ref{ProoVer}.
