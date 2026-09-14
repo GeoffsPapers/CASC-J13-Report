@@ -407,7 +407,7 @@ information.
 A division acronym in {\em italics} indicates the system was in the demonstration division.
 The division winners of the previous CASC (\LAST{}) and the Prover9~1109a system are automatically
 entered into the demonstration division to provide benchmarks against which progress can be judged.
-System descriptions are in the competition proceedings~\cite{Sut24-CASC-J12} and on the \THIS{}
+System descriptions are in the competition proceedings~\cite{Sut26-CASC-J13} and on the \THIS{}
 web site.
 
 \begin{table*}
@@ -428,7 +428,7 @@ FMB4J 0.1                 &   &   &FNT&   & Michael Rawson (Joe Hall)           
 iProver 3.9.4             &   &FOF&FNT&UEQ& Konstantin Korovin                                & University of Manchester \\
 LEO-II 1.7.0              &THF&   &   &   & Alexander Steen (Christoph Benzmüller)            & University of Greifswald \\
 Leo-III 1.9.0             &THF&   &   &   & Alexander Steen (Christoph Benzmüller)            & University of Greifswald \\
-LisaST 0.9                &   &{\em FOF}&   &   & Simon Guilloud                              & EPFL \\
+LisaST 0.9                &   &FOF&   &   & Simon Guilloud                                    & EPFL \\
 Mace4 2026-6A             &   &   &FNT&   & Jeff Machado (Larry Lesyna)                       & Independent Researcher \\
 mrs 0.2.0                 &   &FOF&   &UEQ& Olivier Roland                                    & Independent Researcher \\
 Prover9 1109a             &   &{\em FOF}&   &   & CASC (Bob Veroff, Bill McCune)              & CASC fixed point \\
@@ -478,7 +478,7 @@ The StarExec Miami computers used for CASC are the same as are publicly availabl
 community, which allows system developers to test and tune their systems in exactly the same 
 environment as is used for the competition.
 
-In \THIS{} a total of 1618 CPU hours were used in 453 wall clock hours, i.e., 5.9 hours spread
+In \THIS{} a total of 1618 CPU hours were used in 353 wall clock hours, i.e., 5.9 hours spread
 over the 60 CPUs, which allowed the competition to run live in one conference day.
 For the problems that were solved, 185 CPU hours were used in 34 wall clock hours.
 
@@ -518,10 +518,11 @@ The problems have to meet certain criteria to be eligible for use:
       The rating calculation also uses performance data from ATP systems that are not
       entered into the competition, which can produce ratings that make some problems eligible
       for selection but easy or unsolvable for the systems in the competition.
-      Using problems that are solved by all or none of the competition systems does not
-      affect the competition rankings, has the benefit of placing the systems' performances
-      in the context of the state-of-the-art in ATP, but does reduce the differentiation between
-      the systems in the competition.
+      Using problems that are solved by all or none of the competition systems reduces the
+      differentiation between the systems in the competition, but does not affect the competition 
+      rankings.
+      It does have the benefit of placing the systems' performances in the context of the 
+      state-of-the-art in ATP.
 \end{packed_itemize}
 
 In order to ensure that no system receives an advantage or disadvantage due to the specific
@@ -777,7 +778,7 @@ and very few slowly~\cite{SS01,Sut24}.
 \href{https://tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}{\tt tptp.org/CASC/J13/WWWFiles/ResultsPlots.html}})
 % and from the ratios of total times taken to solved times given in Section~\ref{Computers} --
 % 1618 vs. 185 CPU hours, and 453 vs. 34 wall clock hours.
-The time limit is chosen value within the range allowed according to the judgement of the
+The time limit is chosen within the range allowed according to the judgement of the
 organizer, and is announced at the competition.
 In \THIS{} a 180~s wall clock time limit was imposed on each system's execution.
 No CPU time limits are imposed, so it can be advantageous to use all the cores on the CPU.
@@ -826,7 +827,7 @@ No CPU time limits are imposed, so it can be advantageous to use all the cores o
 
 The ATP systems are registered for the competition 
 % by the registration deadline, 
-using an system registration form,
+using a system registration form.
 Systems can be entered at only the division level, and can be entered into more than one division.
 Entering many similar variants of a system is deprecated, and entrants may be required to limit
 the number of variants that they enter.
@@ -1046,7 +1047,7 @@ In each column the best value in the competition division is {\bf emboldened}.
 The \LAST{} winner is \textit{emphasized} in the demonstration divisions.
 Detailed results, including the systems' output files, are available on the \THIS{} web 
 site.\footnote{%
-\href{https://tptp.org/CASC/30/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}}
+\href{https://tptp.org/CASC/J13/WWWFiles/Results.html}{\tt tptp.org/CASC/30/WWWFiles/Results.html}}
 
 The structural checking of proofs in the competition theorem proving divisions was new in \LAST{}, 
 and many systems' proofs had structural flaws.
@@ -1073,9 +1074,10 @@ The flaws in Zipperposition's proofs are quite simple, e.g., many of them have d
 names, in some cases duplicate formulae, and others give the SZS \smalltt{status(esa)} when 
 negating the conjecture (it should be \smalltt{status(cth)}).
 These are flaws that should be easily fixed, so that Zipperposition is upgraded for \NEXT{}.
-The 13 missing proofs from Leo-III are interesting: they come from Leo-III using bracketed
+The 23 missing proofs from Leo-III are interesting: they come from Leo-III using bracketed
 quantifiers as terms that are applied, e.g., \smalltt{((!)\,@\,\ldots)}, instead of the
 combinator equivalents expected in the TPTP language, e.g., \smalltt{(!!\,@\,\ldots)}.
+% 18 (!), 5 (@+)
 
 \begin{table*}[tbh]
 \caption{THF division results}
@@ -1120,7 +1122,7 @@ which definitions were sequentially applied in a single inference.
 Vampire~5.0.1 improved over Vampire~5.0 because the old \smalltt{avatar\_sat\_refutation} 
 inferences have been replaced by the CaDiCaL refutation steps.
 The main motivation for this work was the ongoing proof-checking efforts in Vampire.
-The developer responisble for this change explained: ``it wasn't so hard with CaDiCaL's 
+The developer responsible for this change explained: ``it wasn't so hard with CaDiCaL's 
 spiffy new Tracer API. You hook your own Tracer subclass into CaDiCaL and it tells you when 
 it learns new clauses.''
 % This made it possible to extend the Vampire refutation with the CaDiCaL refutation.
@@ -1345,8 +1347,8 @@ In \NEXT{} the requirements for proofs to be considered ``acceptable'' will be t
 explained in Section~\ref{Acceptable}.
 
 A highlight of \THIS{} was the number of newcomers to the competition.
-In the FOF division there were four absolute newcomers: FindProof, SUPr, mrs, and VIP.
-Additionally there were four new variants of existing systems: CSI++, Prover9~2026-6A, LisaST, and
+In the FOF division there were five absolute newcomers: LisaST, FindProof, SUPr, mrs, and VIP.
+Additionally there were three new variants of existing systems: CSI++, Prover9~2026-6A, and
 SATResetCoP.
 It was particularly pleasing to see the new release of Prover9, which earned it the ``Honourable 
 Mention'' medal for CASC in the FLoC Olympic games.
@@ -1468,7 +1470,7 @@ the other systems.
 \label{FNT}
 
 The FNT division return to \THIS{} after two years on hiatus.
-The winner from CASC-29 in 2003 was entered as the previous winner.
+The winner from CASC-29 in 2023 was entered as the previous winner.
 Table~\ref{FNTSummary} summarizes the results.
 Vampire~5.0.1 came out ahead of the other systems, by a large margin, surpassing Vampire~4.8
 that had come out way ahead in CASC-29.
@@ -2203,7 +2205,7 @@ Drodi       & 4.1.0    &   121 &    121 &  0.00\% & 4.1.1   &   163 &    163 &  
 A comparison of the granularity values between \LAST{} and \THIS{} would be ``unfair'', because
 the measure was not part of the \LAST{} design, and thus developers had no motivation to minimise
 granularity.
-The granularity values reported in Sections~\ref{THF}, \ref{FOF}, \ref{FNT}, and~\ref{UEQ} provide
+The granularity values reported in Sections~\ref{THF}, \ref{FOF}, and~\ref{UEQ} provide
 some indication of the situation in \THIS{}.
 As a counter point to the maximal value of 72367 clauses sent to Z3 in \LAST{}, the maximal value 
 in \THIS{} was 12651.
@@ -2218,7 +2220,7 @@ The \THIS{} panel ruled that the documentation of the required format for these 
 inadequate, and thus those flawed proofs were counted.
 The documentation has been improved for these two points and more, and more precise requirements 
 have became possible.
-These are given in requirements 12', 13', and 14 below.
+These are given in requirements 9', 10', 14, and 15 below.
 
 Discussions during the IJCAR 2026 conference that hosted \THIS{} led to the conclusion that 
 requirement 11 is unrealistic because precisely extracting the set of parents that were used 
@@ -2234,41 +2236,42 @@ shown in the ATP system's proof.
 It would be preferable for the SAT/ATP/SMT system's proof to be exposed by being grafted onto the
 ATP system's proof (as done in Vampire~5.0.1's use of CaDiCaL - see Section~\ref{THF}).
 Grafting on the proofs of subsystems will be encouraged in \NEXT{}, specified in requirement
-15 below.
+13 below.
 
 In addition to these reactive changes to observations from \THIS{}, two further requirements
 will be added.
-Firstly, users of ATP systems can reasonably expect proofs to not use TPTP language features
+Firstly, as another incremental step towards a verified track in CASC, leaves of proofs will
+be required to be copied from the problem, modulo variable renaming.
+To that end requirement 12 below will be added.
+This is in agreement with the requirements of the ProoVer competition described in 
+Section~\ref{ProoVer}.
+Secondly, users of ATP systems can reasonably expect proofs to not use TPTP language features
 that are not supported by the language used for the problem.
 For example, proofs for FOF problems should not use THF higher-order features, and if that
 restriction is observed then the proofs can be expected to be written in FOF.
-That that end requirement 9 below will be added.
-Secondly, as another incremental step towards a verified track in CASC, leaves of proofs will
-be required to be copied from the problem, modulo variable renaming.
-That that end requirement 10 below will be added.
-This is in agreement with the requirements of the ProoVer competition described in 
-Section~\ref{ProoVer}.
+To that end requirement 16 below will be added.
 
 The requirements for \NEXT{} will include: 
 \begin{packed_enumerate}
-\item[9.] Proofs should not use a TPTP language that is more expressive than that of the problem.
-\item[10.] Leaf annotated formulae of proofs must be alpha-equivalent to the corresponding named
-      annotated formula in the problem.
+\item[9'.] Proofs that negate the conjecture must correctly annotate the step as
+      \smalltt{status(cth)} and have a single parent with the role \smalltt{conjecture}.
+\item[10'.] New symbols introduced in derivations must be documented in a \smalltt{new\_symbols()}
+      record. 
+      The new symbols listed in a \smalltt{new\_symbols()} record must be unique and globally new.
 \item[11'.] Inference steps must aim to list exactly those parents that are used in the inference. 
       Inference steps may list parents that are not necessary for the inference.\footnote{%
       For example, in the inference of \smalltt{p(a)} from the parents \smalltt{p(a)} and 
       \smalltt{a = a}, the equality is not necessary but might be used in an (unnecessary) 
       equality substitution step, but in contrast \smalltt{p(b)} would probably not be used 
       as a parent in that inference step.}
-\item[12'.] Proofs that negate the conjecture must correctly annotate the step as
-      \smalltt{status(cth)} and have a single parent with the role \smalltt{conjecture}.
-\item[13'.] New symbols introduced in derivations must be documented in a \smalltt{new\_symbols()}
-      record. 
-      The new symbols listed in a \smalltt{new\_symbols()} record must be unique and globally new.
+\item[12.] Leaf annotated formulae of proofs must be alpha-equivalent to the corresponding named
+      annotated formula in the problem.
+\item[13.] Proofs should graft in subproofs from external systems.
 \item[14.] Requirements for the \smalltt{introduced()} records of symbol definitions, 
-      introduced tautologies, and theory axioms will be provided.
-      Requirements for the \smalltt{inference()} records of Skolemization steps will be provided.
-\item[15.] Proofs should graft in subproofs from external systems.
+      introduced tautologies, and theory axioms, will be provided.
+\item[15.] Requirements for the \smalltt{inference()} records of Skolemization steps will be 
+provided.
+\item[16.] Proofs should not use a TPTP language that is more expressive than that of the problem.
 \end{packed_enumerate}
 The BNF-based parser~\cite{VS06}, the TPTP4X parser, and an improved version of GDV will be 
 made available to the systems' developers so that they can check their proofs.
